@@ -1,4 +1,5 @@
 import { gql } from "@urql/core";
+import { REG_USER } from "./fragments";
 
 export const LOGIN = gql`
   mutation login($username: String!, $password: String!) {
@@ -8,13 +9,11 @@ export const LOGIN = gql`
         message
       }
       user {
-        id
-        createdAt
-        username
-        displayName
+        ...RegUser
       }
     }
   }
+  ${REG_USER}
 `;
 
 export const REGISTER = gql`
@@ -37,11 +36,15 @@ export const REGISTER = gql`
         message
       }
       user {
-        id
-        createdAt
-        username
-        displayName
+        ...RegUser
       }
     }
+  }
+  ${REG_USER}
+`;
+
+export const LOGOUT = gql`
+  mutation logout {
+    logout
   }
 `;

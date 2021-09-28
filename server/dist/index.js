@@ -15,6 +15,7 @@ const redis_1 = __importDefault(require("redis"));
 const express_session_1 = __importDefault(require("express-session"));
 const connect_redis_1 = __importDefault(require("connect-redis"));
 const cors_1 = __importDefault(require("cors"));
+const constants_1 = require("./constants");
 const main = async () => {
     const orm = await core_1.MikroORM.init(mikro_orm_config_1.default);
     await orm.getMigrator().up();
@@ -35,7 +36,7 @@ const main = async () => {
             maxAge: 1000 * 60 * 60 * 24 * 7,
             httpOnly: true,
             sameSite: "lax",
-            secure: process.env.NODE_ENV === "production",
+            secure: constants_1.__prod__,
         },
         saveUninitialized: false,
         secret: "gnbviouwesgnfdegndeognbgouerdsbhouge",

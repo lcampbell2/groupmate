@@ -1,12 +1,11 @@
 import { gql } from "@urql/core";
+import { REG_USER } from "./fragments";
 
 export const ME = gql`
   query me {
     me {
-      id
-      createdAt
-      username
-      displayName
+      ...RegUser
     }
   }
+  ${REG_USER}
 `;

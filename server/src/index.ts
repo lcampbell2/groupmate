@@ -10,6 +10,7 @@ import redis from "redis";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
+import { __prod__ } from "./constants";
 
 const main = async () => {
   const orm = await MikroORM.init(mikroOrmConfig);
@@ -37,7 +38,7 @@ const main = async () => {
         maxAge: 1000 * 60 * 60 * 24 * 7,
         httpOnly: true,
         sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
+        secure: __prod__,
       },
       saveUninitialized: false,
       secret: "gnbviouwesgnfdegndeognbgouerdsbhouge",

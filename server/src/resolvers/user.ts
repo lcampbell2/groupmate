@@ -11,7 +11,7 @@ import {
   Query,
 } from "type-graphql";
 import argon2 from "argon2";
-// import { EntityManager } from "@mikro-orm/knex";
+// import { COOKIE_NAME } from "src/constants";
 
 @InputType()
 class LoginInput {
@@ -140,21 +140,9 @@ export class UserResolver {
       username: options.username,
       password: hashedPassword,
     });
-    // let user;
 
     try {
-      // const result = await (em as EntityManager)
-      //   .createQueryBuilder(User)
-      //   .getKnexQuery()
-      //   .insert({
-      //     username: options.username,
-      //     password: hashedPassword,
-      //     created_at: new Date(),
-      //     updated_at: new Date(),
-      //   })
-      //   .returning("*");
       await em.persistAndFlush(user);
-      // user = result[0];
     } catch (error) {
       if (error.detail.includes("already exists")) {
         // duplicate username error
@@ -210,5 +198,19 @@ export class UserResolver {
     req.session!.userId = user.id;
 
     return { user };
+  }
+
+  @Mutation(() => Boolean)
+  logout(@Ctx() { req, res }: MyContext) {
+    return new Promise((resolve) =>
+      req.session.destroy((err: any) => {
+        res.clearCookie("qid");
+        if (err) {
+          console.error(err);
+          resolve(false);
+        }
+        resolve(true);
+      })
+    );
   }
 }
