@@ -31,7 +31,6 @@ export const Register: React.FC<registerProps> = ({}) => {
           if (res.data.register.errors) {
             setErrors(toErrorMap(res.data.register.errors));
           } else if (res.data?.register.user) {
-            console.log(JSON.stringify(res.data));
             toast({
               title: "Account successfully created.",
               description: `Thank you for registering with us, ${res.data.register.user.displayName}`,

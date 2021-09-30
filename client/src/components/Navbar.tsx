@@ -1,13 +1,14 @@
-import { Button, Flex, Link, Stack, Text } from "@chakra-ui/react";
+import { Button, Flex, Link, Stack, useToast } from "@chakra-ui/react";
 import React from "react";
 import NextLink from "next/link";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
-import { useMutation } from "urql";
-import { LOGOUT } from "../graphql/mutations";
+import { useRouter } from "next/dist/client/router";
 
 interface NavbarProps {}
 
 export const Navbar: React.FC<NavbarProps> = ({}) => {
+  const router = useRouter();
+  const toast = useToast();
   const [{ data, fetching }] = useMeQuery();
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
   let authLinks = null;
@@ -20,7 +21,20 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
         <NextLink href='/user'>
           <Link>{data.me?.displayName}</Link>
         </NextLink>
-        <Button isLoading={logoutFetching} onClick={() => logout()}>
+        <Button
+          isLoading={logoutFetching}
+          onClick={() => {
+            router.push("/");
+            logout();
+            toast({
+              title: `Successfully signed out`,
+              description: "You have been successfully been logged out",
+              status: "success",
+              duration: 9000,
+              isClosable: true,
+            });
+          }}
+        >
           Sign Out
         </Button>
       </>

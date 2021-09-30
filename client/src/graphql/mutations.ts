@@ -48,3 +48,62 @@ export const LOGOUT = gql`
     logout
   }
 `;
+
+export const UPDATE_USERNAME = gql`
+  mutation updateUsername($id: Float!, $username: String!) {
+    updateUsername(id: $id, username: $username) {
+      errors {
+        field
+        message
+      }
+      user {
+        id
+        createdAt
+        updatedAt
+        username
+      }
+    }
+  }
+`;
+
+export const UPDATE_DISPLAYNAME = gql`
+  mutation updateDisplayName($id: Float!, $displayName: String!) {
+    updateDisplayName(id: $id, displayName: $displayName) {
+      errors {
+        field
+        message
+      }
+      user {
+        id
+        createdAt
+        updatedAt
+        displayName
+      }
+    }
+  }
+`;
+
+export const UPDATE_PASSWORD = gql`
+  mutation updatePassword(
+    $id: Float!
+    $currentPassword: String!
+    $newPassword: String!
+    $confirmNewPassword: String!
+  ) {
+    updatePassword(
+      id: $id
+      currentPassword: $currentPassword
+      newPassword: $newPassword
+      confirmNewPassword: $confirmNewPassword
+    ) {
+      errors {
+        field
+        message
+      }
+      user {
+        id
+        updatedAt
+      }
+    }
+  }
+`;

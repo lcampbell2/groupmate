@@ -208,6 +208,131 @@ let UserResolver = class UserResolver {
             resolve(true);
         }));
     }
+    async updateUsername(id, username, { em }) {
+        const user = await em.findOne(User_1.User, { id });
+        if (!user) {
+            return null;
+        }
+        if (typeof username !== "undefined") {
+            if (username.length < 1) {
+                return {
+                    errors: [
+                        {
+                            field: "username",
+                            message: "username empty",
+                        },
+                    ],
+                };
+            }
+            try {
+                user.username = username;
+                user.updatedAt = new Date();
+                await em.persistAndFlush(user);
+            }
+            catch (error) {
+                if (error.detail.includes("already exists")) {
+                    return {
+                        errors: [
+                            {
+                                field: "username",
+                                message: "Username is taken",
+                            },
+                        ],
+                    };
+                }
+                console.error(error);
+            }
+        }
+        return { user };
+    }
+    async updateDisplayName(id, displayName, { em }) {
+        const user = await em.findOne(User_1.User, { id });
+        if (!user) {
+            return null;
+        }
+        if (typeof displayName !== "undefined") {
+            if (displayName.length < 1) {
+                return {
+                    errors: [
+                        {
+                            field: "displayName",
+                            message: "displayName empty",
+                        },
+                    ],
+                };
+            }
+            user.displayName = displayName;
+            user.updatedAt = new Date();
+            await em.persistAndFlush(user);
+        }
+        return { user };
+    }
+    async updatePassword(id, currentPassword, newPassword, confirmNewPassword, { em }) {
+        const user = await em.findOne(User_1.User, { id });
+        if (!user) {
+            return null;
+        }
+        if (typeof currentPassword !== "undefined" &&
+            typeof newPassword !== "undefined" &&
+            typeof confirmNewPassword !== "undefined") {
+            if (currentPassword.length < 1) {
+                return {
+                    errors: [
+                        {
+                            field: "currentPassword",
+                            message: "currentPassword empty",
+                        },
+                    ],
+                };
+            }
+            if (newPassword.length < 1) {
+                return {
+                    errors: [
+                        {
+                            field: "newPassword",
+                            message: "newPassword empty",
+                        },
+                    ],
+                };
+            }
+            if (confirmNewPassword.length < 1) {
+                return {
+                    errors: [
+                        {
+                            field: "confirmNewPassword",
+                            message: "confirmNewPassword empty",
+                        },
+                    ],
+                };
+            }
+            const valid = await argon2_1.default.verify(user.password, currentPassword);
+            if (!valid) {
+                return {
+                    errors: [
+                        {
+                            field: "password",
+                            message: "password is incorrect",
+                        },
+                    ],
+                };
+            }
+            if (newPassword !== confirmNewPassword) {
+                return {
+                    errors: [
+                        {
+                            field: "confirmNewPassword",
+                            message: "password and confirmPassword do not match",
+                        },
+                    ],
+                };
+            }
+            const hashedPassword = await argon2_1.default.hash(newPassword);
+            user.password = hashedPassword;
+            user.updatedAt = new Date();
+            await em.persistAndFlush(user);
+        }
+        return { user };
+    }
 };
 __decorate([
     (0, type_graphql_1.Query)(() => [User_1.User]),
@@ -254,6 +379,37 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UserResolver.prototype, "logout", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => UserRepsonse, { nullable: true }),
+    __param(0, (0, type_graphql_1.Arg)("id")),
+    __param(1, (0, type_graphql_1.Arg)("username", () => String)),
+    __param(2, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, String, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "updateUsername", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => UserRepsonse, { nullable: true }),
+    __param(0, (0, type_graphql_1.Arg)("id")),
+    __param(1, (0, type_graphql_1.Arg)("displayName", () => String)),
+    __param(2, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, String, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "updateDisplayName", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => UserRepsonse, { nullable: true }),
+    __param(0, (0, type_graphql_1.Arg)("id")),
+    __param(1, (0, type_graphql_1.Arg)("currentPassword", () => String)),
+    __param(2, (0, type_graphql_1.Arg)("newPassword", () => String)),
+    __param(3, (0, type_graphql_1.Arg)("confirmNewPassword", () => String)),
+    __param(4, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, String,
+        String,
+        String, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "updatePassword", null);
 UserResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], UserResolver);

@@ -33,7 +33,10 @@ export type Mutation = {
   register: UserRepsonse;
   removePost: Scalars['Boolean'];
   removeUser: Scalars['Boolean'];
+  updateDisplayName?: Maybe<UserRepsonse>;
+  updatePassword?: Maybe<UserRepsonse>;
   updatePost?: Maybe<Post>;
+  updateUsername?: Maybe<UserRepsonse>;
 };
 
 
@@ -62,9 +65,29 @@ export type MutationRemoveUserArgs = {
 };
 
 
+export type MutationUpdateDisplayNameArgs = {
+  displayName: Scalars['String'];
+  id: Scalars['Float'];
+};
+
+
+export type MutationUpdatePasswordArgs = {
+  confirmNewPassword: Scalars['String'];
+  currentPassword: Scalars['String'];
+  id: Scalars['Float'];
+  newPassword: Scalars['String'];
+};
+
+
 export type MutationUpdatePostArgs = {
   id: Scalars['Float'];
   title?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateUsernameArgs = {
+  id: Scalars['Float'];
+  username: Scalars['String'];
 };
 
 export type NewUserInput = {
@@ -135,6 +158,32 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
+export type UpdateUsernameMutationVariables = Exact<{
+  id: Scalars['Float'];
+  username: Scalars['String'];
+}>;
+
+
+export type UpdateUsernameMutation = { __typename?: 'Mutation', updateUsername?: Maybe<{ __typename?: 'UserRepsonse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, createdAt: string, updatedAt: string, username: string }> }> };
+
+export type UpdateDisplayNameMutationVariables = Exact<{
+  id: Scalars['Float'];
+  displayName: Scalars['String'];
+}>;
+
+
+export type UpdateDisplayNameMutation = { __typename?: 'Mutation', updateDisplayName?: Maybe<{ __typename?: 'UserRepsonse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, createdAt: string, updatedAt: string, displayName: string }> }> };
+
+export type UpdatePasswordMutationVariables = Exact<{
+  id: Scalars['Float'];
+  currentPassword: Scalars['String'];
+  newPassword: Scalars['String'];
+  confirmNewPassword: Scalars['String'];
+}>;
+
+
+export type UpdatePasswordMutation = { __typename?: 'Mutation', updatePassword?: Maybe<{ __typename?: 'UserRepsonse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, updatedAt: string }> }> };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -191,6 +240,69 @@ export const LogoutDocument = gql`
 
 export function useLogoutMutation() {
   return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
+};
+export const UpdateUsernameDocument = gql`
+    mutation updateUsername($id: Float!, $username: String!) {
+  updateUsername(id: $id, username: $username) {
+    errors {
+      field
+      message
+    }
+    user {
+      id
+      createdAt
+      updatedAt
+      username
+    }
+  }
+}
+    `;
+
+export function useUpdateUsernameMutation() {
+  return Urql.useMutation<UpdateUsernameMutation, UpdateUsernameMutationVariables>(UpdateUsernameDocument);
+};
+export const UpdateDisplayNameDocument = gql`
+    mutation updateDisplayName($id: Float!, $displayName: String!) {
+  updateDisplayName(id: $id, displayName: $displayName) {
+    errors {
+      field
+      message
+    }
+    user {
+      id
+      createdAt
+      updatedAt
+      displayName
+    }
+  }
+}
+    `;
+
+export function useUpdateDisplayNameMutation() {
+  return Urql.useMutation<UpdateDisplayNameMutation, UpdateDisplayNameMutationVariables>(UpdateDisplayNameDocument);
+};
+export const UpdatePasswordDocument = gql`
+    mutation updatePassword($id: Float!, $currentPassword: String!, $newPassword: String!, $confirmNewPassword: String!) {
+  updatePassword(
+    id: $id
+    currentPassword: $currentPassword
+    newPassword: $newPassword
+    confirmNewPassword: $confirmNewPassword
+  ) {
+    errors {
+      field
+      message
+    }
+    user {
+      id
+      updatedAt
+    }
+  }
+}
+    `;
+
+export function useUpdatePasswordMutation() {
+  return Urql.useMutation<UpdatePasswordMutation, UpdatePasswordMutationVariables>(UpdatePasswordDocument);
 };
 export const MeDocument = gql`
     query me {

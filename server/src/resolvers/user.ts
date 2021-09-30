@@ -213,4 +213,166 @@ export class UserResolver {
       })
     );
   }
+
+  @Mutation(() => UserRepsonse, { nullable: true })
+  async updateUsername(
+    @Arg("id") id: number,
+    @Arg("username", () => String) username: String,
+    @Ctx() { em }: MyContext
+  ): Promise<UserRepsonse | null> {
+    const user = await em.findOne(User, { id });
+    if (!user) {
+      return null;
+    }
+    if (typeof username !== "undefined") {
+      // input field is empty
+      if (username.length < 1) {
+        return {
+          errors: [
+            {
+              field: "username",
+              message: "username empty",
+            },
+          ],
+        };
+      }
+      // username changed to existing username
+      try {
+        user.username = username as string;
+        user.updatedAt = new Date();
+        await em.persistAndFlush(user);
+      } catch (error) {
+        if (error.detail.includes("already exists")) {
+          // duplicate username error
+          return {
+            errors: [
+              {
+                field: "username",
+                message: "Username is taken",
+              },
+            ],
+          };
+        }
+        console.error(error);
+      }
+    }
+    return { user };
+  }
+
+  @Mutation(() => UserRepsonse, { nullable: true })
+  async updateDisplayName(
+    @Arg("id") id: number,
+    @Arg("displayName", () => String) displayName: String,
+    @Ctx() { em }: MyContext
+  ): Promise<UserRepsonse | null> {
+    const user = await em.findOne(User, { id });
+    if (!user) {
+      return null;
+    }
+    if (typeof displayName !== "undefined") {
+      // input field is empty
+      if (displayName.length < 1) {
+        return {
+          errors: [
+            {
+              field: "displayName",
+              message: "displayName empty",
+            },
+          ],
+        };
+      }
+      // username changed to existing username
+      user.displayName = displayName as string;
+      user.updatedAt = new Date();
+      await em.persistAndFlush(user);
+    }
+    return { user };
+  }
+
+  @Mutation(() => UserRepsonse, { nullable: true })
+  async updatePassword(
+    @Arg("id") id: number,
+    @Arg("currentPassword", () => String)
+    currentPassword: String,
+    @Arg("newPassword", () => String)
+    newPassword: String,
+    @Arg("confirmNewPassword", () => String)
+    confirmNewPassword: String,
+    @Ctx() { em }: MyContext
+  ): Promise<UserRepsonse | null> {
+    const user = await em.findOne(User, { id });
+    if (!user) {
+      return null;
+    }
+    if (
+      typeof currentPassword !== "undefined" &&
+      typeof newPassword !== "undefined" &&
+      typeof confirmNewPassword !== "undefined"
+    ) {
+      // currentPassword field is empty
+      if (currentPassword.length < 1) {
+        return {
+          errors: [
+            {
+              field: "currentPassword",
+              message: "currentPassword empty",
+            },
+          ],
+        };
+      }
+      // newPassword field is empty
+      if (newPassword.length < 1) {
+        return {
+          errors: [
+            {
+              field: "newPassword",
+              message: "newPassword empty",
+            },
+          ],
+        };
+      }
+      // confirmNewPassword field is empty
+      if (confirmNewPassword.length < 1) {
+        return {
+          errors: [
+            {
+              field: "confirmNewPassword",
+              message: "confirmNewPassword empty",
+            },
+          ],
+        };
+      }
+      // password is incorrect
+      const valid = await argon2.verify(
+        user.password,
+        currentPassword as string
+      );
+      if (!valid) {
+        return {
+          errors: [
+            {
+              field: "password",
+              message: "password is incorrect",
+            },
+          ],
+        };
+      }
+      // new password and confirmation do not match
+      if (newPassword !== confirmNewPassword) {
+        return {
+          errors: [
+            {
+              field: "confirmNewPassword",
+              message: "password and confirmPassword do not match",
+            },
+          ],
+        };
+      }
+      const hashedPassword = await argon2.hash(newPassword as string);
+      user.password = hashedPassword;
+      user.updatedAt = new Date();
+      await em.persistAndFlush(user);
+    }
+    return { user };
+  }
 }

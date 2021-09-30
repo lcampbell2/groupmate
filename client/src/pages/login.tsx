@@ -26,7 +26,6 @@ export const Login: React.FC<loginProps> = ({}) => {
           if (res.data.login.errors) {
             setErrors(toErrorMap(res.data.login.errors));
           } else if (res.data?.login.user) {
-            console.log(JSON.stringify(res.data));
             toast({
               title: `Welcome, ${res.data.login.user.displayName}`,
               description:
