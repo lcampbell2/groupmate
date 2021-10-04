@@ -20,7 +20,7 @@ export const Login: React.FC<loginProps> = ({}) => {
     <Box>
       <Heading textAlign='center'>Login to your account</Heading>
       <Formik
-        initialValues={{ username: "", password: "" }}
+        initialValues={{ email: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
           const res = await login(values);
           if (res.data.login.errors) {
@@ -40,11 +40,7 @@ export const Login: React.FC<loginProps> = ({}) => {
       >
         {({ handleChange }) => (
           <Form>
-            <InputField
-              name='username'
-              label='Username'
-              onChange={handleChange}
-            />
+            <InputField name='email' label='Email' onChange={handleChange} />
             <InputField
               type='password'
               name='password'

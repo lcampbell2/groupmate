@@ -4,7 +4,7 @@ import React from "react";
 import { useQuery } from "urql";
 import { EditableDisplayName } from "../components/user/EditableDisplayName";
 import { EditablePassword } from "../components/user/EditablePassword";
-import { EditableUsername } from "../components/user/EditableUsername";
+import { EditableUserEmail } from "../components/user/EditableUserEmail";
 import { ME } from "../graphql/queries";
 
 interface userProps {}
@@ -21,10 +21,7 @@ export const User: React.FC<userProps> = ({}) => {
         User Profile Page
       </Heading>
 
-      <EditableUsername
-        currentUsername={data?.me.username}
-        userId={data?.me.id}
-      />
+      <EditableUserEmail currentEmail={data?.me.email} userId={data?.me.id} />
       <EditableDisplayName
         currentDisplayName={data?.me.displayName}
         userId={data?.me.id}

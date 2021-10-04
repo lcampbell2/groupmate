@@ -16,7 +16,7 @@ import argon2 from "argon2";
 @InputType()
 class LoginInput {
   @Field()
-  username: string;
+  email: string;
   @Field()
   password: string;
 }
@@ -24,7 +24,7 @@ class LoginInput {
 @InputType()
 class NewUserInput {
   @Field()
-  username: string;
+  email: string;
   @Field()
   displayName: string;
   @Field()
@@ -84,12 +84,22 @@ export class UserResolver {
     @Arg("options") options: NewUserInput,
     @Ctx() { em, req }: MyContext
   ): Promise<UserRepsonse> {
-    if (options.username.length < 1) {
+    if (options.email.length < 1) {
       return {
         errors: [
           {
-            field: "username",
-            message: "username empty",
+            field: "email",
+            message: "email empty",
+          },
+        ],
+      };
+    }
+    if (!options.email.includes("@")) {
+      return {
+        errors: [
+          {
+            field: "email",
+            message: "invalid email",
           },
         ],
       };
@@ -137,7 +147,7 @@ export class UserResolver {
     const hashedPassword = await argon2.hash(options.password);
     const user = em.create(User, {
       displayName: options.displayName,
-      username: options.username,
+      email: options.email,
       password: hashedPassword,
     });
 
@@ -145,12 +155,12 @@ export class UserResolver {
       await em.persistAndFlush(user);
     } catch (error) {
       if (error.detail.includes("already exists")) {
-        // duplicate username error
+        // duplicate email error
         return {
           errors: [
             {
-              field: "username",
-              message: "Username is taken",
+              field: "email",
+              message: "email is taken",
             },
           ],
         };
@@ -171,14 +181,34 @@ export class UserResolver {
     @Ctx() { em, req }: MyContext
   ): Promise<UserRepsonse> {
     const user = await em.findOne(User, {
-      username: options.username.toLowerCase(),
+      email: options.email.toLowerCase(),
     });
     if (!user) {
       return {
         errors: [
           {
-            field: "username",
+            field: "email",
             message: "user does not exist",
+          },
+        ],
+      };
+    }
+    if (!options.email.includes("@")) {
+      return {
+        errors: [
+          {
+            field: "email",
+            message: "invalid email",
+          },
+        ],
+      };
+    }
+    if (options.email.length < 1) {
+      return {
+        errors: [
+          {
+            field: "email",
+            message: "email empty",
           },
         ],
       };
@@ -215,40 +245,40 @@ export class UserResolver {
   }
 
   @Mutation(() => UserRepsonse, { nullable: true })
-  async updateUsername(
+  async updateEmail(
     @Arg("id") id: number,
-    @Arg("username", () => String) username: String,
+    @Arg("email", () => String) email: String,
     @Ctx() { em }: MyContext
   ): Promise<UserRepsonse | null> {
     const user = await em.findOne(User, { id });
     if (!user) {
       return null;
     }
-    if (typeof username !== "undefined") {
+    if (typeof email !== "undefined") {
       // input field is empty
-      if (username.length < 1) {
+      if (email.length < 1) {
         return {
           errors: [
             {
-              field: "username",
-              message: "username empty",
+              field: "email",
+              message: "email empty",
             },
           ],
         };
       }
-      // username changed to existing username
+      // email changed to existing email
       try {
-        user.username = username as string;
+        user.email = email as string;
         user.updatedAt = new Date();
         await em.persistAndFlush(user);
       } catch (error) {
         if (error.detail.includes("already exists")) {
-          // duplicate username error
+          // duplicate email error
           return {
             errors: [
               {
-                field: "username",
-                message: "Username is taken",
+                field: "email",
+                message: "email is taken",
               },
             ],
           };
@@ -281,7 +311,7 @@ export class UserResolver {
           ],
         };
       }
-      // username changed to existing username
+      // email changed to existing email
       user.displayName = displayName as string;
       user.updatedAt = new Date();
       await em.persistAndFlush(user);

@@ -17,34 +17,34 @@ import {
 } from "@chakra-ui/react";
 import { Formik } from "formik";
 import React, { useRef } from "react";
-import { useUpdateUsernameMutation } from "../../generated/graphql";
+import { useUpdateEmailMutation } from "../../generated/graphql";
 import { toErrorMap } from "../../utils/toErrorMap";
 import { InputField } from "../InputField";
 
-interface EditableUsernameProps {
+interface EditableUserEmailProps {
   userId: number;
-  currentUsername: string;
+  currentEmail: string;
 }
 
-export const EditableUsername: React.FC<EditableUsernameProps> = ({
-  currentUsername,
+export const EditableUserEmail: React.FC<EditableUserEmailProps> = ({
+  currentEmail,
   userId,
   ...props
 }) => {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialFocusRef = useRef<HTMLHeadingElement>(null);
-  const [_, updateUsername] = useUpdateUsernameMutation();
+  const [_, updateEmail] = useUpdateEmailMutation();
 
   return (
     <Stack {...props}>
       <Text fontWeight='bold' fontSize='lg'>
-        Username:
+        Email:
       </Text>
       <Flex align='center'>
         <EmailIcon color='gray.400' />
         <Text ml='2' mb='1'>
-          {currentUsername}
+          {currentEmail}
         </Text>
         <Button ml='auto' onClick={onOpen}>
           Edit
@@ -62,18 +62,18 @@ export const EditableUsername: React.FC<EditableUsernameProps> = ({
             validateOnBlur={false}
             initialValues={{
               id: userId,
-              username: "",
+              email: "",
             }}
             initialTouched={{
-              username: true,
+              email: true,
             }}
             onSubmit={async (values, { setErrors }) => {
-              const res = await updateUsername(values);
-              if (res?.data?.updateUsername?.errors) {
-                setErrors(toErrorMap(res.data.updateUsername.errors));
-              } else if (res?.data?.updateUsername?.user) {
+              const res = await updateEmail(values);
+              if (res?.data?.updateEmail?.errors) {
+                setErrors(toErrorMap(res.data.updateEmail.errors));
+              } else if (res?.data?.updateEmail?.user) {
                 toast({
-                  title: `updateUsername Success`,
+                  title: `updateEmail Success`,
                   description: "description",
                   status: "success",
                   duration: 9000,
@@ -85,20 +85,20 @@ export const EditableUsername: React.FC<EditableUsernameProps> = ({
           >
             {({ handleSubmit, handleChange, isSubmitting }) => (
               <form id='form' onSubmit={handleSubmit}>
-                <ModalHeader>Edit Username</ModalHeader>
+                <ModalHeader>Edit email</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                   <Stack spacing='4' p='6'>
                     <Flex align='center'>
                       <Heading as='h3' size='sm'>
-                        Current Username:
+                        Current email:
                       </Heading>
-                      <Text ml='2'>{currentUsername}</Text>
+                      <Text ml='2'>{currentEmail}</Text>
                     </Flex>
 
                     <InputField
-                      name='username'
-                      label='New Username:'
+                      name='email'
+                      label='New email:'
                       onChange={handleChange}
                     />
                   </Stack>

@@ -11,9 +11,14 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
 import { __prod__ } from "./constants";
+// import { User } from "./entities/User";
+// import { sendEmail } from "./utils/sendEmail";
 
 const main = async () => {
+  // sendEmail("l.campbell144768@gmail.com", "testing testing 123");
   const orm = await MikroORM.init(mikroOrmConfig);
+  // use to delete all users from db
+  // await orm.em.nativeDelete(User, {});
   await orm.getMigrator().up();
 
   const app = express();

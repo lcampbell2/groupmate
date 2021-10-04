@@ -21,7 +21,7 @@ export const Register: React.FC<registerProps> = ({}) => {
       <Heading textAlign='center'>Register your account</Heading>
       <Formik
         initialValues={{
-          username: "",
+          email: "",
           displayName: "",
           password: "",
           confirmPassword: "",
@@ -44,11 +44,7 @@ export const Register: React.FC<registerProps> = ({}) => {
       >
         {({ handleChange }) => (
           <Form>
-            <InputField
-              name='username'
-              label='Username'
-              onChange={handleChange}
-            />
+            <InputField name='email' label='Email' onChange={handleChange} />
             <InputField
               name='displayName'
               label='Display Name'

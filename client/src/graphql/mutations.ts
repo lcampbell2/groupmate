@@ -2,8 +2,8 @@ import { gql } from "@urql/core";
 import { REG_USER } from "./fragments";
 
 export const LOGIN = gql`
-  mutation login($username: String!, $password: String!) {
-    login(options: { username: $username, password: $password }) {
+  mutation login($email: String!, $password: String!) {
+    login(options: { email: $email, password: $password }) {
       errors {
         field
         message
@@ -18,14 +18,14 @@ export const LOGIN = gql`
 
 export const REGISTER = gql`
   mutation register(
-    $username: String!
+    $email: String!
     $displayName: String!
     $password: String!
     $confirmPassword: String!
   ) {
     register(
       options: {
-        username: $username
+        email: $email
         displayName: $displayName
         password: $password
         confirmPassword: $confirmPassword
@@ -49,9 +49,9 @@ export const LOGOUT = gql`
   }
 `;
 
-export const UPDATE_USERNAME = gql`
-  mutation updateUsername($id: Float!, $username: String!) {
-    updateUsername(id: $id, username: $username) {
+export const UPDATE_EMAIL = gql`
+  mutation updateEmail($id: Float!, $email: String!) {
+    updateEmail(id: $id, email: $email) {
       errors {
         field
         message
@@ -60,7 +60,7 @@ export const UPDATE_USERNAME = gql`
         id
         createdAt
         updatedAt
-        username
+        email
       }
     }
   }
