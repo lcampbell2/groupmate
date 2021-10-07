@@ -6,7 +6,7 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-co
 import { buildSchema } from "type-graphql";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
-import redis from "redis";
+import Redis from "ioredis";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
@@ -15,7 +15,6 @@ import { __prod__ } from "./constants";
 // import { sendEmail } from "./utils/sendEmail";
 
 const main = async () => {
-  // sendEmail("l.campbell144768@gmail.com", "testing testing 123");
   const orm = await MikroORM.init(mikroOrmConfig);
   // use to delete all users from db
   // await orm.em.nativeDelete(User, {});
@@ -24,12 +23,12 @@ const main = async () => {
   const app = express();
 
   const RedisStore = connectRedis(session);
-  const redisClient = redis.createClient();
+  const redis = new Redis();
 
-  redisClient.on("error", (error) => {
+  redis.on("error", (error) => {
     console.error(error);
   });
-  redisClient.on("connect", () => {
+  redis.on("connect", () => {
     console.info("Successfully connected to redis");
   });
 
@@ -38,7 +37,7 @@ const main = async () => {
   app.use(
     session({
       name: "qid",
-      store: new RedisStore({ client: redisClient, disableTouch: true }),
+      store: new RedisStore({ client: redis, disableTouch: true }),
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7,
         httpOnly: true,
@@ -56,7 +55,7 @@ const main = async () => {
       resolvers: [PostResolver, UserResolver],
       validate: false,
     }),
-    context: ({ req, res }) => ({ em: orm.em, req, res }),
+    context: ({ req, res }) => ({ em: orm.em, req, res, redis }),
     plugins: [
       ApolloServerPluginLandingPageGraphQLPlayground({
         //options

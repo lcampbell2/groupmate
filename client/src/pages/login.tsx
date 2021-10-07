@@ -47,6 +47,12 @@ export const Login: React.FC<loginProps> = ({}) => {
               label='Password'
               onChange={handleChange}
             />
+            <Button
+              variant='link'
+              onClick={() => router.push("/forgot-password")}
+            >
+              Forgot your password?
+            </Button>
             <Stack isInline my='4'>
               <Button type='submit'>Login</Button>
               <Button onClick={() => router.push("/")}>Back</Button>

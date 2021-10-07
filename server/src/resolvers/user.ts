@@ -1,5 +1,5 @@
 import { User } from "../entities/User";
-import { MyContext } from "src/types";
+import { MyContext } from "../types";
 import {
   Resolver,
   Arg,
@@ -11,7 +11,10 @@ import {
   Query,
 } from "type-graphql";
 import argon2 from "argon2";
+import { sendEmail } from "../utils/sendEmail";
 // import { COOKIE_NAME } from "src/constants";
+import { v4 } from "uuid";
+// import { Redis } from "ioredis";
 
 @InputType()
 class LoginInput {
@@ -68,6 +71,8 @@ export class UserResolver {
   }
 
   // prod tools
+
+  // queries
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req, em }: MyContext) {
     // not logged in
@@ -79,6 +84,7 @@ export class UserResolver {
     return user;
   }
 
+  // mutations
   @Mutation(() => UserRepsonse)
   async register(
     @Arg("options") options: NewUserInput,
@@ -266,6 +272,16 @@ export class UserResolver {
           ],
         };
       }
+      if (!email.includes("@")) {
+        return {
+          errors: [
+            {
+              field: "email",
+              message: "invalid email",
+            },
+          ],
+        };
+      }
       // email changed to existing email
       try {
         user.email = email as string;
@@ -403,6 +419,108 @@ export class UserResolver {
       user.updatedAt = new Date();
       await em.persistAndFlush(user);
     }
+    return { user };
+  }
+
+  @Mutation(() => Boolean)
+  async forgotPassword(
+    @Arg("email") email: string,
+    @Ctx() { em, redis }: MyContext
+  ) {
+    const user = await em.findOne(User, { email });
+    // email not attached to user
+    if (!user) {
+      return true;
+    }
+
+    const resetToken = v4();
+
+    await redis.set(
+      `forgot-password:${resetToken}`,
+      user.id,
+      "ex",
+      1000 * 60 * 60 * 24 * 1
+    );
+
+    await sendEmail(
+      email,
+      `<a href="http://localhost:3000/reset-password/${resetToken}">Reset your GroupMate password</a>`
+    );
+
+    return true;
+  }
+
+  @Mutation(() => UserRepsonse)
+  async resetPassword(
+    @Arg("resetToken") resetToken: string,
+    @Arg("newPassword") newPassword: string,
+    @Arg("confirmNewPassword") confirmNewPassword: string,
+    @Ctx() { em, redis }: MyContext
+  ): Promise<UserRepsonse> {
+    // newPassword field is empty
+    if (newPassword.length < 1) {
+      return {
+        errors: [
+          {
+            field: "newPassword",
+            message: "newPassword empty",
+          },
+        ],
+      };
+    }
+    // confirmNewPassword field is empty
+    if (confirmNewPassword.length < 1) {
+      return {
+        errors: [
+          {
+            field: "confirmNewPassword",
+            message: "confirmNewPassword empty",
+          },
+        ],
+      };
+    }
+    // new password and confirmation do not match
+    if (newPassword !== confirmNewPassword) {
+      return {
+        errors: [
+          {
+            field: "confirmNewPassword",
+            message: "password and confirmPassword do not match",
+          },
+        ],
+      };
+    }
+
+    const userId = await redis.get(`forgot-password:${resetToken}`);
+    if (!userId) {
+      return {
+        errors: [
+          {
+            field: "token",
+            message: "token expired",
+          },
+        ],
+      };
+    }
+
+    const user = await em.findOne(User, { id: parseInt(userId) });
+
+    if (!user) {
+      return {
+        errors: [
+          {
+            field: "token",
+            message: "user does not exist",
+          },
+        ],
+      };
+    }
+
+    const hashedPassword = await argon2.hash(newPassword as string);
+    user.password = hashedPassword;
+    user.updatedAt = new Date();
+    await em.persistAndFlush(user);
+
     return { user };
   }
 }

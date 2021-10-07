@@ -28,11 +28,13 @@ export type LoginInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   createPost: Post;
+  forgotPassword: Scalars['Boolean'];
   login: UserRepsonse;
   logout: Scalars['Boolean'];
   register: UserRepsonse;
   removePost: Scalars['Boolean'];
   removeUser: Scalars['Boolean'];
+  resetPassword: UserRepsonse;
   updateDisplayName?: Maybe<UserRepsonse>;
   updateEmail?: Maybe<UserRepsonse>;
   updatePassword?: Maybe<UserRepsonse>;
@@ -42,6 +44,11 @@ export type Mutation = {
 
 export type MutationCreatePostArgs = {
   title: Scalars['String'];
+};
+
+
+export type MutationForgotPasswordArgs = {
+  email: Scalars['String'];
 };
 
 
@@ -62,6 +69,13 @@ export type MutationRemovePostArgs = {
 
 export type MutationRemoveUserArgs = {
   id: Scalars['Float'];
+};
+
+
+export type MutationResetPasswordArgs = {
+  confirmNewPassword: Scalars['String'];
+  newPassword: Scalars['String'];
+  resetToken: Scalars['String'];
 };
 
 
@@ -184,6 +198,22 @@ export type UpdatePasswordMutationVariables = Exact<{
 
 export type UpdatePasswordMutation = { __typename?: 'Mutation', updatePassword?: Maybe<{ __typename?: 'UserRepsonse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, updatedAt: string }> }> };
 
+export type ForgotPasswordMutationVariables = Exact<{
+  email: Scalars['String'];
+}>;
+
+
+export type ForgotPasswordMutation = { __typename?: 'Mutation', forgotPassword: boolean };
+
+export type ResetPasswordMutationVariables = Exact<{
+  resetToken: Scalars['String'];
+  newPassword: Scalars['String'];
+  confirmNewPassword: Scalars['String'];
+}>;
+
+
+export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword: { __typename?: 'UserRepsonse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, updatedAt: string, email: string }> } };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -303,6 +333,38 @@ export const UpdatePasswordDocument = gql`
 
 export function useUpdatePasswordMutation() {
   return Urql.useMutation<UpdatePasswordMutation, UpdatePasswordMutationVariables>(UpdatePasswordDocument);
+};
+export const ForgotPasswordDocument = gql`
+    mutation ForgotPassword($email: String!) {
+  forgotPassword(email: $email)
+}
+    `;
+
+export function useForgotPasswordMutation() {
+  return Urql.useMutation<ForgotPasswordMutation, ForgotPasswordMutationVariables>(ForgotPasswordDocument);
+};
+export const ResetPasswordDocument = gql`
+    mutation ResetPassword($resetToken: String!, $newPassword: String!, $confirmNewPassword: String!) {
+  resetPassword(
+    resetToken: $resetToken
+    newPassword: $newPassword
+    confirmNewPassword: $confirmNewPassword
+  ) {
+    errors {
+      field
+      message
+    }
+    user {
+      id
+      updatedAt
+      email
+    }
+  }
+}
+    `;
+
+export function useResetPasswordMutation() {
+  return Urql.useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(ResetPasswordDocument);
 };
 export const MeDocument = gql`
     query me {

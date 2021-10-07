@@ -1,4 +1,5 @@
-import { ChakraProvider, ColorModeProvider } from "@chakra-ui/react";
+import { Box, ChakraProvider, ColorModeProvider } from "@chakra-ui/react";
+import React from "react";
 import { Provider } from "urql";
 import { client } from "../client";
 import { Footer } from "../components/Footer";
