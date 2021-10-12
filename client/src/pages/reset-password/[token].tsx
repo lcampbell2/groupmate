@@ -22,10 +22,10 @@ export const ResetPassword: NextPage<{ token: string }> = ({ token }) => {
           confirmNewPassword: "",
         }}
         onSubmit={async (values, { setErrors }) => {
-          const res = await resetPassword(values);
-          if (res.data.resetPassword.errors) {
-            setErrors(toErrorMap(res.data.resetPassword.errors));
-          } else if (res.data?.resetPassword.user) {
+          const { data } = await resetPassword(values);
+          if (data?.resetPassword.errors) {
+            setErrors(toErrorMap(data.resetPassword.errors));
+          } else if (data?.resetPassword.user) {
             toast({
               title: `resetPassword Success`,
               description: "description",

@@ -3,6 +3,8 @@ import { MikroORM } from "@mikro-orm/core";
 import path from "path";
 import { User } from "./entities/User";
 import { __prod__ } from "./constants";
+import { Group } from "./entities/Group";
+import { GroupUser } from "./entities/GroupUser";
 
 export default {
   migrations: {
@@ -10,7 +12,7 @@ export default {
     pattern: /^[\w-]+\d+\.[tj]s$/, // regex pattern for the migration files
     disableForeignKeys: false,
   },
-  entities: [Post, User],
+  entities: [Post, User, Group, GroupUser],
   dbName: "capstone",
   port: 5433,
   type: "postgresql",

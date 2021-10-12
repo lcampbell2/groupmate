@@ -12,10 +12,33 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
   const [{ data, fetching }] = useMeQuery();
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
   let authLinks = null;
+  let navBarLinks = (
+    <>
+      <NextLink href='/'>
+        <Link>Home</Link>
+      </NextLink>
+    </>
+  );
 
   if (fetching) {
     authLinks = null;
   } else if (data?.me) {
+    navBarLinks = (
+      <>
+        <NextLink href='/'>
+          <Link>Home</Link>
+        </NextLink>
+        <NextLink href='/groups'>
+          <Link>My Groups</Link>
+        </NextLink>
+        <NextLink href='/schedule'>
+          <Link>My Schedule</Link>
+        </NextLink>
+        <NextLink href='/group-search'>
+          <Link>Group Search</Link>
+        </NextLink>
+      </>
+    );
     authLinks = (
       <>
         <NextLink href='/user'>
@@ -42,24 +65,24 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
   } else {
     authLinks = (
       <>
-        <NextLink href='/login'>
+        <Button onClick={() => router.push("/login")}>Sign in</Button>
+        <Button onClick={() => router.push("/register")}>Create Account</Button>
+        {/* <NextLink href='/login'>
           <Link>Sign In</Link>
-        </NextLink>
-        <NextLink href='/register'>
+        </NextLink> */}
+        {/* <NextLink href='/register'>
           <Link>Create Account</Link>
-        </NextLink>
+        </NextLink> */}
       </>
     );
   }
 
   return (
     <Flex bg='gray.300' p='4'>
-      <Stack isInline align='center'>
-        <NextLink href='/'>
-          <Link>Home</Link>
-        </NextLink>
+      <Stack isInline align='center' spacing={10}>
+        {navBarLinks}
       </Stack>
-      <Stack isInline ml='auto' align='center'>
+      <Stack isInline ml='auto' align='center' spacing={4}>
         {authLinks}
       </Stack>
     </Flex>

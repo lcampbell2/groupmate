@@ -11,14 +11,21 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
 import { __prod__ } from "./constants";
+import { GroupResolver } from "./resolvers/group";
 // import { User } from "./entities/User";
+// import { Post } from "./entities/Post";
 // import { sendEmail } from "./utils/sendEmail";
 
 const main = async () => {
   const orm = await MikroORM.init(mikroOrmConfig);
-  // use to delete all users from db
+
+  //    use to delete all users from db
+  // ====================================
   // await orm.em.nativeDelete(User, {});
-  await orm.getMigrator().up();
+  // await orm.em.nativeDelete(Post, {});
+  // ====================================
+
+  // await orm.getMigrator().up();
 
   const app = express();
 
@@ -52,7 +59,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [PostResolver, UserResolver],
+      resolvers: [PostResolver, UserResolver, GroupResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({ em: orm.em, req, res, redis }),

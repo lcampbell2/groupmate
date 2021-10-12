@@ -12,9 +12,7 @@ import {
 } from "type-graphql";
 import argon2 from "argon2";
 import { sendEmail } from "../utils/sendEmail";
-// import { COOKIE_NAME } from "src/constants";
 import { v4 } from "uuid";
-// import { Redis } from "ioredis";
 
 @InputType()
 class LoginInput {
@@ -285,7 +283,6 @@ export class UserResolver {
       // email changed to existing email
       try {
         user.email = email as string;
-        user.updatedAt = new Date();
         await em.persistAndFlush(user);
       } catch (error) {
         if (error.detail.includes("already exists")) {
@@ -329,7 +326,6 @@ export class UserResolver {
       }
       // email changed to existing email
       user.displayName = displayName as string;
-      user.updatedAt = new Date();
       await em.persistAndFlush(user);
     }
     return { user };
@@ -416,7 +412,6 @@ export class UserResolver {
       }
       const hashedPassword = await argon2.hash(newPassword as string);
       user.password = hashedPassword;
-      user.updatedAt = new Date();
       await em.persistAndFlush(user);
     }
     return { user };
@@ -518,7 +513,6 @@ export class UserResolver {
 
     const hashedPassword = await argon2.hash(newPassword as string);
     user.password = hashedPassword;
-    user.updatedAt = new Date();
     await em.persistAndFlush(user);
 
     return { user };
