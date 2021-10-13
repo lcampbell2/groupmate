@@ -55,7 +55,6 @@ export class GroupResolver {
     @Ctx() { em, req }: MyContext
   ): Promise<GroupResponse> {
     // validate input
-
     if (input.name.length < 1) {
       return {
         errors: [
@@ -66,7 +65,6 @@ export class GroupResolver {
         ],
       };
     }
-
     if (input.description.length < 1) {
       return {
         errors: [
@@ -77,7 +75,6 @@ export class GroupResolver {
         ],
       };
     }
-
     if (input.visibility.length < 1) {
       return {
         errors: [
@@ -88,7 +85,6 @@ export class GroupResolver {
         ],
       };
     }
-
     if (!Object.values(GroupVisibility).includes(input.visibility)) {
       return {
         errors: [
@@ -155,9 +151,9 @@ export class GroupResolver {
   @Mutation(() => GroupResponse, { nullable: true })
   async updateGroup(
     @Arg("id") id: number,
-    @Arg("name") name: string,
-    @Arg("description") description: string,
-    @Arg("visibility") visibility: GroupVisibility,
+    @Arg("name", { nullable: true }) name: String,
+    @Arg("description", { nullable: true }) description: String,
+    @Arg("visibility", { nullable: true }) visibility: GroupVisibility,
     @Ctx() { em }: MyContext
   ): Promise<GroupResponse | null> {
     const group = await em.findOne(Group, { id });
@@ -165,27 +161,34 @@ export class GroupResolver {
       return null;
     }
 
-    if (name.length > 1) {
-      group.name = name;
+    if (typeof name !== "undefined") {
+      if (name.length > 1) {
+        group.name = name as string;
+        group.slug = slugify(name as string);
+      }
     }
 
-    if (description.length > 1) {
-      group.description = description;
+    if (typeof description !== "undefined") {
+      if (description.length > 1) {
+        group.description = description as string;
+      }
     }
 
-    if (!Object.values(GroupVisibility).includes(visibility)) {
-      return {
-        errors: [
-          {
-            field: "visibility",
-            message: "invalid visibility enum",
-          },
-        ],
-      };
-    }
+    if (typeof visibility !== "undefined") {
+      if (!Object.values(GroupVisibility).includes(visibility)) {
+        return {
+          errors: [
+            {
+              field: "visibility",
+              message: "invalid visibility enum",
+            },
+          ],
+        };
+      }
 
-    if (visibility !== group.visibility && visibility.length > 1) {
-      group.visibility = visibility;
+      if (visibility !== group.visibility && visibility.length > 1) {
+        group.visibility = visibility;
+      }
     }
 
     try {
