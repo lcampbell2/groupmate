@@ -1,4 +1,4 @@
-import { Entity, Enum, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import { Entity, Enum, ManyToOne, PrimaryKey } from "@mikro-orm/core";
 import { UserRole } from "../enums";
 import { Field, Int, ObjectType } from "type-graphql";
 import { User } from "./User";
@@ -22,7 +22,4 @@ export class GroupUser {
   @Field(() => String)
   @Enum(() => UserRole)
   role: UserRole;
-
-  @Property()
-  this_is_a_fake_property: string;
 }

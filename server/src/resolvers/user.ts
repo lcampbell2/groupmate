@@ -1,5 +1,5 @@
 import { User } from "../entities/User";
-import { MyContext } from "../types";
+import { FieldError, MyContext } from "../types";
 import {
   Resolver,
   Arg,
@@ -32,14 +32,6 @@ class NewUserInput {
   password: string;
   @Field()
   confirmPassword: string;
-}
-
-@ObjectType()
-class FieldError {
-  @Field()
-  field: string;
-  @Field()
-  message: string;
 }
 
 @ObjectType()

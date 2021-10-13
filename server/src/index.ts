@@ -14,15 +14,18 @@ import { __prod__ } from "./constants";
 import { GroupResolver } from "./resolvers/group";
 // import { User } from "./entities/User";
 // import { Post } from "./entities/Post";
-// import { sendEmail } from "./utils/sendEmail";
+// import { Group } from "./entities/Group";
+// import { GroupUser } from "./entities/GroupUser";
 
 const main = async () => {
   const orm = await MikroORM.init(mikroOrmConfig);
 
-  //    use to delete all users from db
+  //    use to clear db
   // ====================================
   // await orm.em.nativeDelete(User, {});
   // await orm.em.nativeDelete(Post, {});
+  // await orm.em.nativeDelete(Group, {});
+  // await orm.em.nativeDelete(GroupUser, {});
   // ====================================
 
   // await orm.getMigrator().up();
