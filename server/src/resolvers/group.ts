@@ -14,6 +14,7 @@ import { GroupVisibility } from "../enums";
 import { slugify } from "../utils/slugify";
 import { User } from "../entities/User";
 import { GroupUser } from "../entities/GroupUser";
+import { Collection } from "@mikro-orm/core";
 
 @InputType()
 class NewGroupInput {
@@ -47,6 +48,30 @@ export class GroupResolver {
   // prod tools
 
   // queries
+  @Query(() => [GroupUser], { nullable: true })
+  async myGroups(
+    @Arg("userId") userId: number,
+    @Ctx() { em }: MyContext
+  ): Promise<Collection<GroupUser> | null> {
+    const currentUser = await em.findOne(User, { id: userId });
+    if (!currentUser) {
+      return null;
+    }
+
+    return currentUser.groups;
+  }
+
+  @Query(() => Group, { nullable: true })
+  async groupBySlug(
+    @Arg("slug") slug: string,
+    @Ctx() { em }: MyContext
+  ): Promise<Group | null> {
+    const group = await em.findOne(Group, { slug: slug });
+    if (!group) {
+      return null;
+    }
+    return group;
+  }
 
   // mutations
   @Mutation(() => GroupResponse)

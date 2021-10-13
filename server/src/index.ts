@@ -22,10 +22,10 @@ const main = async () => {
 
   //    use to clear db
   // ====================================
-  // await orm.em.nativeDelete(User, {});
-  // await orm.em.nativeDelete(Post, {});
-  // await orm.em.nativeDelete(Group, {});
   // await orm.em.nativeDelete(GroupUser, {});
+  // await orm.em.nativeDelete(User, {});
+  // await orm.em.nativeDelete(Group, {});
+  // await orm.em.nativeDelete(Post, {});
   // ====================================
 
   // await orm.getMigrator().up();

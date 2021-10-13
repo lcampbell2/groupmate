@@ -137,3 +137,62 @@ export const RESET_PASSWORD = gql`
     }
   }
 `;
+
+export const CREATE_GROUP = gql`
+  mutation createGroup(
+    $name: String!
+    $description: String!
+    $visibility: String!
+  ) {
+    createGroup(
+      input: { name: $name, description: $description, visibility: $visibility }
+    ) {
+      errors {
+        field
+        message
+      }
+      group {
+        id
+        createdAt
+        name
+        description
+        slug
+        visibility
+        users {
+          user {
+            displayName
+          }
+          role
+        }
+      }
+    }
+  }
+`;
+
+export const UPDATE_GROUP = gql`
+  mutation updateGroup(
+    $id: Float!
+    $name: String
+    $description: String
+    $visibility: String
+  ) {
+    updateGroup(
+      id: $id
+      name: $name
+      description: $description
+      visibility: $visibility
+    ) {
+      errors {
+        field
+        message
+      }
+      group {
+        id
+        updatedAt
+        name
+        description
+        visibility
+      }
+    }
+  }
+`;

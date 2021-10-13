@@ -32,7 +32,7 @@ export class Post {
 
   @Field()
   @Property({ type: "text" })
-  descrpition!: string;
+  description!: string;
 
   @Field(() => User)
   @ManyToOne(() => User)
