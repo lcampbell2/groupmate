@@ -20,6 +20,33 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
+export type Group = {
+  __typename?: 'Group';
+  createdAt: Scalars['String'];
+  description: Scalars['String'];
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  posts?: Maybe<Array<Post>>;
+  slug: Scalars['String'];
+  updatedAt: Scalars['String'];
+  users: Array<GroupUser>;
+  visibility: Scalars['String'];
+};
+
+export type GroupResponse = {
+  __typename?: 'GroupResponse';
+  errors?: Maybe<Array<FieldError>>;
+  group?: Maybe<Group>;
+};
+
+export type GroupUser = {
+  __typename?: 'GroupUser';
+  group: Group;
+  id: Scalars['Int'];
+  role: Scalars['String'];
+  user: User;
+};
+
 export type LoginInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -27,6 +54,7 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createGroup: GroupResponse;
   createPost: Post;
   forgotPassword: Scalars['Boolean'];
   login: UserRepsonse;
@@ -37,8 +65,14 @@ export type Mutation = {
   resetPassword: UserRepsonse;
   updateDisplayName?: Maybe<UserRepsonse>;
   updateEmail?: Maybe<UserRepsonse>;
+  updateGroup?: Maybe<GroupResponse>;
   updatePassword?: Maybe<UserRepsonse>;
   updatePost?: Maybe<Post>;
+};
+
+
+export type MutationCreateGroupArgs = {
+  input: NewGroupInput;
 };
 
 
@@ -91,6 +125,14 @@ export type MutationUpdateEmailArgs = {
 };
 
 
+export type MutationUpdateGroupArgs = {
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['Float'];
+  name?: Maybe<Scalars['String']>;
+  visibility?: Maybe<Scalars['String']>;
+};
+
+
 export type MutationUpdatePasswordArgs = {
   confirmNewPassword: Scalars['String'];
   currentPassword: Scalars['String'];
@@ -104,6 +146,12 @@ export type MutationUpdatePostArgs = {
   title?: Maybe<Scalars['String']>;
 };
 
+export type NewGroupInput = {
+  description: Scalars['String'];
+  name: Scalars['String'];
+  visibility: Scalars['String'];
+};
+
 export type NewUserInput = {
   confirmPassword: Scalars['String'];
   displayName: Scalars['String'];
@@ -113,7 +161,10 @@ export type NewUserInput = {
 
 export type Post = {
   __typename?: 'Post';
+  author: User;
   createdAt: Scalars['String'];
+  description: Scalars['String'];
+  group: Group;
   id: Scalars['Int'];
   title: Scalars['String'];
   updatedAt: Scalars['String'];
@@ -121,10 +172,23 @@ export type Post = {
 
 export type Query = {
   __typename?: 'Query';
+  groupBySlug?: Maybe<Group>;
+  groups: Array<Group>;
   me?: Maybe<User>;
+  myGroups?: Maybe<Array<GroupUser>>;
   post?: Maybe<Post>;
   posts: Array<Post>;
   users: Array<User>;
+};
+
+
+export type QueryGroupBySlugArgs = {
+  slug: Scalars['String'];
+};
+
+
+export type QueryMyGroupsArgs = {
+  userId: Scalars['Float'];
 };
 
 
@@ -137,7 +201,9 @@ export type User = {
   createdAt: Scalars['String'];
   displayName: Scalars['String'];
   email: Scalars['String'];
+  groups: Array<GroupUser>;
   id: Scalars['Int'];
+  posts?: Maybe<Array<Post>>;
   updatedAt: Scalars['String'];
 };
 
@@ -214,10 +280,43 @@ export type ResetPasswordMutationVariables = Exact<{
 
 export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword: { __typename?: 'UserRepsonse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, updatedAt: string, email: string }> } };
 
+export type CreateGroupMutationVariables = Exact<{
+  name: Scalars['String'];
+  description: Scalars['String'];
+  visibility: Scalars['String'];
+}>;
+
+
+export type CreateGroupMutation = { __typename?: 'Mutation', createGroup: { __typename?: 'GroupResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, group?: Maybe<{ __typename?: 'Group', id: number, createdAt: string, name: string, description: string, slug: string, visibility: string, users: Array<{ __typename?: 'GroupUser', role: string, user: { __typename?: 'User', displayName: string } }> }> } };
+
+export type UpdateGroupMutationVariables = Exact<{
+  id: Scalars['Float'];
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  visibility?: Maybe<Scalars['String']>;
+}>;
+
+
+export type UpdateGroupMutation = { __typename?: 'Mutation', updateGroup?: Maybe<{ __typename?: 'GroupResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, group?: Maybe<{ __typename?: 'Group', id: number, updatedAt: string, name: string, description: string, visibility: string }> }> };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, displayName: string }> };
+
+export type MyGroupsQueryVariables = Exact<{
+  userId: Scalars['Float'];
+}>;
+
+
+export type MyGroupsQuery = { __typename?: 'Query', myGroups?: Maybe<Array<{ __typename?: 'GroupUser', id: number, role: string, group: { __typename?: 'Group', id: number, name: string, description: string, slug: string, visibility: string } }>> };
+
+export type OrganizationBySlugQueryVariables = Exact<{
+  slug: Scalars['String'];
+}>;
+
+
+export type OrganizationBySlugQuery = { __typename?: 'Query', groupBySlug?: Maybe<{ __typename?: 'Group', id: number, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', id: number, role: string, user: { __typename?: 'User', id: number, displayName: string } }>, posts?: Maybe<Array<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', displayName: string } }>> }> };
 
 export const RegUserFragmentDoc = gql`
     fragment RegUser on User {
@@ -366,6 +465,62 @@ export const ResetPasswordDocument = gql`
 export function useResetPasswordMutation() {
   return Urql.useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(ResetPasswordDocument);
 };
+export const CreateGroupDocument = gql`
+    mutation createGroup($name: String!, $description: String!, $visibility: String!) {
+  createGroup(
+    input: {name: $name, description: $description, visibility: $visibility}
+  ) {
+    errors {
+      field
+      message
+    }
+    group {
+      id
+      createdAt
+      name
+      description
+      slug
+      visibility
+      users {
+        user {
+          displayName
+        }
+        role
+      }
+    }
+  }
+}
+    `;
+
+export function useCreateGroupMutation() {
+  return Urql.useMutation<CreateGroupMutation, CreateGroupMutationVariables>(CreateGroupDocument);
+};
+export const UpdateGroupDocument = gql`
+    mutation updateGroup($id: Float!, $name: String, $description: String, $visibility: String) {
+  updateGroup(
+    id: $id
+    name: $name
+    description: $description
+    visibility: $visibility
+  ) {
+    errors {
+      field
+      message
+    }
+    group {
+      id
+      updatedAt
+      name
+      description
+      visibility
+    }
+  }
+}
+    `;
+
+export function useUpdateGroupMutation() {
+  return Urql.useMutation<UpdateGroupMutation, UpdateGroupMutationVariables>(UpdateGroupDocument);
+};
 export const MeDocument = gql`
     query me {
   me {
@@ -376,4 +531,54 @@ export const MeDocument = gql`
 
 export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
+};
+export const MyGroupsDocument = gql`
+    query myGroups($userId: Float!) {
+  myGroups(userId: $userId) {
+    id
+    group {
+      id
+      name
+      description
+      slug
+      visibility
+    }
+    role
+  }
+}
+    `;
+
+export function useMyGroupsQuery(options: Omit<Urql.UseQueryArgs<MyGroupsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<MyGroupsQuery>({ query: MyGroupsDocument, ...options });
+};
+export const OrganizationBySlugDocument = gql`
+    query organizationBySlug($slug: String!) {
+  groupBySlug(slug: $slug) {
+    id
+    name
+    description
+    visibility
+    users {
+      id
+      user {
+        id
+        displayName
+      }
+      role
+    }
+    posts {
+      id
+      title
+      updatedAt
+      description
+      author {
+        displayName
+      }
+    }
+  }
+}
+    `;
+
+export function useOrganizationBySlugQuery(options: Omit<Urql.UseQueryArgs<OrganizationBySlugQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<OrganizationBySlugQuery>({ query: OrganizationBySlugDocument, ...options });
 };
