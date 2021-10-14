@@ -311,12 +311,12 @@ export type MyGroupsQueryVariables = Exact<{
 
 export type MyGroupsQuery = { __typename?: 'Query', myGroups?: Maybe<Array<{ __typename?: 'GroupUser', id: number, role: string, group: { __typename?: 'Group', id: number, name: string, description: string, slug: string, visibility: string } }>> };
 
-export type OrganizationBySlugQueryVariables = Exact<{
+export type GroupBySlugQueryVariables = Exact<{
   slug: Scalars['String'];
 }>;
 
 
-export type OrganizationBySlugQuery = { __typename?: 'Query', groupBySlug?: Maybe<{ __typename?: 'Group', id: number, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', id: number, role: string, user: { __typename?: 'User', id: number, displayName: string } }>, posts?: Maybe<Array<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', displayName: string } }>> }> };
+export type GroupBySlugQuery = { __typename?: 'Query', groupBySlug?: Maybe<{ __typename?: 'Group', id: number, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', id: number, role: string, user: { __typename?: 'User', id: number, displayName: string } }>, posts?: Maybe<Array<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', displayName: string } }>> }> };
 
 export const RegUserFragmentDoc = gql`
     fragment RegUser on User {
@@ -551,8 +551,8 @@ export const MyGroupsDocument = gql`
 export function useMyGroupsQuery(options: Omit<Urql.UseQueryArgs<MyGroupsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<MyGroupsQuery>({ query: MyGroupsDocument, ...options });
 };
-export const OrganizationBySlugDocument = gql`
-    query organizationBySlug($slug: String!) {
+export const GroupBySlugDocument = gql`
+    query groupBySlug($slug: String!) {
   groupBySlug(slug: $slug) {
     id
     name
@@ -579,6 +579,6 @@ export const OrganizationBySlugDocument = gql`
 }
     `;
 
-export function useOrganizationBySlugQuery(options: Omit<Urql.UseQueryArgs<OrganizationBySlugQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<OrganizationBySlugQuery>({ query: OrganizationBySlugDocument, ...options });
+export function useGroupBySlugQuery(options: Omit<Urql.UseQueryArgs<GroupBySlugQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GroupBySlugQuery>({ query: GroupBySlugDocument, ...options });
 };

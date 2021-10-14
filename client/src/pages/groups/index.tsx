@@ -22,7 +22,7 @@ export const Groups: React.FC<indexProps> = ({}) => {
     console.error(error);
   }
 
-  groupList = data?.myGroups.map(({ id, group, role }, idx) => {
+  groupList = data?.myGroups?.map(({ id, group, role }, idx) => {
     return (
       <GroupCard
         key={`${id}-${idx}`}

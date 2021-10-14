@@ -27,7 +27,7 @@ export const MY_GROUPS = gql`
 `;
 
 export const GROUP_BY_SLUG = gql`
-  query organizationBySlug($slug: String!) {
+  query groupBySlug($slug: String!) {
     groupBySlug(slug: $slug) {
       id
       name
