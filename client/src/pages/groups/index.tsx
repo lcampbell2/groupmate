@@ -6,10 +6,10 @@ import { GroupCard } from "./GroupCard";
 interface indexProps {}
 
 export const Groups: React.FC<indexProps> = ({}) => {
-  const [{ data: user, fetching: loadingUser, error: userError }] =
+  const [{ data: userData, fetching: loadingUser, error: userError }] =
     useMeQuery();
   const [{ data, fetching, error }, _] = useMyGroupsQuery({
-    variables: { userId: user?.me?.id as number },
+    variables: { userId: userData?.me?.id as number },
   });
   let groupList = null;
 
@@ -21,8 +21,6 @@ export const Groups: React.FC<indexProps> = ({}) => {
     groupList = <Box>{JSON.stringify(error)}</Box>;
     console.error(error);
   }
-
-  // console.log(data);
 
   groupList = data?.myGroups.map(({ id, group, role }, idx) => {
     return (
