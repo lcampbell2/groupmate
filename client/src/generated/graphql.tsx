@@ -55,12 +55,11 @@ export type LoginInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   createGroup: GroupResponse;
-  createPost: Post;
+  createPost: PostResponse;
   forgotPassword: Scalars['Boolean'];
   login: UserRepsonse;
   logout: Scalars['Boolean'];
   register: UserRepsonse;
-  removePost: Scalars['Boolean'];
   removeUser: Scalars['Boolean'];
   resetPassword: UserRepsonse;
   updateDisplayName?: Maybe<UserRepsonse>;
@@ -77,6 +76,8 @@ export type MutationCreateGroupArgs = {
 
 
 export type MutationCreatePostArgs = {
+  description: Scalars['String'];
+  groupId: Scalars['Float'];
   title: Scalars['String'];
 };
 
@@ -93,11 +94,6 @@ export type MutationLoginArgs = {
 
 export type MutationRegisterArgs = {
   options: NewUserInput;
-};
-
-
-export type MutationRemovePostArgs = {
-  id: Scalars['Float'];
 };
 
 
@@ -142,6 +138,7 @@ export type MutationUpdatePasswordArgs = {
 
 
 export type MutationUpdatePostArgs = {
+  description?: Maybe<Scalars['String']>;
   id: Scalars['Float'];
   title?: Maybe<Scalars['String']>;
 };
@@ -168,6 +165,12 @@ export type Post = {
   id: Scalars['Int'];
   title: Scalars['String'];
   updatedAt: Scalars['String'];
+};
+
+export type PostResponse = {
+  __typename?: 'PostResponse';
+  errors?: Maybe<Array<FieldError>>;
+  post?: Maybe<Post>;
 };
 
 export type Query = {
@@ -214,6 +217,8 @@ export type UserRepsonse = {
 };
 
 export type RegUserFragment = { __typename?: 'User', id: number, email: string, displayName: string };
+
+export type RegPostFragment = { __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string } };
 
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
@@ -299,6 +304,24 @@ export type UpdateGroupMutationVariables = Exact<{
 
 export type UpdateGroupMutation = { __typename?: 'Mutation', updateGroup?: Maybe<{ __typename?: 'GroupResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, group?: Maybe<{ __typename?: 'Group', id: number, updatedAt: string, name: string, description: string, visibility: string }> }> };
 
+export type CreatePostMutationVariables = Exact<{
+  groupId: Scalars['Float'];
+  title: Scalars['String'];
+  description: Scalars['String'];
+}>;
+
+
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'PostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, post?: Maybe<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string } }> } };
+
+export type UpdatePostMutationVariables = Exact<{
+  id: Scalars['Float'];
+  title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+}>;
+
+
+export type UpdatePostMutation = { __typename?: 'Mutation', updatePost?: Maybe<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string } }> };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -316,13 +339,25 @@ export type GroupBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GroupBySlugQuery = { __typename?: 'Query', groupBySlug?: Maybe<{ __typename?: 'Group', id: number, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', id: number, role: string, user: { __typename?: 'User', id: number, displayName: string } }>, posts?: Maybe<Array<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', displayName: string } }>> }> };
+export type GroupBySlugQuery = { __typename?: 'Query', groupBySlug?: Maybe<{ __typename?: 'Group', id: number, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', id: number, role: string, user: { __typename?: 'User', id: number, displayName: string } }>, posts?: Maybe<Array<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string } }>> }> };
 
 export const RegUserFragmentDoc = gql`
     fragment RegUser on User {
   id
   email
   displayName
+}
+    `;
+export const RegPostFragmentDoc = gql`
+    fragment RegPost on Post {
+  id
+  title
+  updatedAt
+  description
+  author {
+    id
+    displayName
+  }
 }
     `;
 export const LoginDocument = gql`
@@ -521,6 +556,34 @@ export const UpdateGroupDocument = gql`
 export function useUpdateGroupMutation() {
   return Urql.useMutation<UpdateGroupMutation, UpdateGroupMutationVariables>(UpdateGroupDocument);
 };
+export const CreatePostDocument = gql`
+    mutation createPost($groupId: Float!, $title: String!, $description: String!) {
+  createPost(groupId: $groupId, title: $title, description: $description) {
+    errors {
+      field
+      message
+    }
+    post {
+      ...RegPost
+    }
+  }
+}
+    ${RegPostFragmentDoc}`;
+
+export function useCreatePostMutation() {
+  return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument);
+};
+export const UpdatePostDocument = gql`
+    mutation updatePost($id: Float!, $title: String, $description: String) {
+  updatePost(id: $id, title: $title, description: $description) {
+    ...RegPost
+  }
+}
+    ${RegPostFragmentDoc}`;
+
+export function useUpdatePostMutation() {
+  return Urql.useMutation<UpdatePostMutation, UpdatePostMutationVariables>(UpdatePostDocument);
+};
 export const MeDocument = gql`
     query me {
   me {
@@ -567,17 +630,11 @@ export const GroupBySlugDocument = gql`
       role
     }
     posts {
-      id
-      title
-      updatedAt
-      description
-      author {
-        displayName
-      }
+      ...RegPost
     }
   }
 }
-    `;
+    ${RegPostFragmentDoc}`;
 
 export function useGroupBySlugQuery(options: Omit<Urql.UseQueryArgs<GroupBySlugQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GroupBySlugQuery>({ query: GroupBySlugDocument, ...options });

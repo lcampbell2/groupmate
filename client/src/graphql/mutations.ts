@@ -1,5 +1,5 @@
 import { gql } from "@urql/core";
-import { REG_USER } from "./fragments";
+import { REG_USER, REG_POST } from "./fragments";
 
 export const LOGIN = gql`
   mutation login($email: String!, $password: String!) {
@@ -195,4 +195,32 @@ export const UPDATE_GROUP = gql`
       }
     }
   }
+`;
+
+export const CREATE_POST = gql`
+  mutation createPost(
+    $groupId: Float!
+    $title: String!
+    $description: String!
+  ) {
+    createPost(groupId: $groupId, title: $title, description: $description) {
+      errors {
+        field
+        message
+      }
+      post {
+        ...RegPost
+      }
+    }
+  }
+  ${REG_POST}
+`;
+
+export const UPDATE_POST = gql`
+  mutation updatePost($id: Float!, $title: String, $description: String) {
+    updatePost(id: $id, title: $title, description: $description) {
+      ...RegPost
+    }
+  }
+  ${REG_POST}
 `;

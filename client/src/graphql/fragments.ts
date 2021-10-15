@@ -7,3 +7,16 @@ export const REG_USER = gql`
     displayName
   }
 `;
+
+export const REG_POST = gql`
+  fragment RegPost on Post {
+    id
+    title
+    updatedAt
+    description
+    author {
+      id
+      displayName
+    }
+  }
+`;

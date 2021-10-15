@@ -1,5 +1,5 @@
 import { gql } from "@urql/core";
-import { REG_USER } from "./fragments";
+import { REG_USER, REG_POST } from "./fragments";
 
 export const ME = gql`
   query me {
@@ -42,14 +42,9 @@ export const GROUP_BY_SLUG = gql`
         role
       }
       posts {
-        id
-        title
-        updatedAt
-        description
-        author {
-          displayName
-        }
+        ...RegPost
       }
     }
   }
+  ${REG_POST}
 `;
