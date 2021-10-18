@@ -224,4 +224,88 @@ export class GroupResolver {
 
     return { group };
   }
+
+  @Mutation(() => GroupResponse)
+  async joinGroup(
+    @Arg("id") id: number,
+    @Ctx() { em, req }: MyContext
+  ): Promise<GroupResponse> {
+    const group = await em.findOne(Group, { id });
+    if (!group) {
+      return {
+        errors: [
+          {
+            field: "group",
+            message: "invalid group",
+          },
+        ],
+      };
+    }
+
+    const currentUser = await em.findOne(User, { id: req.session.userId });
+    if (!currentUser) {
+      return {
+        errors: [
+          {
+            field: "user",
+            message: "invalid user",
+          },
+        ],
+      };
+    }
+
+    const groupUsers = group.users.getItems();
+    for (let i = 0; i < groupUsers.length; i++) {
+      if (groupUsers[i].user.id === currentUser.id) {
+        return {
+          errors: [
+            {
+              field: "group user",
+              message: "User already in group",
+            },
+          ],
+        };
+      }
+    }
+
+    if (group.visibility !== "open") {
+      return {
+        errors: [
+          {
+            field: "group",
+            message: "group visibility not OPEN",
+          },
+        ],
+      };
+    }
+
+    const groupUser = em.create(GroupUser, {
+      user: currentUser,
+      group: group,
+      role: "read",
+    });
+
+    group.users.add(groupUser);
+    currentUser.groups.add(groupUser);
+
+    try {
+      await em.persistAndFlush(groupUser);
+    } catch (error) {
+      console.error(error);
+    }
+
+    try {
+      await em.persistAndFlush(group);
+    } catch (error) {
+      console.error(error);
+    }
+
+    try {
+      await em.persistAndFlush(currentUser);
+    } catch (error) {
+      console.error(error);
+    }
+
+    return { group };
+  }
 }

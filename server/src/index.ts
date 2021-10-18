@@ -16,16 +16,18 @@ import { GroupResolver } from "./resolvers/group";
 // import { Post } from "./entities/Post";
 // import { Group } from "./entities/Group";
 // import { GroupUser } from "./entities/GroupUser";
+// import { PostReply } from "./entities/PostReply";
 
 const main = async () => {
   const orm = await MikroORM.init(mikroOrmConfig);
 
   //    use to clear db
   // ====================================
+  // await orm.em.nativeDelete(PostReply, {});
   // await orm.em.nativeDelete(GroupUser, {});
+  // await orm.em.nativeDelete(Post, {});
   // await orm.em.nativeDelete(User, {});
   // await orm.em.nativeDelete(Group, {});
-  // await orm.em.nativeDelete(Post, {});
   // ====================================
 
   // await orm.getMigrator().up();
