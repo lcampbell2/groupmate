@@ -1,15 +1,15 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+  Collection,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryKey,
+  Property,
+} from "@mikro-orm/core";
 import { Field, Int, ObjectType } from "type-graphql";
 import { Group } from "./Group";
 import { User } from "./User";
-
-// @ObjectType()
-// class PostReply {
-//   @Field()
-//   replyAuthor: User;
-//   @Field()
-//   replyText: string;
-// }
+import { PostReply } from "./PostReply";
 
 @ObjectType()
 @Entity()
@@ -42,6 +42,7 @@ export class Post {
   @ManyToOne(() => Group)
   group: Group;
 
-  // replies, nullable: true
-  // [PostReply]
+  @Field(() => [PostReply], { nullable: true })
+  @OneToMany(() => PostReply, (pr: PostReply) => pr.post, { nullable: true })
+  replies = new Collection<PostReply>(this);
 }

@@ -56,6 +56,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createGroup: GroupResponse;
   createPost: PostResponse;
+  createReply: PostResponse;
   forgotPassword: Scalars['Boolean'];
   login: UserRepsonse;
   logout: Scalars['Boolean'];
@@ -79,6 +80,12 @@ export type MutationCreatePostArgs = {
   description: Scalars['String'];
   groupId: Scalars['Float'];
   title: Scalars['String'];
+};
+
+
+export type MutationCreateReplyArgs = {
+  id: Scalars['Float'];
+  message: Scalars['String'];
 };
 
 
@@ -163,7 +170,18 @@ export type Post = {
   description: Scalars['String'];
   group: Group;
   id: Scalars['Int'];
+  replies?: Maybe<Array<PostReply>>;
   title: Scalars['String'];
+  updatedAt: Scalars['String'];
+};
+
+export type PostReply = {
+  __typename?: 'PostReply';
+  author: User;
+  createdAt: Scalars['String'];
+  id: Scalars['Int'];
+  message: Scalars['String'];
+  post: Post;
   updatedAt: Scalars['String'];
 };
 
@@ -218,7 +236,7 @@ export type UserRepsonse = {
 
 export type RegUserFragment = { __typename?: 'User', id: number, email: string, displayName: string };
 
-export type RegPostFragment = { __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string } };
+export type RegPostFragment = { __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string }, replies?: Maybe<Array<{ __typename?: 'PostReply', id: number, updatedAt: string, message: string, author: { __typename?: 'User', id: number, displayName: string } }>> };
 
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
@@ -311,7 +329,7 @@ export type CreatePostMutationVariables = Exact<{
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'PostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, post?: Maybe<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string } }> } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'PostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, post?: Maybe<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string }, replies?: Maybe<Array<{ __typename?: 'PostReply', id: number, updatedAt: string, message: string, author: { __typename?: 'User', id: number, displayName: string } }>> }> } };
 
 export type UpdatePostMutationVariables = Exact<{
   id: Scalars['Float'];
@@ -320,7 +338,15 @@ export type UpdatePostMutationVariables = Exact<{
 }>;
 
 
-export type UpdatePostMutation = { __typename?: 'Mutation', updatePost?: Maybe<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string } }> };
+export type UpdatePostMutation = { __typename?: 'Mutation', updatePost?: Maybe<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string }, replies?: Maybe<Array<{ __typename?: 'PostReply', id: number, updatedAt: string, message: string, author: { __typename?: 'User', id: number, displayName: string } }>> }> };
+
+export type CreateReplyMutationVariables = Exact<{
+  postId: Scalars['Float'];
+  replyMessage: Scalars['String'];
+}>;
+
+
+export type CreateReplyMutation = { __typename?: 'Mutation', createReply: { __typename?: 'PostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, post?: Maybe<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string }, replies?: Maybe<Array<{ __typename?: 'PostReply', id: number, updatedAt: string, message: string, author: { __typename?: 'User', id: number, displayName: string } }>> }> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -339,7 +365,7 @@ export type GroupBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GroupBySlugQuery = { __typename?: 'Query', groupBySlug?: Maybe<{ __typename?: 'Group', id: number, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', id: number, role: string, user: { __typename?: 'User', id: number, displayName: string } }>, posts?: Maybe<Array<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string } }>> }> };
+export type GroupBySlugQuery = { __typename?: 'Query', groupBySlug?: Maybe<{ __typename?: 'Group', id: number, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', id: number, role: string, user: { __typename?: 'User', id: number, displayName: string } }>, posts?: Maybe<Array<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string }, replies?: Maybe<Array<{ __typename?: 'PostReply', id: number, updatedAt: string, message: string, author: { __typename?: 'User', id: number, displayName: string } }>> }>> }> };
 
 export const RegUserFragmentDoc = gql`
     fragment RegUser on User {
@@ -357,6 +383,15 @@ export const RegPostFragmentDoc = gql`
   author {
     id
     displayName
+  }
+  replies {
+    id
+    updatedAt
+    message
+    author {
+      id
+      displayName
+    }
   }
 }
     `;
@@ -583,6 +618,23 @@ export const UpdatePostDocument = gql`
 
 export function useUpdatePostMutation() {
   return Urql.useMutation<UpdatePostMutation, UpdatePostMutationVariables>(UpdatePostDocument);
+};
+export const CreateReplyDocument = gql`
+    mutation createReply($postId: Float!, $replyMessage: String!) {
+  createReply(id: $postId, message: $replyMessage) {
+    errors {
+      field
+      message
+    }
+    post {
+      ...RegPost
+    }
+  }
+}
+    ${RegPostFragmentDoc}`;
+
+export function useCreateReplyMutation() {
+  return Urql.useMutation<CreateReplyMutation, CreateReplyMutationVariables>(CreateReplyDocument);
 };
 export const MeDocument = gql`
     query me {

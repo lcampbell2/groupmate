@@ -5,6 +5,7 @@ import { User } from "./entities/User";
 import { __prod__ } from "./constants";
 import { Group } from "./entities/Group";
 import { GroupUser } from "./entities/GroupUser";
+import { PostReply } from "./entities/PostReply";
 
 export default {
   migrations: {
@@ -12,7 +13,7 @@ export default {
     pattern: /^[\w-]+\d+\.[tj]s$/, // regex pattern for the migration files
     disableForeignKeys: false,
   },
-  entities: [Post, User, Group, GroupUser],
+  entities: [Post, User, Group, GroupUser, PostReply],
   dbName: "capstone",
   port: 5433,
   type: "postgresql",

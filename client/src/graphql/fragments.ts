@@ -18,5 +18,14 @@ export const REG_POST = gql`
       id
       displayName
     }
+    replies {
+      id
+      updatedAt
+      message
+      author {
+        id
+        displayName
+      }
+    }
   }
 `;

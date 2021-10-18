@@ -224,3 +224,18 @@ export const UPDATE_POST = gql`
   }
   ${REG_POST}
 `;
+
+export const CREATE_REPLY = gql`
+  mutation createReply($postId: Float!, $replyMessage: String!) {
+    createReply(id: $postId, message: $replyMessage) {
+      errors {
+        field
+        message
+      }
+      post {
+        ...RegPost
+      }
+    }
+  }
+  ${REG_POST}
+`;

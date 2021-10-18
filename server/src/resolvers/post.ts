@@ -12,6 +12,7 @@ import {
 } from "type-graphql";
 import { User } from "../entities/User";
 import { Group } from "../entities/Group";
+import { PostReply } from "../entities/PostReply";
 
 @ObjectType()
 class PostResponse {
@@ -158,4 +159,63 @@ export class PostResolver {
   //   em.nativeDelete(Post, { id });
   //   return true;
   // }
+
+  @Mutation(() => PostResponse)
+  async createReply(
+    @Arg("id") id: number,
+    @Arg("message", () => String) message: String,
+    @Ctx() { em, req }: MyContext
+  ): Promise<PostResponse> {
+    const post = await em.findOne(Post, { id });
+    if (!post) {
+      return {
+        errors: [
+          {
+            field: "post",
+            message: "invalid post",
+          },
+        ],
+      };
+    }
+
+    const author = await em.findOne(User, { id: req.session.userId });
+    if (!author) {
+      return {
+        errors: [
+          {
+            field: "user",
+            message: "invalid user",
+          },
+        ],
+      };
+    }
+
+    if (message.length < 1) {
+      return {
+        errors: [
+          {
+            field: "reply",
+            message: "post reply empty",
+          },
+        ],
+      };
+    }
+
+    const reply = em.create(PostReply, { message, author, post });
+    post.replies.add(reply);
+
+    try {
+      await em.persistAndFlush(post);
+    } catch (err) {
+      console.error(err);
+    }
+
+    try {
+      await em.persistAndFlush(reply);
+    } catch (err) {
+      console.error(err);
+    }
+
+    return { post };
+  }
 }

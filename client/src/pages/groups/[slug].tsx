@@ -80,10 +80,12 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
       return (
         <Box key={post.id}>
           <TextPost
+            id={post.id}
             title={post.title}
             description={post.description}
             date={post.updatedAt}
             authorName={post.author.displayName}
+            replies={post.replies}
           />
           <Divider borderBottomColor='gray.900' />
         </Box>
