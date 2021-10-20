@@ -48,3 +48,19 @@ export const GROUP_BY_SLUG = gql`
   }
   ${REG_POST}
 `;
+
+export const PUBLIC_GROUPS = gql`
+  query publicGroups {
+    publicGroups {
+      id
+      name
+      description
+      visibility
+      users {
+        group {
+          id
+        }
+      }
+    }
+  }
+`;

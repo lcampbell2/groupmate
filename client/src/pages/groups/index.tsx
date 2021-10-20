@@ -1,7 +1,7 @@
 import { Box, Heading } from "@chakra-ui/react";
 import React from "react";
 import { useMeQuery, useMyGroupsQuery } from "../../generated/graphql";
-import { GroupCard } from "./GroupCard";
+import { GroupCard } from "../../components/group/GroupCard";
 
 interface indexProps {}
 

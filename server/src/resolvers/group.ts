@@ -73,6 +73,13 @@ export class GroupResolver {
     return group;
   }
 
+  @Query(() => [Group], { nullable: true })
+  async publicGroups(@Ctx() { em }: MyContext): Promise<Group[]> {
+    const openGroups = await em.find(Group, { visibility: "open" });
+    const closedGroups = await em.find(Group, { visibility: "closed" });
+    return openGroups.concat(closedGroups);
+  }
+
   // mutations
   @Mutation(() => GroupResponse)
   async createGroup(

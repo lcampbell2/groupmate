@@ -58,6 +58,7 @@ export type Mutation = {
   createPost: PostResponse;
   createReply: PostResponse;
   forgotPassword: Scalars['Boolean'];
+  joinGroup: GroupResponse;
   login: UserRepsonse;
   logout: Scalars['Boolean'];
   register: UserRepsonse;
@@ -91,6 +92,11 @@ export type MutationCreateReplyArgs = {
 
 export type MutationForgotPasswordArgs = {
   email: Scalars['String'];
+};
+
+
+export type MutationJoinGroupArgs = {
+  id: Scalars['Float'];
 };
 
 
@@ -199,6 +205,7 @@ export type Query = {
   myGroups?: Maybe<Array<GroupUser>>;
   post?: Maybe<Post>;
   posts: Array<Post>;
+  publicGroups?: Maybe<Array<Group>>;
   users: Array<User>;
 };
 
@@ -348,6 +355,13 @@ export type CreateReplyMutationVariables = Exact<{
 
 export type CreateReplyMutation = { __typename?: 'Mutation', createReply: { __typename?: 'PostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, post?: Maybe<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string }, replies?: Maybe<Array<{ __typename?: 'PostReply', id: number, updatedAt: string, message: string, author: { __typename?: 'User', id: number, displayName: string } }>> }> } };
 
+export type JoinGroupMutationVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type JoinGroupMutation = { __typename?: 'Mutation', joinGroup: { __typename?: 'GroupResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, group?: Maybe<{ __typename?: 'Group', id: number, name: string, users: Array<{ __typename?: 'GroupUser', role: string, user: { __typename?: 'User', id: number, email: string, displayName: string } }> }> } };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -366,6 +380,11 @@ export type GroupBySlugQueryVariables = Exact<{
 
 
 export type GroupBySlugQuery = { __typename?: 'Query', groupBySlug?: Maybe<{ __typename?: 'Group', id: number, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', id: number, role: string, user: { __typename?: 'User', id: number, displayName: string } }>, posts?: Maybe<Array<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string }, replies?: Maybe<Array<{ __typename?: 'PostReply', id: number, updatedAt: string, message: string, author: { __typename?: 'User', id: number, displayName: string } }>> }>> }> };
+
+export type PublicGroupsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PublicGroupsQuery = { __typename?: 'Query', publicGroups?: Maybe<Array<{ __typename?: 'Group', id: number, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', group: { __typename?: 'Group', id: number } }> }>> };
 
 export const RegUserFragmentDoc = gql`
     fragment RegUser on User {
@@ -636,6 +655,32 @@ export const CreateReplyDocument = gql`
 export function useCreateReplyMutation() {
   return Urql.useMutation<CreateReplyMutation, CreateReplyMutationVariables>(CreateReplyDocument);
 };
+export const JoinGroupDocument = gql`
+    mutation joinGroup($id: Float!) {
+  joinGroup(id: $id) {
+    errors {
+      field
+      message
+    }
+    group {
+      id
+      name
+      users {
+        user {
+          id
+          email
+          displayName
+        }
+        role
+      }
+    }
+  }
+}
+    `;
+
+export function useJoinGroupMutation() {
+  return Urql.useMutation<JoinGroupMutation, JoinGroupMutationVariables>(JoinGroupDocument);
+};
 export const MeDocument = gql`
     query me {
   me {
@@ -690,4 +735,23 @@ export const GroupBySlugDocument = gql`
 
 export function useGroupBySlugQuery(options: Omit<Urql.UseQueryArgs<GroupBySlugQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GroupBySlugQuery>({ query: GroupBySlugDocument, ...options });
+};
+export const PublicGroupsDocument = gql`
+    query publicGroups {
+  publicGroups {
+    id
+    name
+    description
+    visibility
+    users {
+      group {
+        id
+      }
+    }
+  }
+}
+    `;
+
+export function usePublicGroupsQuery(options: Omit<Urql.UseQueryArgs<PublicGroupsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<PublicGroupsQuery>({ query: PublicGroupsDocument, ...options });
 };

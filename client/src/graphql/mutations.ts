@@ -239,3 +239,26 @@ export const CREATE_REPLY = gql`
   }
   ${REG_POST}
 `;
+
+export const JOIN_GROUP = gql`
+  mutation joinGroup($id: Float!) {
+    joinGroup(id: $id) {
+      errors {
+        field
+        message
+      }
+      group {
+        id
+        name
+        users {
+          user {
+            id
+            email
+            displayName
+          }
+          role
+        }
+      }
+    }
+  }
+`;

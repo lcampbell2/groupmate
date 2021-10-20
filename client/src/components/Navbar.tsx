@@ -34,7 +34,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
         <NextLink href='/schedule'>
           <Link>My Schedule</Link>
         </NextLink>
-        <NextLink href='/group-search'>
+        <NextLink href='/groups/search'>
           <Link>Group Search</Link>
         </NextLink>
       </>
