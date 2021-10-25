@@ -1,5 +1,5 @@
 import { User } from "../entities/User";
-import { FieldError, MyContext } from "../types";
+import { FieldError, MyContext, BooleanResponse } from "../types";
 import {
   Resolver,
   Arg,
@@ -44,12 +44,6 @@ class UserRepsonse {
 
   @Field(() => User, { nullable: true })
   user?: User;
-}
-
-@ObjectType()
-class BooleanResponse {
-  @Field(() => Boolean)
-  status: Boolean;
 }
 
 @Resolver()
@@ -581,7 +575,7 @@ export class UserResolver {
     @Arg("groupId") groupId: number,
     @Arg("newRole") newRole: UserRole,
     @Ctx() { em, req }: MyContext
-  ) {
+  ): Promise<BooleanResponse> {
     const group = await em.findOne(Group, { id: groupId });
     if (!group) {
       console.error("invalid group");

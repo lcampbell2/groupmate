@@ -1,5 +1,5 @@
 import { Post } from "../entities/Post";
-import { FieldError, MyContext } from "../types";
+import { BooleanResponse, FieldError, MyContext } from "../types";
 import {
   Resolver,
   Query,
@@ -151,15 +151,6 @@ export class PostResolver {
     return post;
   }
 
-  // @Mutation(() => Boolean)
-  // async removePost(
-  //   @Arg("id") id: number,
-  //   @Ctx() { em }: MyContext
-  // ): Promise<boolean> {
-  //   em.nativeDelete(Post, { id });
-  //   return true;
-  // }
-
   @Mutation(() => PostResponse)
   async createReply(
     @Arg("id") id: number,
@@ -217,5 +208,15 @@ export class PostResolver {
     }
 
     return { post };
+  }
+
+  // TOOD: removePost
+  @Mutation(() => BooleanResponse)
+  async removePost(
+    @Arg("id") id: number,
+    @Ctx() { em }: MyContext
+  ): Promise<BooleanResponse> {
+    em.nativeDelete(Post, { id });
+    return { status: true };
   }
 }

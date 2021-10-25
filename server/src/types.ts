@@ -17,3 +17,9 @@ export class FieldError {
   @Field()
   message: string;
 }
+
+@ObjectType()
+export class BooleanResponse {
+  @Field(() => Boolean)
+  status: Boolean;
+}

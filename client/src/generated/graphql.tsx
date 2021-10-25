@@ -68,6 +68,7 @@ export type Mutation = {
   login: UserRepsonse;
   logout: Scalars['Boolean'];
   register: UserRepsonse;
+  removePost: BooleanResponse;
   removeUser: Scalars['Boolean'];
   resetPassword: UserRepsonse;
   updateDisplayName?: Maybe<UserRepsonse>;
@@ -120,6 +121,11 @@ export type MutationLoginArgs = {
 
 export type MutationRegisterArgs = {
   options: NewUserInput;
+};
+
+
+export type MutationRemovePostArgs = {
+  id: Scalars['Float'];
 };
 
 
@@ -395,6 +401,13 @@ export type ChangeUserRoleMutationVariables = Exact<{
 
 
 export type ChangeUserRoleMutation = { __typename?: 'Mutation', changeUserRole: { __typename?: 'BooleanResponse', status: boolean } };
+
+export type RemovePostMutationVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type RemovePostMutation = { __typename?: 'Mutation', removePost: { __typename?: 'BooleanResponse', status: boolean } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -739,6 +752,17 @@ export const ChangeUserRoleDocument = gql`
 
 export function useChangeUserRoleMutation() {
   return Urql.useMutation<ChangeUserRoleMutation, ChangeUserRoleMutationVariables>(ChangeUserRoleDocument);
+};
+export const RemovePostDocument = gql`
+    mutation removePost($id: Float!) {
+  removePost(id: $id) {
+    status
+  }
+}
+    `;
+
+export function useRemovePostMutation() {
+  return Urql.useMutation<RemovePostMutation, RemovePostMutationVariables>(RemovePostDocument);
 };
 export const MeDocument = gql`
     query me {

@@ -274,3 +274,11 @@ export const CHANGE_USER_ROLE = gql`
     }
   }
 `;
+
+export const REMOVE_POST = gql`
+  mutation removePost($id: Float!) {
+    removePost(id: $id) {
+      status
+    }
+  }
+`;

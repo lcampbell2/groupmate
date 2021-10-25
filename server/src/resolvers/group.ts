@@ -77,6 +77,9 @@ export class GroupResolver {
   async publicGroups(@Ctx() { em }: MyContext): Promise<Group[]> {
     const openGroups = await em.find(Group, { visibility: "open" });
     const closedGroups = await em.find(Group, { visibility: "closed" });
+
+    // TODO: add filtering options
+
     return openGroups.concat(closedGroups);
   }
 
@@ -315,4 +318,8 @@ export class GroupResolver {
 
     return { group };
   }
+
+  // TODO: requestGroupInvite
+
+  // TODO: inviteUserToGroup
 }
