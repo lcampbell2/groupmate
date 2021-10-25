@@ -83,6 +83,62 @@ export class UserResolver {
     return user;
   }
 
+  @Query(() => Boolean)
+  async isUserAdmin(
+    @Arg("groupId") groupId: number,
+    @Ctx() { em, req }: MyContext
+  ) {
+    const user = await em.findOne(User, { id: req.session.userId });
+    if (!user) {
+      console.error("invalid user");
+      return false;
+    }
+    const group = await em.findOne(Group, { id: groupId });
+    if (!group) {
+      console.error("invalid group");
+      return false;
+    }
+    const groupUser = await em.findOne(GroupUser, { user, group });
+    if (!groupUser) {
+      console.error("invalid group user");
+      return false;
+    }
+
+    if (groupUser.role === "admin") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @Query(() => Boolean)
+  async isUserOwner(
+    @Arg("groupId") groupId: number,
+    @Ctx() { em, req }: MyContext
+  ) {
+    const user = await em.findOne(User, { id: req.session.userId });
+    if (!user) {
+      console.error("invalid user");
+      return false;
+    }
+    const group = await em.findOne(Group, { id: groupId });
+    if (!group) {
+      console.error("invalid group");
+      return false;
+    }
+    const groupUser = await em.findOne(GroupUser, { user, group });
+    if (!groupUser) {
+      console.error("invalid group user");
+      return false;
+    }
+
+    if (groupUser.role === "owner") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // mutations
   @Mutation(() => UserRepsonse)
   async register(

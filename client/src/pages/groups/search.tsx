@@ -24,6 +24,7 @@ export const GroupSearch: React.FC<searchProps> = ({}) => {
           name={group.name}
           description={group.description}
           visibility={group.visibility}
+          users={group.users.length}
         />
         <Divider borderBottomColor='gray.900' />
       </Box>

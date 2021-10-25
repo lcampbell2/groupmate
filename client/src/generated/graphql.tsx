@@ -14,6 +14,11 @@ export type Scalars = {
   Float: number;
 };
 
+export type BooleanResponse = {
+  __typename?: 'BooleanResponse';
+  status: Scalars['Boolean'];
+};
+
 export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
@@ -54,6 +59,7 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  changeUserRole: BooleanResponse;
   createGroup: GroupResponse;
   createPost: PostResponse;
   createReply: PostResponse;
@@ -69,6 +75,13 @@ export type Mutation = {
   updateGroup?: Maybe<GroupResponse>;
   updatePassword?: Maybe<UserRepsonse>;
   updatePost?: Maybe<Post>;
+};
+
+
+export type MutationChangeUserRoleArgs = {
+  groupId: Scalars['Float'];
+  newRole: Scalars['String'];
+  userId: Scalars['Float'];
 };
 
 
@@ -201,6 +214,8 @@ export type Query = {
   __typename?: 'Query';
   groupBySlug?: Maybe<Group>;
   groups: Array<Group>;
+  isUserAdmin: Scalars['Boolean'];
+  isUserOwner: Scalars['Boolean'];
   me?: Maybe<User>;
   myGroups?: Maybe<Array<GroupUser>>;
   post?: Maybe<Post>;
@@ -212,6 +227,16 @@ export type Query = {
 
 export type QueryGroupBySlugArgs = {
   slug: Scalars['String'];
+};
+
+
+export type QueryIsUserAdminArgs = {
+  groupId: Scalars['Float'];
+};
+
+
+export type QueryIsUserOwnerArgs = {
+  groupId: Scalars['Float'];
 };
 
 
@@ -362,6 +387,15 @@ export type JoinGroupMutationVariables = Exact<{
 
 export type JoinGroupMutation = { __typename?: 'Mutation', joinGroup: { __typename?: 'GroupResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, group?: Maybe<{ __typename?: 'Group', id: number, name: string, users: Array<{ __typename?: 'GroupUser', role: string, user: { __typename?: 'User', id: number, email: string, displayName: string } }> }> } };
 
+export type ChangeUserRoleMutationVariables = Exact<{
+  userId: Scalars['Float'];
+  groupUser: Scalars['Float'];
+  newRole: Scalars['String'];
+}>;
+
+
+export type ChangeUserRoleMutation = { __typename?: 'Mutation', changeUserRole: { __typename?: 'BooleanResponse', status: boolean } };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -385,6 +419,20 @@ export type PublicGroupsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type PublicGroupsQuery = { __typename?: 'Query', publicGroups?: Maybe<Array<{ __typename?: 'Group', id: number, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', group: { __typename?: 'Group', id: number } }> }>> };
+
+export type IsUserAdminQueryVariables = Exact<{
+  groupId: Scalars['Float'];
+}>;
+
+
+export type IsUserAdminQuery = { __typename?: 'Query', isUserAdmin: boolean };
+
+export type IsUserOwnerQueryVariables = Exact<{
+  groupId: Scalars['Float'];
+}>;
+
+
+export type IsUserOwnerQuery = { __typename?: 'Query', isUserOwner: boolean };
 
 export const RegUserFragmentDoc = gql`
     fragment RegUser on User {
@@ -681,6 +729,17 @@ export const JoinGroupDocument = gql`
 export function useJoinGroupMutation() {
   return Urql.useMutation<JoinGroupMutation, JoinGroupMutationVariables>(JoinGroupDocument);
 };
+export const ChangeUserRoleDocument = gql`
+    mutation changeUserRole($userId: Float!, $groupUser: Float!, $newRole: String!) {
+  changeUserRole(userId: $userId, groupId: $groupUser, newRole: $newRole) {
+    status
+  }
+}
+    `;
+
+export function useChangeUserRoleMutation() {
+  return Urql.useMutation<ChangeUserRoleMutation, ChangeUserRoleMutationVariables>(ChangeUserRoleDocument);
+};
 export const MeDocument = gql`
     query me {
   me {
@@ -754,4 +813,22 @@ export const PublicGroupsDocument = gql`
 
 export function usePublicGroupsQuery(options: Omit<Urql.UseQueryArgs<PublicGroupsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<PublicGroupsQuery>({ query: PublicGroupsDocument, ...options });
+};
+export const IsUserAdminDocument = gql`
+    query isUserAdmin($groupId: Float!) {
+  isUserAdmin(groupId: $groupId)
+}
+    `;
+
+export function useIsUserAdminQuery(options: Omit<Urql.UseQueryArgs<IsUserAdminQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<IsUserAdminQuery>({ query: IsUserAdminDocument, ...options });
+};
+export const IsUserOwnerDocument = gql`
+    query isUserOwner($groupId: Float!) {
+  isUserOwner(groupId: $groupId)
+}
+    `;
+
+export function useIsUserOwnerQuery(options: Omit<Urql.UseQueryArgs<IsUserOwnerQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<IsUserOwnerQuery>({ query: IsUserOwnerDocument, ...options });
 };

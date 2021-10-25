@@ -64,3 +64,15 @@ export const PUBLIC_GROUPS = gql`
     }
   }
 `;
+
+export const IS_USER_ADMIN = gql`
+  query isUserAdmin($groupId: Float!) {
+    isUserAdmin(groupId: $groupId)
+  }
+`;
+
+export const IS_USER_OWNER = gql`
+  query isUserOwner($groupId: Float!) {
+    isUserOwner(groupId: $groupId)
+  }
+`;

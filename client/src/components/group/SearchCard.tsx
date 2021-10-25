@@ -8,6 +8,7 @@ interface SearchCardProps {
   name: string;
   description: string;
   visibility: string;
+  users: number;
 }
 
 export const SearchCard: React.FC<SearchCardProps> = ({
@@ -15,6 +16,7 @@ export const SearchCard: React.FC<SearchCardProps> = ({
   name,
   description,
   visibility,
+  users,
 }) => {
   const [_, joinGroup] = useJoinGroupMutation();
   const toast = useToast();
@@ -76,6 +78,14 @@ export const SearchCard: React.FC<SearchCardProps> = ({
         align='center'
       >
         <Text fontWeight='semibold'>{description}</Text>
+      </Box>
+      <Box
+        // flexBasis={{ md: "7em" }}
+        mr={{ md: "1em" }}
+        // minWidth={{ md: "2em" }}
+        align='center'
+      >
+        <Text fontWeight='semibold'>Total users: {users}</Text>
       </Box>
       {visibility === "open" ? (
         <Button onClick={handleJoin}>Join</Button>
