@@ -262,3 +262,15 @@ export const JOIN_GROUP = gql`
     }
   }
 `;
+
+export const CHANGE_USER_ROLE = gql`
+  mutation changeUserRole(
+    $userId: Float!
+    $groupUser: Float!
+    $newRole: String!
+  ) {
+    changeUserRole(userId: $userId, groupId: $groupUser, newRole: $newRole) {
+      status
+    }
+  }
+`;

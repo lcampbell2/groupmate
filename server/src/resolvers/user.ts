@@ -13,6 +13,9 @@ import {
 import argon2 from "argon2";
 import { sendEmail } from "../utils/sendEmail";
 import { v4 } from "uuid";
+import { UserRole } from "../enums";
+import { GroupUser } from "../entities/GroupUser";
+import { Group } from "../entities/Group";
 
 @InputType()
 class LoginInput {
@@ -41,6 +44,12 @@ class UserRepsonse {
 
   @Field(() => User, { nullable: true })
   user?: User;
+}
+
+@ObjectType()
+class BooleanResponse {
+  @Field(() => Boolean)
+  status: Boolean;
 }
 
 @Resolver()
@@ -508,5 +517,67 @@ export class UserResolver {
     await em.persistAndFlush(user);
 
     return { user };
+  }
+
+  @Mutation(() => BooleanResponse)
+  async changeUserRole(
+    @Arg("userId") userId: number,
+    @Arg("groupId") groupId: number,
+    @Arg("newRole") newRole: UserRole,
+    @Ctx() { em, req }: MyContext
+  ) {
+    const group = await em.findOne(Group, { id: groupId });
+    if (!group) {
+      console.error("invalid group");
+      return { status: false };
+    }
+
+    // see if currentUser is an admin
+    const currentUser = await em.findOne(User, { id: req.session.userId });
+    if (!currentUser) {
+      console.error("invalid user");
+      return { status: false };
+    }
+    const groupAdmin = await em.findOne(GroupUser, {
+      user: currentUser,
+      group,
+    });
+    if (
+      !groupAdmin ||
+      (groupAdmin.role !== "admin" && groupAdmin.role !== "owner")
+    ) {
+      console.error("current user is NOT a group admin");
+      return { status: false };
+    }
+
+    // get user
+    const user = await em.findOne(User, { id: userId });
+    if (!user) {
+      console.error("invalid user");
+      return { status: false };
+    }
+    const groupUser = await em.findOne(GroupUser, { user, group });
+    if (!groupUser) {
+      console.error("invalid group user");
+      return { status: false };
+    }
+
+    if (!Object.values(UserRole).includes(newRole)) {
+      console.error("invalid user role value");
+      return { status: false };
+    }
+
+    if (newRole === "owner") {
+      console.error("Only one group owner allowed");
+      return { status: false };
+    }
+
+    if (newRole !== groupUser.role && newRole.length > 1) {
+      groupUser.role = newRole;
+      return { status: true };
+    }
+
+    console.error("Error");
+    return { status: false };
   }
 }

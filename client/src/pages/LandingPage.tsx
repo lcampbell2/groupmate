@@ -17,7 +17,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({}) => {
       <Heading textAlign='center'>{welcomeMessage}</Heading>
       <Button
         onClick={() => {
-          router.push("/groups/create");
+          data?.me ? router.push("/groups/create") : router.push("/register");
         }}
       >
         Create Group
