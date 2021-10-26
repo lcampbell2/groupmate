@@ -53,7 +53,11 @@ export class GroupResolver {
     @Arg("userId") userId: number,
     @Ctx() { em }: MyContext
   ): Promise<Collection<GroupUser> | null> {
-    const currentUser = await em.findOne(User, { id: userId });
+    const currentUser = await em.findOne(
+      User,
+      { id: userId },
+      { orderBy: { slug: "asc" } }
+    );
     if (!currentUser) {
       return null;
     }
@@ -75,12 +79,15 @@ export class GroupResolver {
 
   @Query(() => [Group], { nullable: true })
   async publicGroups(@Ctx() { em }: MyContext): Promise<Group[]> {
-    const openGroups = await em.find(Group, { visibility: "open" });
-    const closedGroups = await em.find(Group, { visibility: "closed" });
+    const publicGroups = await em.find(
+      Group,
+      {
+        $not: { visibility: "private" },
+      },
+      { orderBy: { slug: "asc" } }
+    );
 
-    // TODO: add filtering options
-
-    return openGroups.concat(closedGroups);
+    return publicGroups;
   }
 
   // mutations

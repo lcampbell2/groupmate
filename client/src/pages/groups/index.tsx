@@ -1,5 +1,5 @@
-import { Box, Heading } from "@chakra-ui/react";
-import React from "react";
+import { Box, Heading, Input } from "@chakra-ui/react";
+import React, { useState } from "react";
 import { useMeQuery, useMyGroupsQuery } from "../../generated/graphql";
 import { GroupCard } from "../../components/group/GroupCard";
 
@@ -11,6 +11,7 @@ export const Groups: React.FC<indexProps> = ({}) => {
   const [{ data, fetching, error }, _] = useMyGroupsQuery({
     variables: { userId: userData?.me?.id as number },
   });
+  const [searchTerm, setSearchTerm] = useState("");
   let groupList = null;
 
   if (fetching || loadingUser) {
@@ -22,7 +23,11 @@ export const Groups: React.FC<indexProps> = ({}) => {
     console.error(error);
   }
 
-  groupList = data?.myGroups?.map(({ id, group, role }, idx) => {
+  const filteredList = data?.myGroups?.filter(({ group }) => {
+    return group.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
+  });
+
+  groupList = filteredList?.map(({ id, group, role }, idx) => {
     return (
       <GroupCard
         key={`${id}-${idx}`}
@@ -39,6 +44,10 @@ export const Groups: React.FC<indexProps> = ({}) => {
       <Heading textAlign='center' mb='4'>
         My Groups
       </Heading>
+      <Input
+        placeholder='Search for groups'
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
       {groupList}
     </Box>
   );
