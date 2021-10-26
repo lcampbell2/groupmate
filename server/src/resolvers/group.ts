@@ -1,4 +1,4 @@
-import { FieldError, MyContext } from "../types";
+import { BooleanResponse, FieldError, MyContext } from "../types";
 import {
   Resolver,
   Ctx,
@@ -10,7 +10,7 @@ import {
   Arg,
 } from "type-graphql";
 import { Group } from "../entities/Group";
-import { GroupVisibility } from "../enums";
+import { GroupVisibility, UserRole } from "../enums";
 import { slugify } from "../utils/slugify";
 import { User } from "../entities/User";
 import { GroupUser } from "../entities/GroupUser";
@@ -327,6 +327,104 @@ export class GroupResolver {
   }
 
   // TODO: requestGroupInvite
+  @Mutation(() => BooleanResponse)
+  async requestGroupInvite(
+    @Ctx() { em, req }: MyContext
+  ): Promise<BooleanResponse> {
+    const currentUser = await em.findOne(User, { id: req.session.userId });
+    if (!currentUser) {
+      return {
+        status: false,
+      };
+    }
 
-  // TODO: inviteUserToGroup
+    return { status: true };
+  }
+
+  @Mutation(() => BooleanResponse)
+  async inviteUserToGroup(
+    @Arg("groupId") groupId: number,
+    @Arg("email") email: string,
+    @Arg("role") role: UserRole,
+    @Ctx() { em, req }: MyContext
+  ): Promise<BooleanResponse> {
+    const currentUser = await em.findOne(User, { id: req.session.userId });
+    if (!currentUser) {
+      console.error("invalid user");
+      return {
+        status: false,
+      };
+    }
+
+    const group = await em.findOne(Group, { id: groupId });
+    if (!group) {
+      console.error("invalid group");
+      return {
+        status: false,
+      };
+    }
+
+    const currentGroupUser = await em.findOne(GroupUser, {
+      user: currentUser,
+      group,
+    });
+    if (!currentGroupUser) {
+      console.error("invalid group user");
+      return {
+        status: false,
+      };
+    }
+
+    if (currentGroupUser.role !== "admin") {
+      console.error("Current user is not admin");
+      return {
+        status: false,
+      };
+    }
+
+    const invitedUser = await em.findOne(User, { email });
+    if (!invitedUser) {
+      console.error("invalid user");
+      return {
+        status: false,
+      };
+    }
+
+    const groupUsers = group.users.getItems();
+    for (let i = 0; i < groupUsers.length; i++) {
+      if (groupUsers[i].user.id === invitedUser.id) {
+        console.error("Invited user already in group");
+        return { status: false };
+      }
+    }
+
+    const invitedGroupUser = em.create(GroupUser, {
+      user: invitedUser,
+      group: group,
+      role,
+    });
+
+    group.users.add(invitedGroupUser);
+    invitedUser.groups.add(invitedGroupUser);
+
+    try {
+      await em.persistAndFlush(invitedGroupUser);
+    } catch (error) {
+      console.error(error);
+    }
+
+    try {
+      await em.persistAndFlush(group);
+    } catch (error) {
+      console.error(error);
+    }
+
+    try {
+      await em.persistAndFlush(invitedUser);
+    } catch (error) {
+      console.error(error);
+    }
+
+    return { status: true };
+  }
 }

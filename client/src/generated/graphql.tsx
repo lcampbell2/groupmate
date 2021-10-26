@@ -64,12 +64,14 @@ export type Mutation = {
   createPost: PostResponse;
   createReply: PostResponse;
   forgotPassword: Scalars['Boolean'];
+  inviteUserToGroup: BooleanResponse;
   joinGroup: GroupResponse;
   login: UserRepsonse;
   logout: Scalars['Boolean'];
   register: UserRepsonse;
   removePost: BooleanResponse;
   removeUser: Scalars['Boolean'];
+  requestGroupInvite: BooleanResponse;
   resetPassword: UserRepsonse;
   updateDisplayName?: Maybe<UserRepsonse>;
   updateEmail?: Maybe<UserRepsonse>;
@@ -106,6 +108,13 @@ export type MutationCreateReplyArgs = {
 
 export type MutationForgotPasswordArgs = {
   email: Scalars['String'];
+};
+
+
+export type MutationInviteUserToGroupArgs = {
+  email: Scalars['String'];
+  groupId: Scalars['Float'];
+  role: Scalars['String'];
 };
 
 
@@ -408,6 +417,15 @@ export type RemovePostMutationVariables = Exact<{
 
 
 export type RemovePostMutation = { __typename?: 'Mutation', removePost: { __typename?: 'BooleanResponse', status: boolean } };
+
+export type InviteUserToGroupMutationVariables = Exact<{
+  groupId: Scalars['Float'];
+  email: Scalars['String'];
+  role: Scalars['String'];
+}>;
+
+
+export type InviteUserToGroupMutation = { __typename?: 'Mutation', inviteUserToGroup: { __typename?: 'BooleanResponse', status: boolean } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -763,6 +781,17 @@ export const RemovePostDocument = gql`
 
 export function useRemovePostMutation() {
   return Urql.useMutation<RemovePostMutation, RemovePostMutationVariables>(RemovePostDocument);
+};
+export const InviteUserToGroupDocument = gql`
+    mutation inviteUserToGroup($groupId: Float!, $email: String!, $role: String!) {
+  inviteUserToGroup(groupId: $groupId, email: $email, role: $role) {
+    status
+  }
+}
+    `;
+
+export function useInviteUserToGroupMutation() {
+  return Urql.useMutation<InviteUserToGroupMutation, InviteUserToGroupMutationVariables>(InviteUserToGroupDocument);
 };
 export const MeDocument = gql`
     query me {

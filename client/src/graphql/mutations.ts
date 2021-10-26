@@ -282,3 +282,15 @@ export const REMOVE_POST = gql`
     }
   }
 `;
+
+export const INVITE_USER_TO_GROUP = gql`
+  mutation inviteUserToGroup(
+    $groupId: Float!
+    $email: String!
+    $role: String!
+  ) {
+    inviteUserToGroup(groupId: $groupId, email: $email, role: $role) {
+      status
+    }
+  }
+`;
