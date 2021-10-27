@@ -294,3 +294,11 @@ export const INVITE_USER_TO_GROUP = gql`
     }
   }
 `;
+
+export const REQUEST_GROUP_INVITE = gql`
+  mutation requestGroupInvite($groupId: Float!) {
+    requestGroupInvite(groupId: $groupId) {
+      status
+    }
+  }
+`;

@@ -329,13 +329,37 @@ export class GroupResolver {
   // TODO: requestGroupInvite
   @Mutation(() => BooleanResponse)
   async requestGroupInvite(
+    @Arg("groupId") groupId: number,
     @Ctx() { em, req }: MyContext
   ): Promise<BooleanResponse> {
     const currentUser = await em.findOne(User, { id: req.session.userId });
     if (!currentUser) {
+      console.error("invalid user");
       return {
         status: false,
       };
+    }
+    const group = await em.findOne(Group, { id: groupId });
+    if (!group) {
+      console.error("invalid group");
+      return {
+        status: false,
+      };
+    }
+
+    currentUser.inviteRequests.add(group);
+    group.inviteRequests.add(currentUser);
+
+    try {
+      await em.persistAndFlush(group);
+    } catch (error) {
+      console.error(error);
+    }
+
+    try {
+      await em.persistAndFlush(currentUser);
+    } catch (error) {
+      console.error(error);
     }
 
     return { status: true };
@@ -375,7 +399,10 @@ export class GroupResolver {
       };
     }
 
-    if (currentGroupUser.role !== "admin") {
+    if (
+      currentGroupUser.role !== "admin" &&
+      currentGroupUser.role !== "owner"
+    ) {
       console.error("Current user is not admin");
       return {
         status: false,
@@ -398,9 +425,19 @@ export class GroupResolver {
       }
     }
 
+    // remove invite requests
+    const groupInviteRequests = group.inviteRequests.getItems();
+    for (let i = 0; i < groupInviteRequests.length; i++) {
+      if (groupInviteRequests[i].id === invitedUser.id) {
+        group.inviteRequests.remove(invitedUser);
+        invitedUser.inviteRequests.remove(group);
+        break;
+      }
+    }
+
     const invitedGroupUser = em.create(GroupUser, {
       user: invitedUser,
-      group: group,
+      group,
       role,
     });
 

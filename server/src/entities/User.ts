@@ -1,11 +1,13 @@
 import {
   Collection,
   Entity,
+  ManyToMany,
   OneToMany,
   PrimaryKey,
   Property,
 } from "@mikro-orm/core";
 import { Field, Int, ObjectType } from "type-graphql";
+import { Group } from "./Group";
 import { GroupUser } from "./GroupUser";
 import { Post } from "./Post";
 
@@ -47,4 +49,9 @@ export class User {
   @Field(() => [GroupUser])
   @OneToMany(() => GroupUser, (gu: GroupUser) => gu.user, { nullable: true })
   groups = new Collection<GroupUser>(this);
+
+  // invite requests sent
+  @Field(() => [Group], { nullable: true })
+  @ManyToMany(() => Group)
+  inviteRequests: Collection<Group> = new Collection<Group>(this);
 }

@@ -2,6 +2,7 @@ import {
   Collection,
   Entity,
   Enum,
+  ManyToMany,
   OneToMany,
   PrimaryKey,
   Property,
@@ -10,6 +11,7 @@ import { GroupVisibility } from "../enums";
 import { Field, Int, ObjectType } from "type-graphql";
 import { Post } from "./Post";
 import { GroupUser } from "./GroupUser";
+import { User } from "./User";
 
 @ObjectType()
 @Entity()
@@ -55,4 +57,9 @@ export class Group {
   @Field(() => [Post], { nullable: true })
   @OneToMany(() => Post, (p: Post) => p.group, { nullable: true })
   posts = new Collection<Post>(this);
+
+  // invite requests received
+  @Field(() => [User], { nullable: true })
+  @ManyToMany(() => User)
+  inviteRequests: Collection<User> = new Collection<User>(this);
 }
