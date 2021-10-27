@@ -6,16 +6,16 @@ import {
   FormControl,
   FormLabel,
   Heading,
-  Input,
   Select,
   Stack,
   Text,
   Textarea,
   useToast,
+  Collapse,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { NextPage } from "next";
-import React from "react";
+import React, { useState } from "react";
 import { InputField } from "../../components/InputField";
 import { TextPost } from "../../components/post/TextPost";
 import { UserCard } from "../../components/user/UserCard";
@@ -26,6 +26,7 @@ import {
   useIsUserOwnerQuery,
   useInviteUserToGroupMutation,
   useDismissInviteRequestMutation,
+  useUpdateGroupMutation,
 } from "../../generated/graphql";
 import { toErrorMap } from "../../utils/toErrorMap";
 
@@ -34,6 +35,7 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
   const [_, createPost] = useCreatePostMutation();
   const [_invite, inviteUser] = useInviteUserToGroupMutation();
   const [_dismiss, dismissRequest] = useDismissInviteRequestMutation();
+  const [_updateGroup, updateGroup] = useUpdateGroupMutation();
   const [{ data, fetching, error }, _query] = useGroupBySlugQuery({
     variables: { slug },
   });
@@ -43,6 +45,7 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
   const [isUserOwner, _owner] = useIsUserOwnerQuery({
     variables: { groupId: data?.groupBySlug?.id as number },
   });
+  const [isEditingGroup, setIsEditingGroup] = useState(false);
 
   if (fetching) {
     return <Box>Loading...</Box>;
@@ -108,8 +111,76 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
     console.log(error);
   }
 
+  const editGroupInfo = (
+    <Collapse in={isEditingGroup}>
+      <Box>
+        <Formik
+          initialValues={{
+            id: data?.groupBySlug?.id as number,
+            name: "",
+            description: "",
+            visibility: data?.groupBySlug?.visibility,
+          }}
+          onSubmit={async (values, { setErrors }) => {
+            const res = await updateGroup(values);
+            if (res.data?.updateGroup?.errors) {
+              setErrors(toErrorMap(res.data.updateGroup.errors));
+            } else if (res.data?.updateGroup?.group) {
+              toast({
+                title: "Group updated",
+                description: "updateGroup Success",
+                status: "success",
+                duration: 9000,
+                isClosable: true,
+              });
+              setIsEditingGroup(false);
+              values.name = "";
+              values.description = "";
+            }
+          }}
+        >
+          {({ values, handleChange }) => (
+            <Form>
+              <InputField
+                name='name'
+                label='Group Name'
+                onChange={handleChange}
+              />
+              <InputField
+                name='description'
+                label='Description'
+                onChange={handleChange}
+              />
+              <FormControl>
+                <FormLabel htmlFor='visibility'>Group Visibility</FormLabel>
+                <Select
+                  name='visibility'
+                  onChange={handleChange}
+                  defaultValue={values.visibility}
+                >
+                  <option value='open'>Open</option>
+                  <option value='closed'>Closed</option>
+                  <option value='private'>Private</option>
+                </Select>
+              </FormControl>
+              <Button type='submit'>Update Group</Button>
+            </Form>
+          )}
+        </Formik>
+      </Box>
+    </Collapse>
+  );
+
   const groupInfo = (
     <Box>
+      {isOwner && (
+        <Box>
+          <Button onClick={() => setIsEditingGroup(!isEditingGroup)}>
+            Edit
+          </Button>
+          {editGroupInfo}
+        </Box>
+      )}
       <Stack isInline>
         <Text fontWeight='bold'>Name:</Text>
         <Text>{data?.groupBySlug?.name}</Text>
@@ -207,12 +278,10 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
       {isOwner ? <Text>YOU ARE OWNER</Text> : <Text>NOT OWNER</Text>}
       {isAdmin ? <Text>YOU ARE ADMIN</Text> : <Text>NOT ADMIN</Text>}
       {groupInfo}
-      {/* <Text>Users:</Text> */}
       <Box>
         <Formik
           initialValues={{ email: "", role: "read" }}
           onSubmit={async (values) => {
-            // window.alert(JSON.stringify(values));
             handleInviteUser(
               values.email,
               data?.groupBySlug?.id as number,
