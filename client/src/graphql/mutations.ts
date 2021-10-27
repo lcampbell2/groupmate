@@ -302,3 +302,11 @@ export const REQUEST_GROUP_INVITE = gql`
     }
   }
 `;
+
+export const DISMISS_INVITE_REQUEST = gql`
+  mutation dismissInviteRequest($userId: Float!, $groupId: Float!) {
+    dismissInviteRequest(userId: $userId, groupId: $groupId) {
+      status
+    }
+  }
+`;

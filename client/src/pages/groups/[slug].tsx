@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Divider,
+  Flex,
   FormControl,
   FormLabel,
   Heading,
@@ -20,19 +21,87 @@ import { UserCard } from "../../components/user/UserCard";
 import {
   useGroupBySlugQuery,
   useCreatePostMutation,
+  useIsUserAdminQuery,
+  useIsUserOwnerQuery,
+  useInviteUserToGroupMutation,
+  useDismissInviteRequestMutation,
 } from "../../generated/graphql";
 import { toErrorMap } from "../../utils/toErrorMap";
 
 export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
   const toast = useToast();
   const [_, createPost] = useCreatePostMutation();
+  const [_invite, inviteUser] = useInviteUserToGroupMutation();
+  const [_dismiss, dismissRequest] = useDismissInviteRequestMutation();
   const [{ data, fetching, error }, _query] = useGroupBySlugQuery({
-    variables: { slug: slug },
+    variables: { slug },
+  });
+  const [isUserAdmin, _admin] = useIsUserAdminQuery({
+    variables: { groupId: data?.groupBySlug?.id as number },
+  });
+  const [isUserOwner, _owner] = useIsUserOwnerQuery({
+    variables: { groupId: data?.groupBySlug?.id as number },
   });
 
   if (fetching) {
     return <Box>Loading...</Box>;
   }
+
+  const isAdmin = isUserAdmin.data?.isUserAdmin;
+  const isOwner = isUserOwner.data?.isUserOwner;
+
+  const handleInviteAccept = async (
+    email: string,
+    groupId: number,
+    role: string
+  ) => {
+    const res = await inviteUser({
+      email,
+      groupId,
+      role,
+    });
+    if (res.data?.inviteUserToGroup.status) {
+      toast({
+        title: "User invited to group",
+        description: `inviteUserToGroup success`,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Invite failed",
+        description: `inviteUserToGroup error`,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const handleInviteDismiss = async (groupId: number, userId: number) => {
+    const res = await dismissRequest({
+      groupId,
+      userId,
+    });
+    if (res.data?.dismissInviteRequest.status) {
+      toast({
+        title: "Request Dismissed",
+        description: `dismissInviteRequest success`,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Dismissal failed",
+        description: `dismissInviteRequest error`,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
 
   if (error) {
     console.log(error);
@@ -54,9 +123,11 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
 
   let userList = null;
   if (data?.groupBySlug?.users.length === 0) {
-    <Box>
-      <Text fontWeight='bold'>No users found</Text>
-    </Box>;
+    userList = (
+      <Box>
+        <Text fontWeight='bold'>No users found</Text>
+      </Box>
+    );
   } else {
     userList = data?.groupBySlug?.users.map(({ user, role }, idx) => {
       return (
@@ -64,6 +135,42 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
           <UserCard displayName={user.displayName} role={role} />
           <Divider borderBottomColor='gray.900' />
         </Box>
+      );
+    });
+  }
+
+  let inviteRequests = null;
+  if (data?.groupBySlug?.inviteRequests?.length === 0) {
+    inviteRequests = (
+      <Box>
+        <Text fontWeight='bold'>No requests found</Text>
+      </Box>
+    );
+  } else {
+    inviteRequests = data?.groupBySlug?.inviteRequests?.map((request, idx) => {
+      return (
+        <Flex key={idx}>
+          {request.email}
+          {request.displayName}
+          <Button
+            onClick={() => {
+              handleInviteAccept(
+                request.email,
+                data.groupBySlug?.id as number,
+                "read"
+              );
+            }}
+          >
+            Accept
+          </Button>
+          <Button
+            onClick={() => {
+              handleInviteDismiss(data.groupBySlug?.id as number, request.id);
+            }}
+          >
+            Dismiss
+          </Button>
+        </Flex>
       );
     });
   }
@@ -96,10 +203,12 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
   return (
     <Box>
       <Heading textAlign='center'>Group Details</Heading>
-      {/* {JSON.stringify(data)} */}
+      {isOwner ? <Text>YOU ARE OWNER</Text> : <Text>NOT OWNER</Text>}
+      {isAdmin ? <Text>YOU ARE ADMIN</Text> : <Text>NOT ADMIN</Text>}
       {groupInfo}
       <Text>Users:</Text>
       {userList}
+      {(isAdmin || isOwner) && inviteRequests}
       <Box>
         <Text fontSize='lg' fontWeight='bold'>
           New Post:

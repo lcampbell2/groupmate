@@ -64,6 +64,7 @@ export type Mutation = {
   createGroup: GroupResponse;
   createPost: PostResponse;
   createReply: PostResponse;
+  dismissInviteRequest: BooleanResponse;
   forgotPassword: Scalars['Boolean'];
   inviteUserToGroup: BooleanResponse;
   joinGroup: GroupResponse;
@@ -104,6 +105,12 @@ export type MutationCreatePostArgs = {
 export type MutationCreateReplyArgs = {
   id: Scalars['Float'];
   message: Scalars['String'];
+};
+
+
+export type MutationDismissInviteRequestArgs = {
+  groupId: Scalars['Float'];
+  userId: Scalars['Float'];
 };
 
 
@@ -440,6 +447,14 @@ export type RequestGroupInviteMutationVariables = Exact<{
 
 
 export type RequestGroupInviteMutation = { __typename?: 'Mutation', requestGroupInvite: { __typename?: 'BooleanResponse', status: boolean } };
+
+export type DismissInviteRequestMutationVariables = Exact<{
+  userId: Scalars['Float'];
+  groupId: Scalars['Float'];
+}>;
+
+
+export type DismissInviteRequestMutation = { __typename?: 'Mutation', dismissInviteRequest: { __typename?: 'BooleanResponse', status: boolean } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -817,6 +832,17 @@ export const RequestGroupInviteDocument = gql`
 
 export function useRequestGroupInviteMutation() {
   return Urql.useMutation<RequestGroupInviteMutation, RequestGroupInviteMutationVariables>(RequestGroupInviteDocument);
+};
+export const DismissInviteRequestDocument = gql`
+    mutation dismissInviteRequest($userId: Float!, $groupId: Float!) {
+  dismissInviteRequest(userId: $userId, groupId: $groupId) {
+    status
+  }
+}
+    `;
+
+export function useDismissInviteRequestMutation() {
+  return Urql.useMutation<DismissInviteRequestMutation, DismissInviteRequestMutationVariables>(DismissInviteRequestDocument);
 };
 export const MeDocument = gql`
     query me {

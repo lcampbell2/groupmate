@@ -326,7 +326,6 @@ export class GroupResolver {
     return { group };
   }
 
-  // TODO: requestGroupInvite
   @Mutation(() => BooleanResponse)
   async requestGroupInvite(
     @Arg("groupId") groupId: number,
@@ -345,6 +344,16 @@ export class GroupResolver {
       return {
         status: false,
       };
+    }
+
+    const groupUsers = group.users.getItems();
+    for (let i = 0; i < groupUsers.length; i++) {
+      if (groupUsers[i].user.id === currentUser.id) {
+        console.error("User already in group");
+        return {
+          status: false,
+        };
+      }
     }
 
     // check for repeat invites
@@ -424,7 +433,7 @@ export class GroupResolver {
         status: false,
       };
     }
-    if (email.includes("@")) {
+    if (!email.includes("@")) {
       console.error("invalid email");
       return {
         status: false,
@@ -480,6 +489,52 @@ export class GroupResolver {
 
     try {
       await em.persistAndFlush(invitedUser);
+    } catch (error) {
+      console.error(error);
+    }
+
+    return { status: true };
+  }
+
+  @Mutation(() => BooleanResponse)
+  async dismissInviteRequest(
+    @Arg("groupId") groupId: number,
+    @Arg("userId") userId: number,
+    @Ctx() { em, req }: MyContext
+  ): Promise<BooleanResponse> {
+    const currentUser = await em.findOne(User, { id: req.session.userId });
+    if (!currentUser) {
+      console.error("invalid current user");
+      return {
+        status: false,
+      };
+    }
+    const group = await em.findOne(Group, { id: groupId });
+    if (!group) {
+      console.error("invalid group");
+      return {
+        status: false,
+      };
+    }
+    const user = await em.findOne(User, { id: userId });
+    if (!user) {
+      console.error("invalid user");
+      return {
+        status: false,
+      };
+    }
+
+    group.inviteRequests.remove(user);
+    user.inviteRequests.remove(group);
+
+    try {
+      await em.persistAndFlush(user);
+    } catch (error) {
+      console.error(error);
+    }
+
+    try {
+      await em.persistAndFlush(group);
     } catch (error) {
       console.error(error);
     }
