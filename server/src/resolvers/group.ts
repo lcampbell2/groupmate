@@ -347,6 +347,15 @@ export class GroupResolver {
       };
     }
 
+    // check for repeat invites
+    const groupInviteRequests = group.inviteRequests.getItems();
+    for (let i = 0; i < groupInviteRequests.length; i++) {
+      if (groupInviteRequests[i].id === currentUser.id) {
+        console.error("invite already sent");
+        return { status: false };
+      }
+    }
+
     currentUser.inviteRequests.add(group);
     group.inviteRequests.add(currentUser);
 
@@ -404,6 +413,19 @@ export class GroupResolver {
       currentGroupUser.role !== "owner"
     ) {
       console.error("Current user is not admin");
+      return {
+        status: false,
+      };
+    }
+
+    if (email.length < 1) {
+      console.error("email empty");
+      return {
+        status: false,
+      };
+    }
+    if (email.includes("@")) {
+      console.error("invalid email");
       return {
         status: false,
       };

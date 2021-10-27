@@ -1,7 +1,10 @@
 import { Box, Button, Flex, Stack, Text, useToast } from "@chakra-ui/react";
 import React from "react";
-import { useRouter } from "next/dist/client/router";
-import { useJoinGroupMutation } from "../../generated/graphql";
+// import { useRouter } from "next/dist/client/router";
+import {
+  useJoinGroupMutation,
+  useRequestGroupInviteMutation,
+} from "../../generated/graphql";
 
 interface SearchCardProps {
   groupId: number;
@@ -18,7 +21,8 @@ export const SearchCard: React.FC<SearchCardProps> = ({
   visibility,
   users,
 }) => {
-  const [_, joinGroup] = useJoinGroupMutation();
+  const [_join, joinGroup] = useJoinGroupMutation();
+  const [_request, requestInvite] = useRequestGroupInviteMutation();
   const toast = useToast();
 
   const handleJoin = async () => {
@@ -46,14 +50,24 @@ export const SearchCard: React.FC<SearchCardProps> = ({
   };
 
   const handleRequestInvite = async () => {
-    // const res = await joinGroup({ id: groupId });
-    toast({
-      title: "Invite Sent",
-      description: `joinGroup success`,
-      status: "success",
-      duration: 9000,
-      isClosable: true,
-    });
+    const res = await requestInvite({ groupId });
+    if (res.data?.requestGroupInvite.status) {
+      toast({
+        title: "Invite request successfully sent.",
+        description: `requestInvite success`,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Invite request failed",
+        description: `requestInvite error`,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
   };
 
   return (

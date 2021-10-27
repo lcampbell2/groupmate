@@ -30,6 +30,7 @@ export type Group = {
   createdAt: Scalars['String'];
   description: Scalars['String'];
   id: Scalars['Int'];
+  inviteRequests?: Maybe<Array<User>>;
   name: Scalars['String'];
   posts?: Maybe<Array<Post>>;
   slug: Scalars['String'];
@@ -140,6 +141,11 @@ export type MutationRemovePostArgs = {
 
 export type MutationRemoveUserArgs = {
   id: Scalars['Float'];
+};
+
+
+export type MutationRequestGroupInviteArgs = {
+  groupId: Scalars['Float'];
 };
 
 
@@ -271,6 +277,7 @@ export type User = {
   email: Scalars['String'];
   groups: Array<GroupUser>;
   id: Scalars['Int'];
+  inviteRequests?: Maybe<Array<Group>>;
   posts?: Maybe<Array<Post>>;
   updatedAt: Scalars['String'];
 };
@@ -427,6 +434,13 @@ export type InviteUserToGroupMutationVariables = Exact<{
 
 export type InviteUserToGroupMutation = { __typename?: 'Mutation', inviteUserToGroup: { __typename?: 'BooleanResponse', status: boolean } };
 
+export type RequestGroupInviteMutationVariables = Exact<{
+  groupId: Scalars['Float'];
+}>;
+
+
+export type RequestGroupInviteMutation = { __typename?: 'Mutation', requestGroupInvite: { __typename?: 'BooleanResponse', status: boolean } };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -444,7 +458,7 @@ export type GroupBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GroupBySlugQuery = { __typename?: 'Query', groupBySlug?: Maybe<{ __typename?: 'Group', id: number, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', id: number, role: string, user: { __typename?: 'User', id: number, displayName: string } }>, posts?: Maybe<Array<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string }, replies?: Maybe<Array<{ __typename?: 'PostReply', id: number, updatedAt: string, message: string, author: { __typename?: 'User', id: number, displayName: string } }>> }>> }> };
+export type GroupBySlugQuery = { __typename?: 'Query', groupBySlug?: Maybe<{ __typename?: 'Group', id: number, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', id: number, role: string, user: { __typename?: 'User', id: number, displayName: string } }>, posts?: Maybe<Array<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string }, replies?: Maybe<Array<{ __typename?: 'PostReply', id: number, updatedAt: string, message: string, author: { __typename?: 'User', id: number, displayName: string } }>> }>>, inviteRequests?: Maybe<Array<{ __typename?: 'User', id: number, displayName: string, email: string }>> }> };
 
 export type PublicGroupsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -793,6 +807,17 @@ export const InviteUserToGroupDocument = gql`
 export function useInviteUserToGroupMutation() {
   return Urql.useMutation<InviteUserToGroupMutation, InviteUserToGroupMutationVariables>(InviteUserToGroupDocument);
 };
+export const RequestGroupInviteDocument = gql`
+    mutation requestGroupInvite($groupId: Float!) {
+  requestGroupInvite(groupId: $groupId) {
+    status
+  }
+}
+    `;
+
+export function useRequestGroupInviteMutation() {
+  return Urql.useMutation<RequestGroupInviteMutation, RequestGroupInviteMutationVariables>(RequestGroupInviteDocument);
+};
 export const MeDocument = gql`
     query me {
   me {
@@ -840,6 +865,11 @@ export const GroupBySlugDocument = gql`
     }
     posts {
       ...RegPost
+    }
+    inviteRequests {
+      id
+      displayName
+      email
     }
   }
 }

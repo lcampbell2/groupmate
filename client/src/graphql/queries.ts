@@ -44,6 +44,11 @@ export const GROUP_BY_SLUG = gql`
       posts {
         ...RegPost
       }
+      inviteRequests {
+        id
+        displayName
+        email
+      }
     }
   }
   ${REG_POST}
