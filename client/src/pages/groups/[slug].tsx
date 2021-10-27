@@ -6,6 +6,7 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  Input,
   Select,
   Stack,
   Text,
@@ -50,7 +51,7 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
   const isAdmin = isUserAdmin.data?.isUserAdmin;
   const isOwner = isUserOwner.data?.isUserOwner;
 
-  const handleInviteAccept = async (
+  const handleInviteUser = async (
     email: string,
     groupId: number,
     role: string
@@ -154,7 +155,7 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
           {request.displayName}
           <Button
             onClick={() => {
-              handleInviteAccept(
+              handleInviteUser(
                 request.email,
                 data.groupBySlug?.id as number,
                 "read"
@@ -206,7 +207,42 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
       {isOwner ? <Text>YOU ARE OWNER</Text> : <Text>NOT OWNER</Text>}
       {isAdmin ? <Text>YOU ARE ADMIN</Text> : <Text>NOT ADMIN</Text>}
       {groupInfo}
-      <Text>Users:</Text>
+      {/* <Text>Users:</Text> */}
+      <Box>
+        <Formik
+          initialValues={{ email: "", role: "read" }}
+          onSubmit={async (values) => {
+            // window.alert(JSON.stringify(values));
+            handleInviteUser(
+              values.email,
+              data?.groupBySlug?.id as number,
+              values.role
+            );
+          }}
+        >
+          {({ handleChange }) => (
+            <Form>
+              <InputField
+                name='email'
+                placeholder='Invite user by email'
+                label='User List'
+                onChange={handleChange}
+              />
+              {(isAdmin || isOwner) && (
+                <>
+                  <Select name='role' onChange={handleChange}>
+                    <option value='read'>READ</option>
+                    <option value='write'>WRITE</option>
+                    <option value='admin'>ADMIN</option>
+                  </Select>
+                  <Button type='submit'>Invite User</Button>
+                </>
+              )}
+            </Form>
+          )}
+        </Formik>
+        <Divider borderBottomColor='gray.900' />
+      </Box>
       {userList}
       {(isAdmin || isOwner) && inviteRequests}
       <Box>
