@@ -418,7 +418,7 @@ export type JoinGroupMutation = { __typename?: 'Mutation', joinGroup: { __typena
 
 export type ChangeUserRoleMutationVariables = Exact<{
   userId: Scalars['Float'];
-  groupUser: Scalars['Float'];
+  groupId: Scalars['Float'];
   newRole: Scalars['String'];
 }>;
 
@@ -790,8 +790,8 @@ export function useJoinGroupMutation() {
   return Urql.useMutation<JoinGroupMutation, JoinGroupMutationVariables>(JoinGroupDocument);
 };
 export const ChangeUserRoleDocument = gql`
-    mutation changeUserRole($userId: Float!, $groupUser: Float!, $newRole: String!) {
-  changeUserRole(userId: $userId, groupId: $groupUser, newRole: $newRole) {
+    mutation changeUserRole($userId: Float!, $groupId: Float!, $newRole: String!) {
+  changeUserRole(userId: $userId, groupId: $groupId, newRole: $newRole) {
     status
   }
 }

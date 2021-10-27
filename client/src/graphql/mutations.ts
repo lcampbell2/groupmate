@@ -266,10 +266,10 @@ export const JOIN_GROUP = gql`
 export const CHANGE_USER_ROLE = gql`
   mutation changeUserRole(
     $userId: Float!
-    $groupUser: Float!
+    $groupId: Float!
     $newRole: String!
   ) {
-    changeUserRole(userId: $userId, groupId: $groupUser, newRole: $newRole) {
+    changeUserRole(userId: $userId, groupId: $groupId, newRole: $newRole) {
       status
     }
   }

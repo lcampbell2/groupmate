@@ -622,12 +622,13 @@ export class UserResolver {
       return { status: false };
     }
 
-    if (newRole !== groupUser.role && newRole.length > 1) {
-      groupUser.role = newRole;
-      return { status: true };
+    if (newRole === groupUser.role) {
+      console.error("new role same as old");
+      return { status: false };
     }
 
-    console.error("Error");
-    return { status: false };
+    groupUser.role = newRole;
+    await em.persistAndFlush(groupUser);
+    return { status: true };
   }
 }

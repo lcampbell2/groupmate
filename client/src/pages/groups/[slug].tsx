@@ -204,7 +204,14 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
     userList = data?.groupBySlug?.users.map(({ user, role }, idx) => {
       return (
         <Box key={idx}>
-          <UserCard displayName={user.displayName} role={role} />
+          <UserCard
+            userId={user.id}
+            groupId={data?.groupBySlug?.id as number}
+            displayName={user.displayName}
+            role={role}
+            isAdmin={isAdmin}
+            isOwner={isOwner}
+          />
           <Divider borderBottomColor='gray.900' />
         </Box>
       );
