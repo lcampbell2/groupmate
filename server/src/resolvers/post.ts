@@ -9,10 +9,12 @@ import {
   Mutation,
   Field,
   ObjectType,
+  InputType,
 } from "type-graphql";
 import { User } from "../entities/User";
 import { Group } from "../entities/Group";
 import { PostReply } from "../entities/PostReply";
+import { GroupEvent } from "../entities/GroupEvent";
 
 @ObjectType()
 class PostResponse {
@@ -21,6 +23,33 @@ class PostResponse {
 
   @Field(() => Post, { nullable: true })
   post?: Post;
+}
+
+@ObjectType()
+class EventResponse {
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[];
+
+  @Field(() => GroupEvent, { nullable: true })
+  event?: GroupEvent;
+}
+
+@InputType()
+class LocationInput {
+  @Field()
+  country: string;
+
+  @Field()
+  region: string;
+
+  @Field()
+  city: string;
+
+  @Field()
+  postalCode: string;
+
+  @Field()
+  locationName: string;
 }
 
 @Resolver()
@@ -218,5 +247,72 @@ export class PostResolver {
   ): Promise<BooleanResponse> {
     em.nativeDelete(Post, { id });
     return { status: true };
+  }
+
+  // TODO createEvent
+  @Mutation(() => EventResponse)
+  async createEvent(
+    @Arg("title") title: string,
+    @Arg("description") description: string,
+    @Arg("groupid") groupId: number,
+    @Arg("timeStamp") timeStamp: string,
+    @Arg("location") location: LocationInput,
+    @Arg("meetingLink") meetingLink: string,
+    @Ctx() { em, req }: MyContext
+  ): Promise<EventResponse> {
+    if (title.length < 1) {
+      return {
+        errors: [
+          {
+            field: "title",
+            message: "event title empty",
+          },
+        ],
+      };
+    }
+    if (description.length < 1) {
+      return {
+        errors: [
+          {
+            field: "description",
+            message: "event description empty",
+          },
+        ],
+      };
+    }
+    const currentUser = await em.findOne(User, { id: req.session.userId });
+    if (!currentUser) {
+      return {
+        errors: [
+          {
+            field: "user",
+            message: "invalid user",
+          },
+        ],
+      };
+    }
+    const group = await em.findOne(Group, { id: groupId });
+    if (!group) {
+      return {
+        errors: [
+          {
+            field: "group",
+            message: "invalid group",
+          },
+        ],
+      };
+    }
+
+    const event = em.create(GroupEvent, {
+      title,
+      description,
+      timeStamp,
+      location,
+      group,
+      meetingLink,
+      createdBy: currentUser,
+    });
+
+    return { event };
   }
 }

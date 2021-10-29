@@ -12,6 +12,7 @@ import { Field, Int, ObjectType } from "type-graphql";
 import { Post } from "./Post";
 import { GroupUser } from "./GroupUser";
 import { User } from "./User";
+import { GroupEvent } from "./GroupEvent";
 
 @ObjectType()
 @Entity()
@@ -62,4 +63,14 @@ export class Group {
   @Field(() => [User], { nullable: true })
   @ManyToMany(() => User)
   inviteRequests: Collection<User> = new Collection<User>(this);
+
+  // General meeting time
+  @Field(() => GroupEvent, { nullable: true })
+  @Property()
+  generalMeeting: GroupEvent;
+
+  // Group Events
+  @Field(() => [GroupEvent], { nullable: true })
+  @OneToMany(() => GroupEvent, (e: GroupEvent) => e.group, { nullable: true })
+  events = new Collection<GroupEvent>(this);
 }

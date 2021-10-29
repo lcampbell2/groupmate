@@ -46,6 +46,7 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
     variables: { groupId: data?.groupBySlug?.id as number },
   });
   const [isEditingGroup, setIsEditingGroup] = useState(false);
+  const [isCreatingPost, setIsCreatingPost] = useState(false);
 
   if (fetching) {
     return <Box>Loading...</Box>;
@@ -322,41 +323,50 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
       {userList}
       {(isAdmin || isOwner) && inviteRequests}
       <Box>
-        <Text fontSize='lg' fontWeight='bold'>
-          New Post:
-        </Text>
-        <Formik
-          initialValues={{
-            groupId: data?.groupBySlug?.id as number,
-            title: "",
-            description: "",
-          }}
-          onSubmit={async (values, { setErrors }) => {
-            const res = await createPost(values);
-            if (res?.data?.createPost.errors) {
-              setErrors(toErrorMap(res.data.createPost.errors));
-            } else if (res.data?.createPost.post) {
-              toast({
-                title: "Post successfully created.",
-                description: `createPost success`,
-                status: "success",
-                duration: 9000,
-                isClosable: true,
-              });
-            }
-          }}
-        >
-          {({ handleChange }) => (
-            <Form>
-              <InputField name='title' label='Title' onChange={handleChange} />
-              <FormControl>
-                <FormLabel htmlFor='description'>Description</FormLabel>
-                <Textarea name='description' onChange={handleChange} />
-              </FormControl>
-              <Button type='submit'>Create Post</Button>
-            </Form>
-          )}
-        </Formik>
+        <Button onClick={() => setIsCreatingPost(!isCreatingPost)}>
+          New Post
+        </Button>
+        <Collapse in={isCreatingPost}>
+          <Formik
+            initialValues={{
+              groupId: data?.groupBySlug?.id as number,
+              title: "",
+              description: "",
+            }}
+            onSubmit={async (values, { setErrors }) => {
+              const res = await createPost(values);
+              if (res?.data?.createPost.errors) {
+                setErrors(toErrorMap(res.data.createPost.errors));
+              } else if (res.data?.createPost.post) {
+                toast({
+                  title: "Post successfully created.",
+                  description: `createPost success`,
+                  status: "success",
+                  duration: 9000,
+                  isClosable: true,
+                });
+                values.title = "";
+                values.description = "";
+                setIsCreatingPost(false);
+              }
+            }}
+          >
+            {({ handleChange }) => (
+              <Form>
+                <InputField
+                  name='title'
+                  label='Title'
+                  onChange={handleChange}
+                />
+                <FormControl>
+                  <FormLabel htmlFor='description'>Description</FormLabel>
+                  <Textarea name='description' onChange={handleChange} />
+                </FormControl>
+                <Button type='submit'>Create Post</Button>
+              </Form>
+            )}
+          </Formik>
+        </Collapse>
       </Box>
       <Text>Posts:</Text>
       {groupPosts}
