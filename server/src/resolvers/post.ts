@@ -71,31 +71,27 @@ export class PostResolver {
     return em.findOne(Post, { id });
   }
 
-  // TODO myEvents
   @Query(() => [GroupEvent], { nullable: true })
   async myEvents(
     @Ctx() { em, req }: MyContext
   ): Promise<Array<GroupEvent> | null> {
-    const currentUser = await em.findOne(User, { id: req.session.userId });
+    const currentUser = await em.findOne(User, { id: req.session.userId }, [
+      "groups",
+    ]);
     if (!currentUser) {
       console.error("invalid user");
       return null;
     }
 
     let userEvents: GroupEvent[] = [];
-
-    await currentUser.groups.init();
-
     for (const group of currentUser.groups) {
-      // console.log(group.group.name);
       try {
         await group.group.events.init();
         for (const event of group.group.events) {
-          // console.log(event.title);
           userEvents.push(event);
         }
-      } catch {
-        console.error("no events");
+      } catch (error) {
+        console.error(error);
       }
     }
 

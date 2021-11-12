@@ -62,6 +62,12 @@ export class GroupResolver {
       return null;
     }
 
+    try {
+      await currentUser.groups.init();
+    } catch (error) {
+      console.log(error);
+    }
+
     return currentUser.groups;
   }
 
@@ -70,10 +76,28 @@ export class GroupResolver {
     @Arg("slug") slug: string,
     @Ctx() { em }: MyContext
   ): Promise<Group | null> {
-    const group = await em.findOne(Group, { slug: slug });
+    const group = await em.findOne(Group, { slug: slug }, [
+      "users",
+      "posts",
+      "events",
+    ]);
     if (!group) {
       return null;
     }
+
+    // init collections
+    try {
+      for (const post of group.posts) {
+        try {
+          await post.replies.init();
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
     return group;
   }
 

@@ -327,8 +327,8 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
   return (
     <Box>
       <Heading textAlign='center'>Group Details</Heading>
-      {isOwner ? <Text>YOU ARE OWNER</Text> : <Text>NOT OWNER</Text>}
-      {isAdmin ? <Text>YOU ARE ADMIN</Text> : <Text>NOT ADMIN</Text>}
+      {/* {isOwner ? <Text>YOU ARE OWNER</Text> : <Text>NOT OWNER</Text>}
+      {isAdmin ? <Text>YOU ARE ADMIN</Text> : <Text>NOT ADMIN</Text>} */}
       {groupInfo}
       <Box>
         <Formik
