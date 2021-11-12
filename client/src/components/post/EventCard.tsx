@@ -1,4 +1,5 @@
-import { Box, Link, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Link, Stack, Text } from "@chakra-ui/react";
+import { useRouter } from "next/dist/client/router";
 import React from "react";
 
 interface EventCardProps {
@@ -8,6 +9,8 @@ interface EventCardProps {
   eventTime: string;
   location?: string;
   meetingLink?: string;
+  groupName?: string;
+  groupSlug?: string;
 }
 
 export const EventCard: React.FC<EventCardProps> = ({
@@ -17,7 +20,10 @@ export const EventCard: React.FC<EventCardProps> = ({
   eventTime,
   location,
   meetingLink,
+  groupName,
+  groupSlug,
 }) => {
+  const router = useRouter();
   const newDate = new Date(parseInt(eventTime));
   eventTime =
     newDate.getDate() +
@@ -54,6 +60,17 @@ export const EventCard: React.FC<EventCardProps> = ({
           {meetingLink}
         </Link>
       </Stack>
+      {groupName && (
+        <Stack isInline>
+          <Text fontWeight='bold'>Group:</Text>
+          <Button
+            variant='link'
+            onClick={() => router.push(`/groups/${groupSlug}`)}
+          >
+            {groupName}
+          </Button>
+        </Stack>
+      )}
     </Box>
   );
 };

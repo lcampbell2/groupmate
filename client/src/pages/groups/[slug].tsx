@@ -32,6 +32,7 @@ import {
 } from "../../generated/graphql";
 import { toErrorMap } from "../../utils/toErrorMap";
 import DateTimePicker from "react-datetime-picker";
+import { compareEventDates } from "../../utils/compareEventDates";
 
 export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
   const toast = useToast();
@@ -119,16 +120,6 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
       return -1;
     }
     if (a.createdAt > b.createdAt) {
-      return 1;
-    }
-    return 0;
-  };
-
-  const compareEventDates = (a, b) => {
-    if (a.timeStamp < b.timeStamp) {
-      return -1;
-    }
-    if (a.timeStamp > b.timeStamp) {
       return 1;
     }
     return 0;

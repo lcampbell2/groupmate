@@ -276,6 +276,7 @@ export type Query = {
   isUserAdmin: Scalars['Boolean'];
   isUserOwner: Scalars['Boolean'];
   me?: Maybe<User>;
+  myEvents?: Maybe<Array<GroupEvent>>;
   myGroups?: Maybe<Array<GroupUser>>;
   post?: Maybe<Post>;
   posts: Array<Post>;
@@ -536,6 +537,11 @@ export type IsUserOwnerQueryVariables = Exact<{
 
 
 export type IsUserOwnerQuery = { __typename?: 'Query', isUserOwner: boolean };
+
+export type MyEventsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyEventsQuery = { __typename?: 'Query', myEvents?: Maybe<Array<{ __typename?: 'GroupEvent', id: number, title: string, description: string, eventTime: string, location?: Maybe<string>, meetingLink?: Maybe<string>, group: { __typename?: 'Group', id: number, name: string, slug: string } }>> };
 
 export const RegUserFragmentDoc = gql`
     fragment RegUser on User {
@@ -1020,4 +1026,25 @@ export const IsUserOwnerDocument = gql`
 
 export function useIsUserOwnerQuery(options: Omit<Urql.UseQueryArgs<IsUserOwnerQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<IsUserOwnerQuery>({ query: IsUserOwnerDocument, ...options });
+};
+export const MyEventsDocument = gql`
+    query myEvents {
+  myEvents {
+    id
+    title
+    description
+    group {
+      id
+      name
+      slug
+    }
+    eventTime
+    location
+    meetingLink
+  }
+}
+    `;
+
+export function useMyEventsQuery(options: Omit<Urql.UseQueryArgs<MyEventsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<MyEventsQuery>({ query: MyEventsDocument, ...options });
 };

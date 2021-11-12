@@ -133,8 +133,6 @@ export class UserResolver {
     }
   }
 
-  // TODO myEvents
-
   // mutations
   @Mutation(() => UserRepsonse)
   async register(

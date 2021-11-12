@@ -101,3 +101,21 @@ export const IS_USER_OWNER = gql`
     isUserOwner(groupId: $groupId)
   }
 `;
+
+export const MY_EVENTS = gql`
+  query myEvents {
+    myEvents {
+      id
+      title
+      description
+      group {
+        id
+        name
+        slug
+      }
+      eventTime
+      location
+      meetingLink
+    }
+  }
+`;
