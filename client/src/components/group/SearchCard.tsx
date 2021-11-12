@@ -1,4 +1,12 @@
-import { Box, Button, Flex, Stack, Text, useToast } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Button,
+  Flex,
+  Stack,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import React from "react";
 // import { useRouter } from "next/dist/client/router";
 import {
@@ -12,6 +20,7 @@ interface SearchCardProps {
   description: string;
   visibility: string;
   users: number;
+  joined: boolean;
 }
 
 export const SearchCard: React.FC<SearchCardProps> = ({
@@ -20,6 +29,7 @@ export const SearchCard: React.FC<SearchCardProps> = ({
   description,
   visibility,
   users,
+  joined,
 }) => {
   const [_join, joinGroup] = useJoinGroupMutation();
   const [_request, requestInvite] = useRequestGroupInviteMutation();
@@ -70,6 +80,13 @@ export const SearchCard: React.FC<SearchCardProps> = ({
     }
   };
 
+  const joinButtons =
+    visibility === "open" ? (
+      <Button onClick={handleJoin}>Join</Button>
+    ) : (
+      <Button onClick={handleRequestInvite}>Request Invite</Button>
+    );
+
   return (
     <Flex
       width='100%'
@@ -101,11 +118,7 @@ export const SearchCard: React.FC<SearchCardProps> = ({
       >
         <Text fontWeight='semibold'>Total users: {users}</Text>
       </Box>
-      {visibility === "open" ? (
-        <Button onClick={handleJoin}>Join</Button>
-      ) : (
-        <Button onClick={handleRequestInvite}>Request Invite</Button>
-      )}
+      {joined ? <Badge>Joined</Badge> : joinButtons}
     </Flex>
   );
 };

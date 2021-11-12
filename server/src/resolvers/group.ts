@@ -111,6 +111,15 @@ export class GroupResolver {
       { orderBy: { slug: "asc" } }
     );
 
+    for (let i = 0; i < publicGroups.length; i++) {
+      const group = publicGroups[i];
+      try {
+        await group.users.init();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     return publicGroups;
   }
 

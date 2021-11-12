@@ -7,7 +7,7 @@ import { useRouter } from "next/dist/client/router";
 interface LandingPageProps {}
 
 export const LandingPage: React.FC<LandingPageProps> = ({}) => {
-  const [{ data, fetching }] = useMeQuery();
+  const [{ data }] = useMeQuery();
   const router = useRouter();
   const welcomeMessage = data?.me
     ? `Welcome back, ${data.me?.displayName}!`

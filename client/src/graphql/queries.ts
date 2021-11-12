@@ -82,7 +82,7 @@ export const PUBLIC_GROUPS = gql`
       description
       visibility
       users {
-        group {
+        user {
           id
         }
       }

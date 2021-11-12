@@ -2,14 +2,16 @@ import { Box, Divider, Heading } from "@chakra-ui/layout";
 import { Input } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { SearchCard } from "../../components/group/SearchCard";
-import { usePublicGroupsQuery } from "../../generated/graphql";
+import { useMeQuery, usePublicGroupsQuery } from "../../generated/graphql";
 
 interface searchProps {}
 
 export const GroupSearch: React.FC<searchProps> = ({}) => {
-  const [{ data, fetching, error }, _] = usePublicGroupsQuery();
+  const [{ data: meData }] = useMeQuery();
+  const [{ data, fetching, error }] = usePublicGroupsQuery();
   const [searchTerm, setSearchTerm] = useState("");
   let groupList = null;
+  let joinedGroup = false;
   if (fetching) {
     groupList = <Box>Loading...</Box>;
   }
@@ -18,11 +20,18 @@ export const GroupSearch: React.FC<searchProps> = ({}) => {
     groupList = <Box>An error has occured</Box>;
   }
 
+  const currentUserId = meData.me.id;
+
   const filteredList = data?.publicGroups?.filter((group) => {
     return group.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
   });
 
   groupList = filteredList?.map((group, idx) => {
+    for (let i = 0; i < group.users.length; i++) {
+      if (currentUserId === group.users[i].user.id) {
+        joinedGroup = true;
+      }
+    }
     return (
       <Box key={idx}>
         <SearchCard
@@ -31,6 +40,7 @@ export const GroupSearch: React.FC<searchProps> = ({}) => {
           description={group.description}
           visibility={group.visibility}
           users={group.users.length}
+          joined={joinedGroup}
         />
         <Divider borderBottomColor='gray.900' />
       </Box>

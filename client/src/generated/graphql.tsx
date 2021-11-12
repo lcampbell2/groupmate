@@ -522,7 +522,7 @@ export type GroupBySlugQuery = { __typename?: 'Query', groupBySlug?: Maybe<{ __t
 export type PublicGroupsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PublicGroupsQuery = { __typename?: 'Query', publicGroups?: Maybe<Array<{ __typename?: 'Group', id: number, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', group: { __typename?: 'Group', id: number } }> }>> };
+export type PublicGroupsQuery = { __typename?: 'Query', publicGroups?: Maybe<Array<{ __typename?: 'Group', id: number, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', user: { __typename?: 'User', id: number } }> }>> };
 
 export type IsUserAdminQueryVariables = Exact<{
   groupId: Scalars['Float'];
@@ -998,7 +998,7 @@ export const PublicGroupsDocument = gql`
     description
     visibility
     users {
-      group {
+      user {
         id
       }
     }
