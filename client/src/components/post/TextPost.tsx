@@ -31,6 +31,18 @@ export const TextPost: React.FC<TextPostProps> = ({
 }) => {
   const [_, createReply] = useCreateReplyMutation();
   const toast = useToast();
+  const newDate = new Date(parseInt(date));
+  date =
+    newDate.getDate() +
+    "/" +
+    (newDate.getMonth() + 1) +
+    "/" +
+    newDate.getFullYear() +
+    " at " +
+    newDate.getHours() +
+    ":" +
+    newDate.getMinutes();
+
   let replyList = null;
   if (!replies || replies?.length === 0) {
     replyList = (

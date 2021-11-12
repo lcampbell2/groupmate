@@ -9,7 +9,7 @@ import {
   Mutation,
   Field,
   ObjectType,
-  InputType,
+  // InputType,
 } from "type-graphql";
 import { User } from "../entities/User";
 import { Group } from "../entities/Group";
@@ -34,23 +34,26 @@ class EventResponse {
   event?: GroupEvent;
 }
 
-@InputType()
-class LocationInput {
-  @Field()
-  country: string;
+// @InputType()
+// class LocationInput {
+//   @Field()
+//   country: string;
 
-  @Field()
-  region: string;
+//   @Field()
+//   region: string;
 
-  @Field()
-  city: string;
+//   @Field()
+//   city: string;
 
-  @Field()
-  postalCode: string;
+//   @Field()
+//   postalCode: string;
 
-  @Field()
-  locationName: string;
-}
+//   @Field()
+//   address: string;
+
+//   @Field()
+//   locationName: string;
+// }
 
 @Resolver()
 export class PostResolver {
@@ -249,15 +252,14 @@ export class PostResolver {
     return { status: true };
   }
 
-  // TODO createEvent
   @Mutation(() => EventResponse)
   async createEvent(
+    @Arg("groupId") groupId: number,
     @Arg("title") title: string,
     @Arg("description") description: string,
-    @Arg("groupid") groupId: number,
-    @Arg("timeStamp") timeStamp: string,
-    @Arg("location") location: LocationInput,
-    @Arg("meetingLink") meetingLink: string,
+    @Arg("eventTime") eventTime: string,
+    @Arg("location", { nullable: true }) location: string,
+    @Arg("meetingLink", { nullable: true }) meetingLink: string,
     @Ctx() { em, req }: MyContext
   ): Promise<EventResponse> {
     if (title.length < 1) {
@@ -303,15 +305,100 @@ export class PostResolver {
       };
     }
 
+    if (eventTime.length < 1) {
+      return {
+        errors: [
+          {
+            field: "eventTime",
+            message: "eventTime empty",
+          },
+        ],
+      };
+    }
+
+    // if (location.locationName.length < 1) {
+    //   return {
+    //     errors: [
+    //       {
+    //         field: "locationName",
+    //         message: "locationName empty",
+    //       },
+    //     ],
+    //   };
+    // }
+    // if (location.address.length < 1) {
+    //   return {
+    //     errors: [
+    //       {
+    //         field: "address",
+    //         message: "address empty",
+    //       },
+    //     ],
+    //   };
+    // }
+    // if (location.city.length < 1) {
+    //   return {
+    //     errors: [
+    //       {
+    //         field: "city",
+    //         message: "city empty",
+    //       },
+    //     ],
+    //   };
+    // }
+    // if (location.region.length < 1) {
+    //   return {
+    //     errors: [
+    //       {
+    //         field: "region",
+    //         message: "region empty",
+    //       },
+    //     ],
+    //   };
+    // }
+    // if (location.country.length < 1) {
+    //   return {
+    //     errors: [
+    //       {
+    //         field: "country",
+    //         message: "country empty",
+    //       },
+    //     ],
+    //   };
+    // }
+    // if (location.postalCode.length < 1) {
+    //   return {
+    //     errors: [
+    //       {
+    //         field: "postalCode",
+    //         message: "postalCode empty",
+    //       },
+    //     ],
+    //   };
+    // }
+
     const event = em.create(GroupEvent, {
       title,
       description,
-      timeStamp,
+      eventTime,
       location,
       group,
       meetingLink,
-      createdBy: currentUser,
+      // createdBy: currentUser,
     });
+    group?.events.add(event);
+
+    try {
+      await em.persistAndFlush(event);
+    } catch (err) {
+      console.error(err);
+    }
+
+    try {
+      await em.persistAndFlush(group);
+    } catch (err) {
+      console.error(err);
+    }
 
     return { event };
   }

@@ -1,30 +1,14 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+  Entity,
+  ManyToOne,
+  // OneToOne,
+  PrimaryKey,
+  Property,
+} from "@mikro-orm/core";
 import { Field, Int, ObjectType } from "type-graphql";
 import { Group } from "./Group";
-import { User } from "./User";
-
-@ObjectType()
-class Location {
-  @Field()
-  @Property({ type: "text" })
-  country: string;
-
-  @Field()
-  @Property({ type: "text" })
-  region: string;
-
-  @Field()
-  @Property({ type: "text" })
-  city: string;
-
-  @Field()
-  @Property({ type: "text" })
-  postalCode: string;
-
-  @Field()
-  @Property({ type: "text" })
-  locationName: string;
-}
+// import { EventLocation } from "./EventLocation";
+// import { User } from "./User";
 
 @ObjectType()
 @Entity()
@@ -49,9 +33,9 @@ export class GroupEvent {
   @Property({ type: "text" })
   description!: string;
 
-  @Field(() => User)
-  @Property()
-  createdBy: User;
+  // @Field(() => User)
+  // @Property()
+  // createdBy: User;
 
   @Field(() => Group)
   @ManyToOne(() => Group)
@@ -59,13 +43,17 @@ export class GroupEvent {
 
   // time + date
   @Field(() => String)
-  @Property({ type: "timestamp" })
-  timeStamp: string;
+  @Property({ type: "date" })
+  eventTime: string;
 
   // location
-  @Field({ nullable: true })
-  @Property()
-  location?: Location;
+  // @Field(() => EventLocation, { nullable: true })
+  // @OneToOne({ nullable: true })
+  // location?: EventLocation;
+
+  @Field(() => String, { nullable: true })
+  @Property({ nullable: true })
+  location?: string;
 
   // online links
   @Field({ nullable: true })

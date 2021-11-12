@@ -49,6 +49,26 @@ export const GROUP_BY_SLUG = gql`
         displayName
         email
       }
+      events {
+        id
+        title
+        description
+        # createdBy {
+        #   id
+        #   displayName
+        # }
+        eventTime
+        # location {
+        #   locationName
+        #   city
+        #   region
+        #   country
+        #   address
+        #   postalCode
+        # }
+        location
+        meetingLink
+      }
     }
   }
   ${REG_POST}

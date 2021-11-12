@@ -310,3 +310,45 @@ export const DISMISS_INVITE_REQUEST = gql`
     }
   }
 `;
+
+export const CREATE_EVENT = gql`
+  mutation createEvent(
+    $groupId: Float!
+    $title: String!
+    $description: String!
+    $eventTime: String!
+    # $location: LocationInput!
+    $location: String
+    $meetingLink: String
+  ) {
+    createEvent(
+      groupId: $groupId
+      title: $title
+      description: $description
+      eventTime: $eventTime
+      location: $location
+      meetingLink: $meetingLink
+    ) {
+      errors {
+        field
+        message
+      }
+      event {
+        id
+        title
+        description
+        eventTime
+        # location {
+        #   locationName
+        #   address
+        #   city
+        #   region
+        #   country
+        #   postalCode
+        # }
+        location
+        meetingLink
+      }
+    }
+  }
+`;

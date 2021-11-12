@@ -19,6 +19,12 @@ export type BooleanResponse = {
   status: Scalars['Boolean'];
 };
 
+export type EventResponse = {
+  __typename?: 'EventResponse';
+  errors?: Maybe<Array<FieldError>>;
+  event?: Maybe<GroupEvent>;
+};
+
 export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
@@ -29,6 +35,7 @@ export type Group = {
   __typename?: 'Group';
   createdAt: Scalars['String'];
   description: Scalars['String'];
+  events?: Maybe<Array<GroupEvent>>;
   id: Scalars['Int'];
   inviteRequests?: Maybe<Array<User>>;
   name: Scalars['String'];
@@ -37,6 +44,19 @@ export type Group = {
   updatedAt: Scalars['String'];
   users: Array<GroupUser>;
   visibility: Scalars['String'];
+};
+
+export type GroupEvent = {
+  __typename?: 'GroupEvent';
+  createdAt: Scalars['String'];
+  description: Scalars['String'];
+  eventTime: Scalars['String'];
+  group: Group;
+  id: Scalars['Int'];
+  location?: Maybe<Scalars['String']>;
+  meetingLink?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
+  updatedAt: Scalars['String'];
 };
 
 export type GroupResponse = {
@@ -61,6 +81,7 @@ export type LoginInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   changeUserRole: BooleanResponse;
+  createEvent: EventResponse;
   createGroup: GroupResponse;
   createPost: PostResponse;
   createReply: PostResponse;
@@ -87,6 +108,16 @@ export type MutationChangeUserRoleArgs = {
   groupId: Scalars['Float'];
   newRole: Scalars['String'];
   userId: Scalars['Float'];
+};
+
+
+export type MutationCreateEventArgs = {
+  description: Scalars['String'];
+  eventTime: Scalars['String'];
+  groupId: Scalars['Float'];
+  location?: Maybe<Scalars['String']>;
+  meetingLink?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
 };
 
 
@@ -456,6 +487,18 @@ export type DismissInviteRequestMutationVariables = Exact<{
 
 export type DismissInviteRequestMutation = { __typename?: 'Mutation', dismissInviteRequest: { __typename?: 'BooleanResponse', status: boolean } };
 
+export type CreateEventMutationVariables = Exact<{
+  groupId: Scalars['Float'];
+  title: Scalars['String'];
+  description: Scalars['String'];
+  eventTime: Scalars['String'];
+  location?: Maybe<Scalars['String']>;
+  meetingLink?: Maybe<Scalars['String']>;
+}>;
+
+
+export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'EventResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, event?: Maybe<{ __typename?: 'GroupEvent', id: number, title: string, description: string, eventTime: string, location?: Maybe<string>, meetingLink?: Maybe<string> }> } };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -473,7 +516,7 @@ export type GroupBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GroupBySlugQuery = { __typename?: 'Query', groupBySlug?: Maybe<{ __typename?: 'Group', id: number, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', id: number, role: string, user: { __typename?: 'User', id: number, displayName: string } }>, posts?: Maybe<Array<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string }, replies?: Maybe<Array<{ __typename?: 'PostReply', id: number, updatedAt: string, message: string, author: { __typename?: 'User', id: number, displayName: string } }>> }>>, inviteRequests?: Maybe<Array<{ __typename?: 'User', id: number, displayName: string, email: string }>> }> };
+export type GroupBySlugQuery = { __typename?: 'Query', groupBySlug?: Maybe<{ __typename?: 'Group', id: number, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', id: number, role: string, user: { __typename?: 'User', id: number, displayName: string } }>, posts?: Maybe<Array<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string }, replies?: Maybe<Array<{ __typename?: 'PostReply', id: number, updatedAt: string, message: string, author: { __typename?: 'User', id: number, displayName: string } }>> }>>, inviteRequests?: Maybe<Array<{ __typename?: 'User', id: number, displayName: string, email: string }>>, events?: Maybe<Array<{ __typename?: 'GroupEvent', id: number, title: string, description: string, eventTime: string, location?: Maybe<string>, meetingLink?: Maybe<string> }>> }> };
 
 export type PublicGroupsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -844,6 +887,35 @@ export const DismissInviteRequestDocument = gql`
 export function useDismissInviteRequestMutation() {
   return Urql.useMutation<DismissInviteRequestMutation, DismissInviteRequestMutationVariables>(DismissInviteRequestDocument);
 };
+export const CreateEventDocument = gql`
+    mutation createEvent($groupId: Float!, $title: String!, $description: String!, $eventTime: String!, $location: String, $meetingLink: String) {
+  createEvent(
+    groupId: $groupId
+    title: $title
+    description: $description
+    eventTime: $eventTime
+    location: $location
+    meetingLink: $meetingLink
+  ) {
+    errors {
+      field
+      message
+    }
+    event {
+      id
+      title
+      description
+      eventTime
+      location
+      meetingLink
+    }
+  }
+}
+    `;
+
+export function useCreateEventMutation() {
+  return Urql.useMutation<CreateEventMutation, CreateEventMutationVariables>(CreateEventDocument);
+};
 export const MeDocument = gql`
     query me {
   me {
@@ -896,6 +968,14 @@ export const GroupBySlugDocument = gql`
       id
       displayName
       email
+    }
+    events {
+      id
+      title
+      description
+      eventTime
+      location
+      meetingLink
     }
   }
 }

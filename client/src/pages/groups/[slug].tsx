@@ -17,6 +17,7 @@ import { Formik, Form } from "formik";
 import { NextPage } from "next";
 import React, { useState } from "react";
 import { InputField } from "../../components/InputField";
+import { EventCard } from "../../components/post/EventCard";
 import { TextPost } from "../../components/post/TextPost";
 import { UserCard } from "../../components/user/UserCard";
 import {
@@ -27,8 +28,10 @@ import {
   useInviteUserToGroupMutation,
   useDismissInviteRequestMutation,
   useUpdateGroupMutation,
+  useCreateEventMutation,
 } from "../../generated/graphql";
 import { toErrorMap } from "../../utils/toErrorMap";
+import DateTimePicker from "react-datetime-picker";
 
 export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
   const toast = useToast();
@@ -36,6 +39,7 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
   const [_invite, inviteUser] = useInviteUserToGroupMutation();
   const [_dismiss, dismissRequest] = useDismissInviteRequestMutation();
   const [_updateGroup, updateGroup] = useUpdateGroupMutation();
+  const [_createEvent, createEvent] = useCreateEventMutation();
   const [{ data, fetching, error }, _query] = useGroupBySlugQuery({
     variables: { slug },
   });
@@ -47,6 +51,8 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
   });
   const [isEditingGroup, setIsEditingGroup] = useState(false);
   const [isCreatingPost, setIsCreatingPost] = useState(false);
+  const [isCreatingEvent, setIsCreatingEvent] = useState(false);
+  const [dateValue, setDateValue] = useState(new Date());
 
   if (fetching) {
     return <Box>Loading...</Box>;
@@ -106,6 +112,26 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
         isClosable: true,
       });
     }
+  };
+
+  const comparePostDates = (a, b) => {
+    if (a.createdAt < b.createdAt) {
+      return -1;
+    }
+    if (a.createdAt > b.createdAt) {
+      return 1;
+    }
+    return 0;
+  };
+
+  const compareEventDates = (a, b) => {
+    if (a.timeStamp < b.timeStamp) {
+      return -1;
+    }
+    if (a.timeStamp > b.timeStamp) {
+      return 1;
+    }
+    return 0;
   };
 
   if (error) {
@@ -263,7 +289,8 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
       </Box>
     );
   } else {
-    groupPosts = data?.groupBySlug?.posts?.map((post) => {
+    const sortedPosts = data.groupBySlug.posts.sort(comparePostDates).reverse();
+    groupPosts = sortedPosts?.map((post) => {
       return (
         <Box key={post.id}>
           <TextPost
@@ -273,6 +300,32 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
             date={post.updatedAt}
             authorName={post.author.displayName}
             replies={post.replies}
+          />
+          <Divider borderBottomColor='gray.900' />
+        </Box>
+      );
+    });
+  }
+
+  let groupEvents = null;
+  if (data?.groupBySlug?.events?.length === 0) {
+    groupEvents = (
+      <Box>
+        <Text fontWeight='bold'>No events found</Text>
+      </Box>
+    );
+  } else {
+    const sortedEvents = data?.groupBySlug?.events?.sort(compareEventDates);
+    groupEvents = sortedEvents?.map((event) => {
+      return (
+        <Box key={event.id}>
+          <EventCard
+            id={event.id}
+            title={event.title}
+            description={event.description}
+            eventTime={event.eventTime}
+            location={event.location}
+            meetingLink={event.meetingLink}
           />
           <Divider borderBottomColor='gray.900' />
         </Box>
@@ -370,6 +423,104 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
       </Box>
       <Text>Posts:</Text>
       {groupPosts}
+
+      <Box>
+        <Button onClick={() => setIsCreatingEvent(!isCreatingEvent)}>
+          New Event
+        </Button>
+        <Collapse in={isCreatingEvent}>
+          <Formik
+            initialValues={{
+              groupId: data?.groupBySlug?.id as number,
+              title: "",
+              description: "",
+              eventTime: new Date().toISOString(),
+              location: "",
+              meetingLink: "",
+            }}
+            onSubmit={async (values, { setErrors }) => {
+              alert(JSON.stringify(values));
+              const res = await createEvent(values);
+              console.log("res: ", res);
+              if (res?.data?.createEvent.errors) {
+                setErrors(toErrorMap(res.data.createEvent.errors));
+              } else if (res.data?.createEvent.event) {
+                toast({
+                  title: "Event successfully created.",
+                  description: `createEvent success`,
+                  status: "success",
+                  duration: 9000,
+                  isClosable: true,
+                });
+                // values.title = "";
+                // values.description = "";
+                setIsCreatingEvent(false);
+              }
+            }}
+          >
+            {({ handleChange }) => (
+              <Form>
+                <InputField
+                  name='title'
+                  label='Title'
+                  onChange={handleChange}
+                />
+                <FormControl>
+                  <FormLabel htmlFor='description'>Description</FormLabel>
+                  <Textarea name='description' onChange={handleChange} />
+                </FormControl>
+
+                {/* <InputField
+                  name='eventTime'
+                  label='Date/Time'
+                  onChange={handleChange}
+                /> */}
+                {/* <DateTimePicker onChange={setDateValue} value={dateValue} /> */}
+
+                <InputField
+                  name='location'
+                  label='Location Name'
+                  onChange={handleChange}
+                />
+                {/* <InputField
+                  name='location.address'
+                  label='Address'
+                  onChange={handleChange}
+                />
+                <InputField
+                  name='location.city'
+                  label='City'
+                  onChange={handleChange}
+                />
+                <InputField
+                  name='location.region'
+                  label='Province/State'
+                  onChange={handleChange}
+                />
+                <InputField
+                  name='location.Country'
+                  label='Country'
+                  onChange={handleChange}
+                />
+                <InputField
+                  name='location.postalCode'
+                  label='Postal Code'
+                  onChange={handleChange}
+                /> */}
+                <InputField
+                  name='meetingLink'
+                  label='Online Meeting Link'
+                  onChange={handleChange}
+                />
+                <Button type='submit'>Create Event</Button>
+              </Form>
+            )}
+          </Formik>
+        </Collapse>
+      </Box>
+      <Text>Events:</Text>
+
+      {groupEvents}
     </Box>
   );
 };

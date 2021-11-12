@@ -65,9 +65,9 @@ export class Group {
   inviteRequests: Collection<User> = new Collection<User>(this);
 
   // General meeting time
-  @Field(() => GroupEvent, { nullable: true })
-  @Property()
-  generalMeeting: GroupEvent;
+  // @Field(() => GroupEvent, { nullable: true })
+  // @Property()
+  // generalMeeting?: GroupEvent;
 
   // Group Events
   @Field(() => [GroupEvent], { nullable: true })
