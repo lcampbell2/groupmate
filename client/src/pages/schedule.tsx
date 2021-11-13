@@ -12,7 +12,7 @@ export const Schedule: React.FC<scheduleProps> = ({}) => {
   if (fetching) {
     eventList = (
       <Box>
-        <Text fontWeight='bold'>No events found</Text>
+        <Text fontWeight='bold'>Loading...</Text>
       </Box>
     );
   }
@@ -20,24 +20,32 @@ export const Schedule: React.FC<scheduleProps> = ({}) => {
     console.log(error);
   }
 
-  const sortedEvents = data?.myEvents?.sort(compareEventDates);
-  eventList = sortedEvents?.map((event) => {
-    return (
-      <Box key={event.id}>
-        <EventCard
-          id={event.id}
-          title={event.title}
-          description={event.description}
-          eventTime={event.eventTime}
-          location={event.location}
-          meetingLink={event.meetingLink}
-          groupName={event.group.name}
-          groupSlug={event.group.slug}
-        />
-        <Divider borderBottomColor='gray.900' />
+  if (data?.myEvents.length === 0) {
+    eventList = (
+      <Box>
+        <Text fontWeight='bold'>No events found</Text>
       </Box>
     );
-  });
+  } else {
+    const sortedEvents = data?.myEvents?.sort(compareEventDates);
+    eventList = sortedEvents?.map((event) => {
+      return (
+        <Box key={event.id}>
+          <EventCard
+            id={event.id}
+            title={event.title}
+            description={event.description}
+            eventTime={event.eventTime}
+            location={event.location}
+            meetingLink={event.meetingLink}
+            groupName={event.group.name}
+            groupSlug={event.group.slug}
+          />
+          <Divider borderBottomColor='gray.900' />
+        </Box>
+      );
+    });
+  }
   return (
     <Box>
       <Heading textAlign='center'>My Schedule</Heading>

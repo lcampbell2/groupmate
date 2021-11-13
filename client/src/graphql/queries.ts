@@ -30,6 +30,7 @@ export const GROUP_BY_SLUG = gql`
   query groupBySlug($slug: String!) {
     groupBySlug(slug: $slug) {
       id
+      createdAt
       name
       description
       visibility

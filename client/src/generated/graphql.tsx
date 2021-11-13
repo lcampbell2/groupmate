@@ -517,7 +517,7 @@ export type GroupBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GroupBySlugQuery = { __typename?: 'Query', groupBySlug?: Maybe<{ __typename?: 'Group', id: number, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', id: number, role: string, user: { __typename?: 'User', id: number, displayName: string } }>, posts?: Maybe<Array<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string }, replies?: Maybe<Array<{ __typename?: 'PostReply', id: number, updatedAt: string, message: string, author: { __typename?: 'User', id: number, displayName: string } }>> }>>, inviteRequests?: Maybe<Array<{ __typename?: 'User', id: number, displayName: string, email: string }>>, events?: Maybe<Array<{ __typename?: 'GroupEvent', id: number, title: string, description: string, eventTime: string, location?: Maybe<string>, meetingLink?: Maybe<string> }>> }> };
+export type GroupBySlugQuery = { __typename?: 'Query', groupBySlug?: Maybe<{ __typename?: 'Group', id: number, createdAt: string, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', id: number, role: string, user: { __typename?: 'User', id: number, displayName: string } }>, posts?: Maybe<Array<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string }, replies?: Maybe<Array<{ __typename?: 'PostReply', id: number, updatedAt: string, message: string, author: { __typename?: 'User', id: number, displayName: string } }>> }>>, inviteRequests?: Maybe<Array<{ __typename?: 'User', id: number, displayName: string, email: string }>>, events?: Maybe<Array<{ __typename?: 'GroupEvent', id: number, title: string, description: string, eventTime: string, location?: Maybe<string>, meetingLink?: Maybe<string> }>> }> };
 
 export type PublicGroupsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -956,6 +956,7 @@ export const GroupBySlugDocument = gql`
     query groupBySlug($slug: String!) {
   groupBySlug(slug: $slug) {
     id
+    createdAt
     name
     description
     visibility

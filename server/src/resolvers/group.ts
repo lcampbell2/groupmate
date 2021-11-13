@@ -80,6 +80,7 @@ export class GroupResolver {
       "users",
       "posts",
       "events",
+      "inviteRequests",
     ]);
     if (!group) {
       return null;
