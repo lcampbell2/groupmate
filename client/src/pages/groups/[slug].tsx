@@ -8,7 +8,6 @@ import {
   Select,
   Stack,
   Text,
-  Textarea,
   useToast,
   Collapse,
 } from "@chakra-ui/react";
@@ -23,9 +22,8 @@ import {
   useUpdateGroupMutation,
 } from "../../generated/graphql";
 import { toErrorMap } from "../../utils/toErrorMap";
-// import DateTimePicker from "react-datetime-picker";
 import { PostList } from "../../components/post/PostList";
-import { UserList } from "../../components/post/UserList";
+import { UserList } from "../../components/user/UserList";
 import { EventList } from "../../components/post/EventList";
 
 export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
@@ -41,7 +39,6 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
     variables: { groupId: data?.groupBySlug?.id as number },
   });
   const [isEditingGroup, setIsEditingGroup] = useState(false);
-  // const [dateValue, setDateValue] = useState(new Date());
 
   if (fetching) {
     return <Box>Loading...</Box>;

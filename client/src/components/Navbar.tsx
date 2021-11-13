@@ -1,17 +1,12 @@
-import { Button, Flex, Link, Stack, useToast } from "@chakra-ui/react";
+import { Flex, Link, Stack } from "@chakra-ui/react";
 import React from "react";
 import NextLink from "next/link";
-import { useLogoutMutation, useMeQuery } from "../generated/graphql";
-import { useRouter } from "next/dist/client/router";
+import { useMeQuery } from "../generated/graphql";
 
 interface NavbarProps {}
 
 export const Navbar: React.FC<NavbarProps> = ({}) => {
-  const router = useRouter();
-  const toast = useToast();
-  const [{ data, fetching }] = useMeQuery();
-  const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
-  let authLinks = null;
+  const [{ data }] = useMeQuery();
   let navBarLinks = (
     <>
       <NextLink href='/'>
@@ -20,9 +15,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
     </>
   );
 
-  if (fetching) {
-    authLinks = null;
-  } else if (data?.me) {
+  if (data?.me) {
     navBarLinks = (
       <>
         <NextLink href='/'>
@@ -37,53 +30,17 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
         <NextLink href='/groups/search'>
           <Link>Group Search</Link>
         </NextLink>
-      </>
-    );
-    authLinks = (
-      <>
         <NextLink href='/user'>
-          <Link>{data.me?.displayName}</Link>
+          <Link>User Profile</Link>
         </NextLink>
-        <Button
-          isLoading={logoutFetching}
-          onClick={() => {
-            router.push("/");
-            logout();
-            toast({
-              title: `Successfully signed out`,
-              description: "You have been successfully been logged out",
-              status: "success",
-              duration: 9000,
-              isClosable: true,
-            });
-          }}
-        >
-          Sign Out
-        </Button>
-      </>
-    );
-  } else {
-    authLinks = (
-      <>
-        <Button onClick={() => router.push("/login")}>Sign in</Button>
-        <Button onClick={() => router.push("/register")}>Create Account</Button>
-        {/* <NextLink href='/login'>
-          <Link>Sign In</Link>
-        </NextLink> */}
-        {/* <NextLink href='/register'>
-          <Link>Create Account</Link>
-        </NextLink> */}
       </>
     );
   }
 
   return (
-    <Flex bg='gray.300' p='4'>
+    <Flex bg='gray.300' px='8' py='4'>
       <Stack isInline align='center' spacing={10}>
         {navBarLinks}
-      </Stack>
-      <Stack isInline ml='auto' align='center' spacing={4}>
-        {authLinks}
       </Stack>
     </Flex>
   );

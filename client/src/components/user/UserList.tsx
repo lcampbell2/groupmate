@@ -16,7 +16,7 @@ import {
   User,
 } from "../../generated/graphql";
 import { InputField } from "../InputField";
-import { UserCard } from "../user/UserCard";
+import { UserCard } from "./UserCard";
 
 interface UserListProps {
   groupId: number;

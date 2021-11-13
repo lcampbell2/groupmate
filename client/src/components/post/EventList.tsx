@@ -16,6 +16,7 @@ import { compareEventDates } from "../../utils/compareEventDates";
 import { toErrorMap } from "../../utils/toErrorMap";
 import { InputField } from "../InputField";
 import { EventCard } from "./EventCard";
+// import DateTimePicker from "react-datetime-picker";
 
 interface EventListProps {
   groupId: number;
@@ -26,6 +27,7 @@ export const EventList: React.FC<EventListProps> = ({ groupId, events }) => {
   const [_createEvent, createEvent] = useCreateEventMutation();
   const [isCreatingEvent, setIsCreatingEvent] = useState(false);
   const toast = useToast();
+  // const [dateValue, setDateValue] = useState(new Date());
 
   let groupEvents = null;
   if (events?.length === 0) {
