@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Collapse,
   Divider,
   Flex,
   Select,
@@ -9,7 +10,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import {
   GroupUser,
   useDismissInviteRequestMutation,
@@ -37,6 +38,7 @@ export const UserList: React.FC<UserListProps> = ({
   const toast = useToast();
   const [_invite, inviteUser] = useInviteUserToGroupMutation();
   const [_dismiss, dismissRequest] = useDismissInviteRequestMutation();
+  const [showUserList, setShowUserList] = useState(false);
 
   const handleInviteUser = async (
     email: string,
@@ -149,37 +151,51 @@ export const UserList: React.FC<UserListProps> = ({
   }
 
   return (
-    <Box>
-      <Formik
-        initialValues={{ email: "", role: "read" }}
-        onSubmit={async (values) => {
-          handleInviteUser(values.email, groupId, values.role);
+    <Box bg='blue.100' px='2'>
+      <Button
+        my='2'
+        onClick={() => {
+          setShowUserList(!showUserList);
         }}
       >
-        {({ handleChange }) => (
-          <Form>
-            <InputField
-              name='email'
-              placeholder='Invite user by email'
-              label='User List'
-              onChange={handleChange}
-            />
-            {(isAdmin || isOwner) && (
-              <Stack isInline justifyContent='space-between' my='2'>
-                <Select name='role' onChange={handleChange} w='25%'>
-                  <option value='read'>READ</option>
-                  <option value='write'>WRITE</option>
-                  <option value='admin'>ADMIN</option>
-                </Select>
-                <Button type='submit'>Invite User</Button>
-              </Stack>
-            )}
-          </Form>
-        )}
-      </Formik>
-      <Divider borderBottomColor='gray.900' />
-      {userList}
-      {(isAdmin || isOwner) && inviteRequestsList}
+        User List
+      </Button>
+      <Collapse in={showUserList}>
+        <Formik
+          initialValues={{ email: "", role: "read" }}
+          onSubmit={async (values) => {
+            handleInviteUser(values.email, groupId, values.role);
+          }}
+        >
+          {({ handleChange }) => (
+            <Form>
+              <InputField
+                name='email'
+                placeholder='Invite user by email'
+                onChange={handleChange}
+              />
+              {(isAdmin || isOwner) && (
+                <Stack isInline justifyContent='space-between' my='2'>
+                  <Select
+                    name='role'
+                    onChange={handleChange}
+                    w='25%'
+                    bg='white'
+                  >
+                    <option value='read'>READ</option>
+                    <option value='write'>WRITE</option>
+                    <option value='admin'>ADMIN</option>
+                  </Select>
+                  <Button type='submit'>Invite User</Button>
+                </Stack>
+              )}
+            </Form>
+          )}
+        </Formik>
+        <Divider borderBottomColor='gray.900' />
+        {userList}
+        {(isAdmin || isOwner) && inviteRequestsList}
+      </Collapse>
     </Box>
   );
 };

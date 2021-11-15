@@ -1,4 +1,4 @@
-import { Flex, Link, Stack } from "@chakra-ui/react";
+import { Box, Flex, Link, Stack } from "@chakra-ui/react";
 import React from "react";
 import NextLink from "next/link";
 import { useMeQuery } from "../generated/graphql";
@@ -30,9 +30,6 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
         <NextLink href='/groups/search'>
           <Link>Group Search</Link>
         </NextLink>
-        <NextLink href='/user'>
-          <Link>User Profile</Link>
-        </NextLink>
       </>
     );
   }
@@ -42,6 +39,11 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
       <Stack isInline align='center' spacing={10}>
         {navBarLinks}
       </Stack>
+      <Box ml='auto'>
+        <NextLink href='/user'>
+          <Link>User Profile</Link>
+        </NextLink>
+      </Box>
     </Flex>
   );
 };

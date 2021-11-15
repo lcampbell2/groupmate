@@ -29,8 +29,9 @@ export const UserCard: React.FC<UserCardProps> = ({
     <Flex
       width='100%'
       alignItems={{ base: "flex-start", md: "center" }}
-      justifyContent='space-around'
+      justifyContent='space-between'
       p='4'
+      bg='blue.200'
     >
       <Text fontSize='lg' fontWeight='semibold' textDecoration='underline'>
         {displayName}
@@ -66,11 +67,11 @@ export const UserCard: React.FC<UserCardProps> = ({
                   <FormControl>
                     <Flex align='center'>
                       <FormLabel htmlFor='newRole'>Role:</FormLabel>
-
                       <Select
                         name='newRole'
                         onChange={handleChange}
                         defaultValue={values.newRole}
+                        bg='white'
                       >
                         <option value='read'>READ</option>
                         <option value='write'>WRITE</option>
