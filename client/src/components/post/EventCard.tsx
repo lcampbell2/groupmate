@@ -50,16 +50,20 @@ export const EventCard: React.FC<EventCardProps> = ({
         <Text fontWeight='bold'>Date/Time:</Text>
         <Text>{eventTime}</Text>
       </Stack>
-      <Stack isInline>
-        <Text fontWeight='bold'>Location:</Text>
-        <Text>{location}</Text>
-      </Stack>
-      <Stack isInline>
-        <Text fontWeight='bold'>Online Meeting Link:</Text>
-        <Link href={meetingLink} isExternal>
-          {meetingLink}
-        </Link>
-      </Stack>
+      {location && (
+        <Stack isInline>
+          <Text fontWeight='bold'>Location:</Text>
+          <Text>{location}</Text>
+        </Stack>
+      )}
+      {meetingLink && (
+        <Stack isInline>
+          <Text fontWeight='bold'>Online Meeting Link:</Text>
+          <Link href={meetingLink} isExternal>
+            {meetingLink}
+          </Link>
+        </Stack>
+      )}
       {groupName && (
         <Stack isInline>
           <Text fontWeight='bold'>Group:</Text>

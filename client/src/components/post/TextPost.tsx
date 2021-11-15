@@ -1,4 +1,4 @@
-import { Box, Stack, Text } from "@chakra-ui/layout";
+import { Box, Divider, Heading, Stack, Text } from "@chakra-ui/layout";
 import {
   FormControl,
   FormLabel,
@@ -44,73 +44,67 @@ export const TextPost: React.FC<TextPostProps> = ({
     newDate.getMinutes();
 
   let replyList = null;
-  if (!replies || replies?.length === 0) {
-    replyList = (
-      <Box>
-        <Text fontWeight='bold'>No Replies</Text>
-      </Box>
-    );
-  } else {
+  if (replies?.length > 0) {
     replyList = replies.map((reply) => {
       return (
-        <Box key={reply.id}>
-          <Text>User: {reply.author.displayName}</Text>
+        <Stack isInline align='center' key={reply.id}>
+          <Text fontWeight='bold'>{reply.author.displayName}:</Text>
           <Text>{reply.message}</Text>
-        </Box>
+        </Stack>
       );
     });
   }
   return (
     <Box>
-      <Stack isInline>
-        <Text fontWeight='bold'>Title:</Text>
-        <Text>{title}</Text>
-      </Stack>
-      <Stack isInline>
-        <Text fontWeight='bold'>Description:</Text>
-        <Text>{description}</Text>
-      </Stack>
-      <Stack isInline>
-        <Text fontWeight='bold'>Date:</Text>
-        <Text>{date}</Text>
-      </Stack>
-      <Stack isInline>
-        <Text fontWeight='bold'>Author:</Text>
-        <Text>{authorName}</Text>
-      </Stack>
-      <Text fontWeight='bold'>Replies:</Text>
-      {replyList}
-      <Formik
-        initialValues={{
-          postId: id,
-          replyMessage: "",
-        }}
-        onSubmit={async (values, { setErrors }) => {
-          const res = await createReply(values);
-          if (res?.data?.createReply.errors) {
-            setErrors(toErrorMap(res.data.createReply.errors));
-          } else if (res.data?.createReply.post) {
-            toast({
-              title: "Reply successfully created.",
-              description: `createReply success`,
-              status: "success",
-              duration: 9000,
-              isClosable: true,
-            });
-          }
-        }}
-      >
-        {({ handleChange }) => (
-          <Form>
-            <InputField
-              name='replyMessage'
-              label='New Reply'
-              onChange={handleChange}
-            />
-            <Button type='submit'>Reply</Button>
-          </Form>
-        )}
-      </Formik>
+      <Box bg='blue.200' p='2'>
+        <Text fontSize='sm' as='u'>
+          {authorName}, {date}
+        </Text>
+        <Text fontWeight='bold' fontSize='2xl'>
+          {title}
+        </Text>
+
+        <Text fontSize='lg'>{description}</Text>
+      </Box>
+      <Divider borderBottomColor='gray.900' />
+      <Box p='2'>
+        {replyList}
+
+        <Formik
+          initialValues={{
+            postId: id,
+            replyMessage: "",
+          }}
+          onSubmit={async (values, { setErrors }) => {
+            const res = await createReply(values);
+            if (res?.data?.createReply.errors) {
+              setErrors(toErrorMap(res.data.createReply.errors));
+            } else if (res.data?.createReply.post) {
+              toast({
+                title: "Reply successfully created.",
+                description: `createReply success`,
+                status: "success",
+                duration: 9000,
+                isClosable: true,
+              });
+              values.replyMessage = "";
+            }
+          }}
+        >
+          {({ handleChange }) => (
+            <Form>
+              <Stack isInline align='center' mb='2'>
+                <InputField
+                  name='replyMessage'
+                  onChange={handleChange}
+                  placeholder='New reply'
+                />
+                <Button type='submit'>Reply</Button>
+              </Stack>
+            </Form>
+          )}
+        </Formik>
+      </Box>
     </Box>
   );
 };

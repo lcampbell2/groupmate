@@ -28,7 +28,6 @@ export const UserCard: React.FC<UserCardProps> = ({
   return (
     <Flex
       width='100%'
-      //   direction={{ base: "column", md: "row" }}
       alignItems={{ base: "flex-start", md: "center" }}
       justifyContent='space-around'
       p='4'

@@ -8,7 +8,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import React from "react";
-// import { useRouter } from "next/dist/client/router";
 import {
   useJoinGroupMutation,
   useRequestGroupInviteMutation,
@@ -90,7 +89,6 @@ export const SearchCard: React.FC<SearchCardProps> = ({
   return (
     <Flex
       width='100%'
-      //   direction={{ base: "column", md: "row" }}
       alignItems={{ base: "flex-start", md: "center" }}
       justifyContent='space-around'
       p='4'
@@ -102,20 +100,10 @@ export const SearchCard: React.FC<SearchCardProps> = ({
           </Text>
         </Stack>
       </Box>
-      <Box
-        // flexBasis={{ md: "7em" }}
-        mr={{ md: "1em" }}
-        // minWidth={{ md: "2em" }}
-        align='center'
-      >
+      <Box mr={{ md: "1em" }} align='center'>
         <Text fontWeight='semibold'>{description}</Text>
       </Box>
-      <Box
-        // flexBasis={{ md: "7em" }}
-        mr={{ md: "1em" }}
-        // minWidth={{ md: "2em" }}
-        align='center'
-      >
+      <Box mr={{ md: "1em" }} align='center'>
         <Text fontWeight='semibold'>Total users: {users}</Text>
       </Box>
       {joined ? <Badge>Joined</Badge> : joinButtons}

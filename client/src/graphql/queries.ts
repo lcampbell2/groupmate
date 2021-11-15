@@ -11,8 +11,8 @@ export const ME = gql`
 `;
 
 export const MY_GROUPS = gql`
-  query myGroups($userId: Float!) {
-    myGroups(userId: $userId) {
+  query myGroups {
+    myGroups {
       id
       group {
         id

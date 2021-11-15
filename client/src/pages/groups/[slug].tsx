@@ -44,6 +44,10 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
     return <Box>Loading...</Box>;
   }
 
+  if (error) {
+    return <Box>Error: {JSON.stringify(error)}</Box>;
+  }
+
   const isAdmin = isUserAdmin.data?.isUserAdmin;
   const isOwner = isUserOwner.data?.isUserOwner;
 
@@ -144,6 +148,8 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
       <EventList
         groupId={data.groupBySlug.id}
         events={data.groupBySlug.events}
+        isAdmin={isAdmin}
+        isOwner={isOwner}
       />
     </Box>
   );

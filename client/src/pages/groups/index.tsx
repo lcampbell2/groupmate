@@ -1,24 +1,20 @@
 import { Box, Heading, Input } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { useMeQuery, useMyGroupsQuery } from "../../generated/graphql";
+import { useMyGroupsQuery } from "../../generated/graphql";
 import { GroupCard } from "../../components/group/GroupCard";
 
 interface indexProps {}
 
 export const Groups: React.FC<indexProps> = ({}) => {
-  const [{ data: userData, fetching: loadingUser, error: userError }] =
-    useMeQuery();
-  const [{ data, fetching, error }, _] = useMyGroupsQuery({
-    variables: { userId: userData?.me?.id as number },
-  });
+  const [{ data, fetching, error }, _] = useMyGroupsQuery();
   const [searchTerm, setSearchTerm] = useState("");
   let groupList = null;
 
-  if (fetching || loadingUser) {
+  if (fetching) {
     groupList = <Box>Loading...</Box>;
   }
 
-  if (error || userError) {
+  if (error) {
     groupList = <Box>{JSON.stringify(error)}</Box>;
     console.error(error);
   }

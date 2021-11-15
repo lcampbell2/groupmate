@@ -7,7 +7,7 @@ interface FooterProps {}
 export const Footer: React.FC<FooterProps> = ({}) => {
   return (
     <Box
-      bg='gray.300'
+      bg='red.300'
       position='absolute'
       bottom='0'
       w='100%'

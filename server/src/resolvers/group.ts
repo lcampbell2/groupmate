@@ -50,12 +50,11 @@ export class GroupResolver {
   // queries
   @Query(() => [GroupUser], { nullable: true })
   async myGroups(
-    @Arg("userId") userId: number,
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<Collection<GroupUser> | null> {
     const currentUser = await em.findOne(
       User,
-      { id: userId },
+      { id: req.session.userId },
       { orderBy: { slug: "asc" } }
     );
     if (!currentUser) {

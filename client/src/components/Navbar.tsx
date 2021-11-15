@@ -38,7 +38,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
   }
 
   return (
-    <Flex bg='gray.300' px='8' py='4'>
+    <Flex bg='gray.200' px='8' py='4'>
       <Stack isInline align='center' spacing={10}>
         {navBarLinks}
       </Stack>

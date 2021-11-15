@@ -21,9 +21,16 @@ import { EventCard } from "./EventCard";
 interface EventListProps {
   groupId: number;
   events: Array<GroupEvent>;
+  isAdmin: boolean;
+  isOwner: boolean;
 }
 
-export const EventList: React.FC<EventListProps> = ({ groupId, events }) => {
+export const EventList: React.FC<EventListProps> = ({
+  groupId,
+  events,
+  isAdmin,
+  isOwner,
+}) => {
   const [_createEvent, createEvent] = useCreateEventMutation();
   const [isCreatingEvent, setIsCreatingEvent] = useState(false);
   const toast = useToast();
@@ -56,64 +63,65 @@ export const EventList: React.FC<EventListProps> = ({ groupId, events }) => {
   }
   return (
     <Box>
-      <Box>
-        <Button onClick={() => setIsCreatingEvent(!isCreatingEvent)}>
-          New Event
-        </Button>
-        <Collapse in={isCreatingEvent}>
-          <Formik
-            initialValues={{
-              groupId,
-              title: "",
-              description: "",
-              eventTime: new Date().toISOString(),
-              location: "",
-              meetingLink: "",
-            }}
-            onSubmit={async (values, { setErrors }) => {
-              const res = await createEvent(values);
-              console.log("res: ", res);
-              if (res?.data?.createEvent.errors) {
-                setErrors(toErrorMap(res.data.createEvent.errors));
-              } else if (res.data?.createEvent.event) {
-                toast({
-                  title: "Event successfully created.",
-                  description: `createEvent success`,
-                  status: "success",
-                  duration: 9000,
-                  isClosable: true,
-                });
-                values.title = "";
-                values.description = "";
-                setIsCreatingEvent(false);
-              }
-            }}
-          >
-            {({ handleChange }) => (
-              <Form>
-                <InputField
-                  name='title'
-                  label='Title'
-                  onChange={handleChange}
-                />
-                <FormControl>
-                  <FormLabel htmlFor='description'>Description</FormLabel>
-                  <Textarea name='description' onChange={handleChange} />
-                </FormControl>
+      {(isAdmin || isOwner) && (
+        <Box>
+          <Button onClick={() => setIsCreatingEvent(!isCreatingEvent)}>
+            New Event
+          </Button>
+          <Collapse in={isCreatingEvent}>
+            <Formik
+              initialValues={{
+                groupId,
+                title: "",
+                description: "",
+                eventTime: new Date().toISOString(),
+                location: "",
+                meetingLink: "",
+              }}
+              onSubmit={async (values, { setErrors }) => {
+                const res = await createEvent(values);
+                console.log("res: ", res);
+                if (res?.data?.createEvent.errors) {
+                  setErrors(toErrorMap(res.data.createEvent.errors));
+                } else if (res.data?.createEvent.event) {
+                  toast({
+                    title: "Event successfully created.",
+                    description: `createEvent success`,
+                    status: "success",
+                    duration: 9000,
+                    isClosable: true,
+                  });
+                  values.title = "";
+                  values.description = "";
+                  setIsCreatingEvent(false);
+                }
+              }}
+            >
+              {({ handleChange }) => (
+                <Form>
+                  <InputField
+                    name='title'
+                    label='Title'
+                    onChange={handleChange}
+                  />
+                  <FormControl>
+                    <FormLabel htmlFor='description'>Description</FormLabel>
+                    <Textarea name='description' onChange={handleChange} />
+                  </FormControl>
 
-                {/* <InputField
+                  {/* <InputField
                   name='eventTime'
                   label='Date/Time'
                   onChange={handleChange}
                 /> */}
-                {/* <DateTimePicker onChange={setDateValue} value={dateValue} /> */}
+                  {/* <DateTimePicker onChange={setDateValue} value={dateValue} /> */}
 
-                <InputField
-                  name='location'
-                  label='Location Name'
-                  onChange={handleChange}
-                />
-                {/* <InputField
+                  <InputField
+                    name='location'
+                    label='Location Name'
+                    onChange={handleChange}
+                  />
+                  {/* <InputField
                   name='location.address'
                   label='Address'
                   onChange={handleChange}
@@ -138,17 +146,18 @@ export const EventList: React.FC<EventListProps> = ({ groupId, events }) => {
                   label='Postal Code'
                   onChange={handleChange}
                 /> */}
-                <InputField
-                  name='meetingLink'
-                  label='Online Meeting Link'
-                  onChange={handleChange}
-                />
-                <Button type='submit'>Create Event</Button>
-              </Form>
-            )}
-          </Formik>
-        </Collapse>
-      </Box>
+                  <InputField
+                    name='meetingLink'
+                    label='Online Meeting Link'
+                    onChange={handleChange}
+                  />
+                  <Button type='submit'>Create Event</Button>
+                </Form>
+              )}
+            </Formik>
+          </Collapse>
+        </Box>
+      )}
       <Text>Events:</Text>
       {groupEvents}
     </Box>

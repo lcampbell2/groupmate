@@ -4,6 +4,7 @@ import {
   Divider,
   Flex,
   Select,
+  Stack,
   Text,
   useToast,
 } from "@chakra-ui/react";
@@ -164,14 +165,14 @@ export const UserList: React.FC<UserListProps> = ({
               onChange={handleChange}
             />
             {(isAdmin || isOwner) && (
-              <>
-                <Select name='role' onChange={handleChange}>
+              <Stack isInline justifyContent='space-between' my='2'>
+                <Select name='role' onChange={handleChange} w='25%'>
                   <option value='read'>READ</option>
                   <option value='write'>WRITE</option>
                   <option value='admin'>ADMIN</option>
                 </Select>
                 <Button type='submit'>Invite User</Button>
-              </>
+              </Stack>
             )}
           </Form>
         )}

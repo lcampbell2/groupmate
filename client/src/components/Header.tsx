@@ -3,7 +3,6 @@ import { Button, Heading, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/dist/client/router";
 import React from "react";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
-import NextLink from "next/link";
 
 interface HeaderProps {}
 
@@ -45,7 +44,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
   }
 
   return (
-    <Box bg='gray.300'>
+    <Box bg='red.300'>
       <Flex px='8' py='4'>
         <Heading>GroupMate</Heading>
         <Stack isInline ml='auto' align='center' spacing={4}>

@@ -300,11 +300,6 @@ export type QueryIsUserOwnerArgs = {
 };
 
 
-export type QueryMyGroupsArgs = {
-  userId: Scalars['Float'];
-};
-
-
 export type QueryPostArgs = {
   id: Scalars['Int'];
 };
@@ -505,9 +500,7 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, displayName: string }> };
 
-export type MyGroupsQueryVariables = Exact<{
-  userId: Scalars['Float'];
-}>;
+export type MyGroupsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MyGroupsQuery = { __typename?: 'Query', myGroups?: Maybe<Array<{ __typename?: 'GroupUser', id: number, role: string, group: { __typename?: 'Group', id: number, name: string, description: string, slug: string, visibility: string } }>> };
@@ -934,8 +927,8 @@ export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'q
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
 };
 export const MyGroupsDocument = gql`
-    query myGroups($userId: Float!) {
-  myGroups(userId: $userId) {
+    query myGroups {
+  myGroups {
     id
     group {
       id

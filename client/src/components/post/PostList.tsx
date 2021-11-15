@@ -62,9 +62,9 @@ export const PostList: React.FC<PostListProps> = ({ groupId, posts }) => {
   }
 
   return (
-    <Box>
-      <Box>
-        <Button onClick={() => setIsCreatingPost(!isCreatingPost)}>
+    <Box bg='blue.100' px='2' py='1'>
+      <Box my='2'>
+        <Button onClick={() => setIsCreatingPost(!isCreatingPost)} mb='2'>
           New Post
         </Button>
         <Collapse in={isCreatingPost}>
@@ -98,10 +98,17 @@ export const PostList: React.FC<PostListProps> = ({ groupId, posts }) => {
                   name='title'
                   label='Title'
                   onChange={handleChange}
+                  placeholder='Post title'
                 />
                 <FormControl>
                   <FormLabel htmlFor='description'>Description</FormLabel>
-                  <Textarea name='description' onChange={handleChange} />
+                  <Textarea
+                    name='description'
+                    onChange={handleChange}
+                    placeholder='I am making this post because...'
+                    mb='2'
+                    bg='white'
+                  />
                 </FormControl>
                 <Button type='submit'>Create Post</Button>
               </Form>
@@ -109,7 +116,6 @@ export const PostList: React.FC<PostListProps> = ({ groupId, posts }) => {
           </Formik>
         </Collapse>
       </Box>
-      <Text>Posts:</Text>
       {groupPosts}
     </Box>
   );

@@ -7,45 +7,43 @@ import { useMeQuery, usePublicGroupsQuery } from "../../generated/graphql";
 interface searchProps {}
 
 export const GroupSearch: React.FC<searchProps> = ({}) => {
-  const [{ data: meData }] = useMeQuery();
+  const [{ data: meData, fetching: meFetching }] = useMeQuery();
   const [{ data, fetching, error }] = usePublicGroupsQuery();
   const [searchTerm, setSearchTerm] = useState("");
   let groupList = null;
   let joinedGroup = false;
-  if (fetching) {
+  if (fetching || meFetching) {
     groupList = <Box>Loading...</Box>;
-  }
-
-  if (!data || error) {
+  } else if (!data || error) {
     groupList = <Box>An error has occured</Box>;
-  }
+  } else {
+    const currentUserId = meData.me.id;
 
-  const currentUserId = meData.me.id;
+    const filteredList = data?.publicGroups?.filter((group) => {
+      return group.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
+    });
 
-  const filteredList = data?.publicGroups?.filter((group) => {
-    return group.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
-  });
-
-  groupList = filteredList?.map((group, idx) => {
-    for (let i = 0; i < group.users.length; i++) {
-      if (currentUserId === group.users[i].user.id) {
-        joinedGroup = true;
+    groupList = filteredList?.map((group, idx) => {
+      for (let i = 0; i < group.users.length; i++) {
+        if (currentUserId === group.users[i].user.id) {
+          joinedGroup = true;
+        }
       }
-    }
-    return (
-      <Box key={idx}>
-        <SearchCard
-          groupId={group.id}
-          name={group.name}
-          description={group.description}
-          visibility={group.visibility}
-          users={group.users.length}
-          joined={joinedGroup}
-        />
-        <Divider borderBottomColor='gray.900' />
-      </Box>
-    );
-  });
+      return (
+        <Box key={idx}>
+          <SearchCard
+            groupId={group.id}
+            name={group.name}
+            description={group.description}
+            visibility={group.visibility}
+            users={group.users.length}
+            joined={joinedGroup}
+          />
+          <Divider borderBottomColor='gray.900' />
+        </Box>
+      );
+    });
+  }
 
   return (
     <Box>
