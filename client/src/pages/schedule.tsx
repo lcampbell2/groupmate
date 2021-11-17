@@ -35,7 +35,8 @@ export const Schedule: React.FC<scheduleProps> = ({}) => {
             id={event.id}
             title={event.title}
             description={event.description}
-            eventTime={event.eventTime}
+            startTime={event.startTime}
+            endTime={event.endTime}
             location={event.location}
             meetingLink={event.meetingLink}
             groupName={event.group.name}

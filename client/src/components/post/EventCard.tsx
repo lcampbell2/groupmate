@@ -67,8 +67,9 @@ export const EventCard: React.FC<EventCardProps> = ({
       <Text fontSize='lg'>{description}</Text>
       <Stack isInline>
         <Text fontWeight='bold'>When:</Text>
-        <Text>{startTime}</Text>
-        <Text>{endTime}</Text>
+        <Text>
+          {startTime} - {endTime}
+        </Text>
       </Stack>
       {location && (
         <Stack isInline>
