@@ -1,8 +1,8 @@
 export const compareEventDates = (a, b) => {
-  if (a.eventTime < b.eventTime) {
+  if (a.startTime < b.startTime) {
     return -1;
   }
-  if (a.eventTime > b.eventTime) {
+  if (a.startTime > b.startTime) {
     return 1;
   }
   return 0;

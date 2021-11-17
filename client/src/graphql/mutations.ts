@@ -316,8 +316,8 @@ export const CREATE_EVENT = gql`
     $groupId: Float!
     $title: String!
     $description: String!
-    $eventTime: String!
-    # $location: LocationInput!
+    $startTime: String!
+    $endTime: String!
     $location: String
     $meetingLink: String
   ) {
@@ -325,7 +325,8 @@ export const CREATE_EVENT = gql`
       groupId: $groupId
       title: $title
       description: $description
-      eventTime: $eventTime
+      startTime: $startTime
+      endTime: $endTime
       location: $location
       meetingLink: $meetingLink
     ) {
@@ -337,15 +338,8 @@ export const CREATE_EVENT = gql`
         id
         title
         description
-        eventTime
-        # location {
-        #   locationName
-        #   address
-        #   city
-        #   region
-        #   country
-        #   postalCode
-        # }
+        startTime
+        endTime
         location
         meetingLink
       }

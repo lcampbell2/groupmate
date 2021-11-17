@@ -50,11 +50,12 @@ export type GroupEvent = {
   __typename?: 'GroupEvent';
   createdAt: Scalars['String'];
   description: Scalars['String'];
-  eventTime: Scalars['String'];
+  endTime: Scalars['String'];
   group: Group;
   id: Scalars['Int'];
   location?: Maybe<Scalars['String']>;
   meetingLink?: Maybe<Scalars['String']>;
+  startTime: Scalars['String'];
   title: Scalars['String'];
   updatedAt: Scalars['String'];
 };
@@ -113,10 +114,11 @@ export type MutationChangeUserRoleArgs = {
 
 export type MutationCreateEventArgs = {
   description: Scalars['String'];
-  eventTime: Scalars['String'];
+  endTime: Scalars['String'];
   groupId: Scalars['Float'];
   location?: Maybe<Scalars['String']>;
   meetingLink?: Maybe<Scalars['String']>;
+  startTime: Scalars['String'];
   title: Scalars['String'];
 };
 
@@ -487,13 +489,14 @@ export type CreateEventMutationVariables = Exact<{
   groupId: Scalars['Float'];
   title: Scalars['String'];
   description: Scalars['String'];
-  eventTime: Scalars['String'];
+  startTime: Scalars['String'];
+  endTime: Scalars['String'];
   location?: Maybe<Scalars['String']>;
   meetingLink?: Maybe<Scalars['String']>;
 }>;
 
 
-export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'EventResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, event?: Maybe<{ __typename?: 'GroupEvent', id: number, title: string, description: string, eventTime: string, location?: Maybe<string>, meetingLink?: Maybe<string> }> } };
+export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'EventResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, event?: Maybe<{ __typename?: 'GroupEvent', id: number, title: string, description: string, startTime: string, endTime: string, location?: Maybe<string>, meetingLink?: Maybe<string> }> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -510,7 +513,7 @@ export type GroupBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GroupBySlugQuery = { __typename?: 'Query', groupBySlug?: Maybe<{ __typename?: 'Group', id: number, createdAt: string, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', id: number, role: string, user: { __typename?: 'User', id: number, displayName: string } }>, posts?: Maybe<Array<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string }, replies?: Maybe<Array<{ __typename?: 'PostReply', id: number, updatedAt: string, message: string, author: { __typename?: 'User', id: number, displayName: string } }>> }>>, inviteRequests?: Maybe<Array<{ __typename?: 'User', id: number, displayName: string, email: string }>>, events?: Maybe<Array<{ __typename?: 'GroupEvent', id: number, title: string, description: string, eventTime: string, location?: Maybe<string>, meetingLink?: Maybe<string> }>> }> };
+export type GroupBySlugQuery = { __typename?: 'Query', groupBySlug?: Maybe<{ __typename?: 'Group', id: number, createdAt: string, name: string, description: string, visibility: string, users: Array<{ __typename?: 'GroupUser', id: number, role: string, user: { __typename?: 'User', id: number, displayName: string } }>, posts?: Maybe<Array<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string }, replies?: Maybe<Array<{ __typename?: 'PostReply', id: number, updatedAt: string, message: string, author: { __typename?: 'User', id: number, displayName: string } }>> }>>, inviteRequests?: Maybe<Array<{ __typename?: 'User', id: number, displayName: string, email: string }>>, events?: Maybe<Array<{ __typename?: 'GroupEvent', id: number, title: string, description: string, startTime: string, endTime: string, location?: Maybe<string>, meetingLink?: Maybe<string> }>> }> };
 
 export type PublicGroupsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -534,7 +537,7 @@ export type IsUserOwnerQuery = { __typename?: 'Query', isUserOwner: boolean };
 export type MyEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyEventsQuery = { __typename?: 'Query', myEvents?: Maybe<Array<{ __typename?: 'GroupEvent', id: number, title: string, description: string, eventTime: string, location?: Maybe<string>, meetingLink?: Maybe<string>, group: { __typename?: 'Group', id: number, name: string, slug: string } }>> };
+export type MyEventsQuery = { __typename?: 'Query', myEvents?: Maybe<Array<{ __typename?: 'GroupEvent', id: number, title: string, description: string, startTime: string, endTime: string, location?: Maybe<string>, meetingLink?: Maybe<string>, group: { __typename?: 'Group', id: number, name: string, slug: string } }>> };
 
 export const RegUserFragmentDoc = gql`
     fragment RegUser on User {
@@ -887,12 +890,13 @@ export function useDismissInviteRequestMutation() {
   return Urql.useMutation<DismissInviteRequestMutation, DismissInviteRequestMutationVariables>(DismissInviteRequestDocument);
 };
 export const CreateEventDocument = gql`
-    mutation createEvent($groupId: Float!, $title: String!, $description: String!, $eventTime: String!, $location: String, $meetingLink: String) {
+    mutation createEvent($groupId: Float!, $title: String!, $description: String!, $startTime: String!, $endTime: String!, $location: String, $meetingLink: String) {
   createEvent(
     groupId: $groupId
     title: $title
     description: $description
-    eventTime: $eventTime
+    startTime: $startTime
+    endTime: $endTime
     location: $location
     meetingLink: $meetingLink
   ) {
@@ -904,7 +908,8 @@ export const CreateEventDocument = gql`
       id
       title
       description
-      eventTime
+      startTime
+      endTime
       location
       meetingLink
     }
@@ -973,7 +978,8 @@ export const GroupBySlugDocument = gql`
       id
       title
       description
-      eventTime
+      startTime
+      endTime
       location
       meetingLink
     }
@@ -1032,7 +1038,8 @@ export const MyEventsDocument = gql`
       name
       slug
     }
-    eventTime
+    startTime
+    endTime
     location
     meetingLink
   }

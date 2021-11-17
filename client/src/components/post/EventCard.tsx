@@ -6,7 +6,8 @@ interface EventCardProps {
   id: number;
   title: string;
   description: string;
-  eventTime: string;
+  startTime: string;
+  endTime: string;
   location?: string;
   meetingLink?: string;
   groupName?: string;
@@ -17,15 +18,28 @@ export const EventCard: React.FC<EventCardProps> = ({
   id,
   title,
   description,
-  eventTime,
+  startTime,
+  endTime,
   location,
   meetingLink,
   groupName,
   groupSlug,
 }) => {
   const router = useRouter();
-  const newDate = new Date(parseInt(eventTime));
-  eventTime =
+  let newDate = new Date(parseInt(startTime));
+  startTime =
+    newDate.getDate() +
+    "/" +
+    (newDate.getMonth() + 1) +
+    "/" +
+    newDate.getFullYear() +
+    " at " +
+    newDate.getHours() +
+    ":" +
+    newDate.getMinutes();
+
+  newDate = new Date(parseInt(endTime));
+  endTime =
     newDate.getDate() +
     "/" +
     (newDate.getMonth() + 1) +
@@ -37,22 +51,28 @@ export const EventCard: React.FC<EventCardProps> = ({
     newDate.getMinutes();
 
   return (
-    <Box>
+    <Box bg='blue.200' px='2' py='1'>
+      {groupName && (
+        <Button
+          color='black'
+          variant='link'
+          onClick={() => router.push(`/groups/${groupSlug}`)}
+        >
+          {groupName}
+        </Button>
+      )}
+      <Text fontSize='2xl' fontWeight='bold'>
+        {title}
+      </Text>
+      <Text fontSize='lg'>{description}</Text>
       <Stack isInline>
-        <Text fontWeight='bold'>Title:</Text>
-        <Text>{title}</Text>
-      </Stack>
-      <Stack isInline>
-        <Text fontWeight='bold'>Description:</Text>
-        <Text>{description}</Text>
-      </Stack>
-      <Stack isInline>
-        <Text fontWeight='bold'>Date/Time:</Text>
-        <Text>{eventTime}</Text>
+        <Text fontWeight='bold'>When:</Text>
+        <Text>{startTime}</Text>
+        <Text>{endTime}</Text>
       </Stack>
       {location && (
         <Stack isInline>
-          <Text fontWeight='bold'>Location:</Text>
+          <Text fontWeight='bold'>Where:</Text>
           <Text>{location}</Text>
         </Stack>
       )}
@@ -62,17 +82,6 @@ export const EventCard: React.FC<EventCardProps> = ({
           <Link href={meetingLink} isExternal>
             {meetingLink}
           </Link>
-        </Stack>
-      )}
-      {groupName && (
-        <Stack isInline>
-          <Text fontWeight='bold'>Group:</Text>
-          <Button
-            variant='link'
-            onClick={() => router.push(`/groups/${groupSlug}`)}
-          >
-            {groupName}
-          </Button>
         </Stack>
       )}
     </Box>

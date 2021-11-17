@@ -8,6 +8,8 @@ import { Navbar } from "../components/Navbar";
 import { Wrapper } from "../components/Wrapper";
 import { FOOTER_HEIGHT } from "../constants";
 import theme from "../theme";
+import "../public/DateTimePicker.css";
+import "../public/Calendar.css";
 
 function MyApp({ Component, pageProps }) {
   return (

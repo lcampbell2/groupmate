@@ -54,19 +54,8 @@ export const GROUP_BY_SLUG = gql`
         id
         title
         description
-        # createdBy {
-        #   id
-        #   displayName
-        # }
-        eventTime
-        # location {
-        #   locationName
-        #   city
-        #   region
-        #   country
-        #   address
-        #   postalCode
-        # }
+        startTime
+        endTime
         location
         meetingLink
       }
@@ -114,7 +103,8 @@ export const MY_EVENTS = gql`
         name
         slug
       }
-      eventTime
+      startTime
+      endTime
       location
       meetingLink
     }

@@ -16,7 +16,7 @@ import { compareEventDates } from "../../utils/compareEventDates";
 import { toErrorMap } from "../../utils/toErrorMap";
 import { InputField } from "../InputField";
 import { EventCard } from "./EventCard";
-// import DateTimePicker from "react-datetime-picker";
+import DateTimePicker from "react-datetime-picker/dist/entry.nostyle";
 
 interface EventListProps {
   groupId: number;
@@ -34,7 +34,8 @@ export const EventList: React.FC<EventListProps> = ({
   const [_createEvent, createEvent] = useCreateEventMutation();
   const [isCreatingEvent, setIsCreatingEvent] = useState(false);
   const toast = useToast();
-  // const [dateValue, setDateValue] = useState(new Date());
+  const [startTimeValue, setStartTimeValue] = useState(new Date());
+  const [endTimeValue, setEndTimeValue] = useState(new Date());
 
   let groupEvents = null;
   if (events?.length === 0) {
@@ -52,7 +53,8 @@ export const EventList: React.FC<EventListProps> = ({
             id={event.id}
             title={event.title}
             description={event.description}
-            eventTime={event.eventTime}
+            startTime={event.startTime}
+            endTime={event.endTime}
             location={event.location}
             meetingLink={event.meetingLink}
           />
@@ -61,6 +63,8 @@ export const EventList: React.FC<EventListProps> = ({
       );
     });
   }
+  console.log("start time:", startTimeValue);
+  console.log("end time:", endTimeValue);
   return (
     <Box>
       {(isAdmin || isOwner) && (
@@ -74,11 +78,15 @@ export const EventList: React.FC<EventListProps> = ({
                 groupId,
                 title: "",
                 description: "",
-                eventTime: new Date().toISOString(),
+                startTime: "",
+                endTime: "",
                 location: "",
                 meetingLink: "",
               }}
               onSubmit={async (values, { setErrors }) => {
+                values.startTime = startTimeValue.toISOString();
+                values.endTime = endTimeValue.toISOString();
+
                 const res = await createEvent(values);
                 console.log("res: ", res);
                 if (res?.data?.createEvent.errors) {
@@ -109,43 +117,29 @@ export const EventList: React.FC<EventListProps> = ({
                     <Textarea name='description' onChange={handleChange} />
                   </FormControl>
 
-                  {/* <InputField
-                  name='eventTime'
-                  label='Date/Time'
-                  onChange={handleChange}
-                /> */}
-                  {/* <DateTimePicker onChange={setDateValue} value={dateValue} /> */}
+                  <FormControl>
+                    <FormLabel>Start Time:</FormLabel>
+                    <DateTimePicker
+                      name='startTime'
+                      value={startTimeValue}
+                      onChange={setStartTimeValue}
+                    />
+                  </FormControl>
+
+                  <FormControl>
+                    <FormLabel>End Time:</FormLabel>
+                    <DateTimePicker
+                      name='endTime'
+                      value={endTimeValue}
+                      onChange={setEndTimeValue}
+                    />
+                  </FormControl>
 
                   <InputField
                     name='location'
                     label='Location Name'
                     onChange={handleChange}
                   />
-                  {/* <InputField
-                  name='location.address'
-                  label='Address'
-                  onChange={handleChange}
-                />
-                <InputField
-                  name='location.city'
-                  label='City'
-                  onChange={handleChange}
-                />
-                <InputField
-                  name='location.region'
-                  label='Province/State'
-                  onChange={handleChange}
-                />
-                <InputField
-                  name='location.Country'
-                  label='Country'
-                  onChange={handleChange}
-                />
-                <InputField
-                  name='location.postalCode'
-                  label='Postal Code'
-                  onChange={handleChange}
-                /> */}
                   <InputField
                     name='meetingLink'
                     label='Online Meeting Link'

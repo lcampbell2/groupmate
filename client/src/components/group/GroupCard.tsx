@@ -19,7 +19,6 @@ export const GroupCard: React.FC<GroupCardProps> = ({
   return (
     <Flex
       width='100%'
-      //   direction={{ base: "column", md: "row" }}
       alignItems={{ base: "flex-start", md: "center" }}
       justifyContent='space-around'
       _hover={{ md: { bg: ["", "gray.100"] } }}
@@ -29,21 +28,14 @@ export const GroupCard: React.FC<GroupCardProps> = ({
         router.push(`/groups/${slug}`);
       }}
     >
-      <Box>
-        <Stack isInline align='center'>
-          <Text fontSize='lg' fontWeight='semibold' textDecoration='underline'>
-            {name}
-          </Text>
-        </Stack>
-      </Box>
-      {/* <Box
-        // flexBasis={{ md: "7em" }}
-        mr={{ md: "1em" }}
-        // minWidth={{ md: "2em" }}
-        align='center'
-      >
+      <Stack isInline align='center'>
+        <Text fontSize='lg' fontWeight='semibold' textDecoration='underline'>
+          {name}
+        </Text>
+      </Stack>
+      <Box mr={{ md: "1em" }} align='center'>
         <Text fontWeight='semibold'>{description}</Text>
-      </Box> */}
+      </Box>
     </Flex>
   );
 };

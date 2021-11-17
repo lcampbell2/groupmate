@@ -1,14 +1,6 @@
-import {
-  Entity,
-  ManyToOne,
-  // OneToOne,
-  PrimaryKey,
-  Property,
-} from "@mikro-orm/core";
+import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, Int, ObjectType } from "type-graphql";
 import { Group } from "./Group";
-// import { EventLocation } from "./EventLocation";
-// import { User } from "./User";
 
 @ObjectType()
 @Entity()
@@ -33,10 +25,6 @@ export class GroupEvent {
   @Property({ type: "text" })
   description!: string;
 
-  // @Field(() => User)
-  // @Property()
-  // createdBy: User;
-
   @Field(() => Group)
   @ManyToOne(() => Group)
   group: Group;
@@ -44,12 +32,11 @@ export class GroupEvent {
   // time + date
   @Field(() => String)
   @Property({ type: "date" })
-  eventTime: string;
+  startTime: string;
 
-  // location
-  // @Field(() => EventLocation, { nullable: true })
-  // @OneToOne({ nullable: true })
-  // location?: EventLocation;
+  @Field(() => String)
+  @Property({ type: "date" })
+  endTime: string;
 
   @Field(() => String, { nullable: true })
   @Property({ nullable: true })

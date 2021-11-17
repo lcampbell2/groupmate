@@ -93,13 +93,11 @@ export const SearchCard: React.FC<SearchCardProps> = ({
       justifyContent='space-around'
       p='4'
     >
-      <Box>
-        <Stack isInline align='center'>
-          <Text fontSize='lg' fontWeight='semibold' textDecoration='underline'>
-            {name}
-          </Text>
-        </Stack>
-      </Box>
+      <Stack isInline align='center'>
+        <Text fontSize='lg' fontWeight='semibold' textDecoration='underline'>
+          {name}
+        </Text>
+      </Stack>
       <Box mr={{ md: "1em" }} align='center'>
         <Text fontWeight='semibold'>{description}</Text>
       </Box>
