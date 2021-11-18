@@ -6,7 +6,6 @@ import {
   FormLabel,
   Heading,
   Select,
-  Stack,
   Text,
   useToast,
   Collapse,
@@ -94,6 +93,8 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
               <FormControl>
                 <FormLabel htmlFor='visibility'>Group Visibility</FormLabel>
                 <Select
+                  w='25%'
+                  bg='white'
                   name='visibility'
                   onChange={handleChange}
                   defaultValue={values.visibility}
@@ -103,7 +104,9 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
                   <option value='private'>Private</option>
                 </Select>
               </FormControl>
-              <Button type='submit'>Update Group</Button>
+              <Button type='submit' my='2'>
+                Update Group
+              </Button>
             </Form>
           )}
         </Formik>
@@ -111,32 +114,27 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
     </Collapse>
   );
 
-  const groupInfo = (
-    <Box>
-      {isOwner && (
-        <Box>
-          <Button onClick={() => setIsEditingGroup(!isEditingGroup)}>
-            Edit
-          </Button>
-          {editGroupInfo}
-        </Box>
-      )}
-      <Stack isInline>
-        <Text fontWeight='bold'>Name:</Text>
-        <Text>{data?.groupBySlug?.name}</Text>
-      </Stack>
-      <Stack isInline>
-        <Text fontWeight='bold'>Description:</Text>
-        <Text>{data?.groupBySlug?.description}</Text>
-      </Stack>
-      <Divider borderBottomColor='gray.900' />
-    </Box>
-  );
-
   return (
     <Box>
-      <Heading textAlign='center'>Group Details</Heading>
-      {groupInfo}
+      <Heading textAlign='center'>
+        {data?.groupBySlug?.name.toUpperCase()}
+      </Heading>
+      <Text textAlign='center' fontSize='xl'>
+        {data?.groupBySlug?.description}
+      </Text>
+      {isOwner && (
+        <Box bg='blue.100' px='2' py='1'>
+          <Button
+            onClick={() => setIsEditingGroup(!isEditingGroup)}
+            w='100%'
+            my='2'
+          >
+            Edit Group
+          </Button>
+          {editGroupInfo}
+          <Divider borderBottomColor='gray.900' />
+        </Box>
+      )}
       <UserList
         groupId={data.groupBySlug.id}
         users={data.groupBySlug.users}
@@ -144,7 +142,9 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
         isAdmin={isAdmin}
         isOwner={isOwner}
       />
+      <Divider borderBottomColor='gray.900' />
       <PostList groupId={data.groupBySlug.id} posts={data.groupBySlug.posts} />
+      <Divider borderBottomColor='gray.900' />
       <EventList
         groupId={data.groupBySlug.id}
         events={data.groupBySlug.events}

@@ -208,8 +208,10 @@ export const CREATE_POST = gql`
         field
         message
       }
-      post {
-        ...RegPost
+      group {
+        posts {
+          ...RegPost
+        }
       }
     }
   }

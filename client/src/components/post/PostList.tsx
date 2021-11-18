@@ -64,7 +64,11 @@ export const PostList: React.FC<PostListProps> = ({ groupId, posts }) => {
   return (
     <Box bg='blue.100' px='2' py='1'>
       <Box my='2'>
-        <Button onClick={() => setIsCreatingPost(!isCreatingPost)} mb='2'>
+        <Button
+          onClick={() => setIsCreatingPost(!isCreatingPost)}
+          mb='2'
+          w='100%'
+        >
           New Post
         </Button>
         <Collapse in={isCreatingPost}>
@@ -78,7 +82,7 @@ export const PostList: React.FC<PostListProps> = ({ groupId, posts }) => {
               const res = await createPost(values);
               if (res?.data?.createPost.errors) {
                 setErrors(toErrorMap(res.data.createPost.errors));
-              } else if (res.data?.createPost.post) {
+              } else if (res.data?.createPost.group.posts) {
                 toast({
                   title: "Post successfully created.",
                   description: `createPost success`,

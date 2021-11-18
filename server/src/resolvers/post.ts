@@ -1,5 +1,10 @@
 import { Post } from "../entities/Post";
-import { BooleanResponse, FieldError, MyContext } from "../types";
+import {
+  BooleanResponse,
+  FieldError,
+  GroupResponse,
+  MyContext,
+} from "../types";
 import {
   Resolver,
   Query,
@@ -77,13 +82,13 @@ export class PostResolver {
   }
 
   // mutations
-  @Mutation(() => PostResponse)
+  @Mutation(() => GroupResponse)
   async createPost(
     @Arg("title") title: String,
     @Arg("description") description: String,
     @Arg("groupId") groupId: number,
     @Ctx() { em, req }: MyContext
-  ): Promise<PostResponse> {
+  ): Promise<GroupResponse> {
     // validate input
     if (title.length < 1) {
       return {
@@ -152,7 +157,7 @@ export class PostResolver {
       console.error(err);
     }
 
-    return { post };
+    return { group };
   }
 
   @Mutation(() => Post, { nullable: true })

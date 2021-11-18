@@ -153,6 +153,7 @@ export const UserList: React.FC<UserListProps> = ({
   return (
     <Box bg='blue.100' px='2'>
       <Button
+        w='100%'
         my='2'
         onClick={() => {
           setShowUserList(!showUserList);

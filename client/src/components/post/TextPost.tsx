@@ -1,12 +1,7 @@
-import { Box, Divider, Heading, Stack, Text } from "@chakra-ui/layout";
-import {
-  FormControl,
-  FormLabel,
-  Textarea,
-  Button,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Stack, Text } from "@chakra-ui/layout";
+import { Button, useToast } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
+import { useRouter } from "next/dist/client/router";
 import React from "react";
 import { PostReply, useCreateReplyMutation } from "../../generated/graphql";
 import { toErrorMap } from "../../utils/toErrorMap";
@@ -18,7 +13,9 @@ interface TextPostProps {
   description: string;
   date: string;
   authorName: string;
-  replies: Array<PostReply> | undefined | null;
+  replies?: Array<PostReply> | undefined | null;
+  groupName?: string;
+  groupSlug?: string;
 }
 
 export const TextPost: React.FC<TextPostProps> = ({
@@ -28,9 +25,12 @@ export const TextPost: React.FC<TextPostProps> = ({
   date,
   authorName,
   replies,
+  groupName,
+  groupSlug,
 }) => {
   const [_, createReply] = useCreateReplyMutation();
   const toast = useToast();
+  const router = useRouter();
   const newDate = new Date(parseInt(date));
   date =
     newDate.getDate() +
@@ -54,22 +54,29 @@ export const TextPost: React.FC<TextPostProps> = ({
       );
     });
   }
+
   return (
     <Box>
       <Box bg='blue.200' p='2'>
+        {groupName && (
+          <Button
+            color='black'
+            variant='link'
+            onClick={() => router.push(`/groups/${groupSlug}`)}
+          >
+            {groupName}
+          </Button>
+        )}
         <Text fontSize='sm' as='u'>
           {authorName}, {date}
         </Text>
         <Text fontWeight='bold' fontSize='2xl'>
           {title}
         </Text>
-
         <Text fontSize='lg'>{description}</Text>
       </Box>
-      <Divider borderBottomColor='gray.900' />
       <Box p='2'>
         {replyList}
-
         <Formik
           initialValues={{
             postId: id,

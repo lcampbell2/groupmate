@@ -1,11 +1,10 @@
-import { BooleanResponse, FieldError, MyContext } from "../types";
+import { BooleanResponse, GroupResponse, MyContext } from "../types";
 import {
   Resolver,
   Ctx,
   Query,
   InputType,
   Field,
-  ObjectType,
   Mutation,
   Arg,
 } from "type-graphql";
@@ -26,15 +25,6 @@ class NewGroupInput {
   visibility: GroupVisibility;
 }
 
-@ObjectType()
-class GroupResponse {
-  @Field(() => [FieldError], { nullable: true })
-  errors?: FieldError[];
-
-  @Field(() => Group, { nullable: true })
-  group?: Group;
-}
-
 @Resolver()
 export class GroupResolver {
   // dev tools
@@ -52,6 +42,7 @@ export class GroupResolver {
   async myGroups(
     @Ctx() { em, req }: MyContext
   ): Promise<Collection<GroupUser> | null> {
+    // const groups = await em.find(Group, {});
     const currentUser = await em.findOne(
       User,
       { id: req.session.userId },

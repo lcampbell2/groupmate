@@ -63,13 +63,16 @@ export const EventList: React.FC<EventListProps> = ({
       );
     });
   }
-  console.log("start time:", startTimeValue);
-  console.log("end time:", endTimeValue);
+
   return (
-    <Box>
+    <Box bg='blue.100' px='2'>
       {(isAdmin || isOwner) && (
         <Box>
-          <Button onClick={() => setIsCreatingEvent(!isCreatingEvent)}>
+          <Button
+            my='2'
+            onClick={() => setIsCreatingEvent(!isCreatingEvent)}
+            w='100%'
+          >
             New Event
           </Button>
           <Collapse in={isCreatingEvent}>
@@ -110,16 +113,23 @@ export const EventList: React.FC<EventListProps> = ({
                   <InputField
                     name='title'
                     label='Title'
+                    placeholder='Event title'
                     onChange={handleChange}
                   />
                   <FormControl>
                     <FormLabel htmlFor='description'>Description</FormLabel>
-                    <Textarea name='description' onChange={handleChange} />
+                    <Textarea
+                      placeholder='This event is awesome because...'
+                      bg='white'
+                      name='description'
+                      onChange={handleChange}
+                    />
                   </FormControl>
 
                   <FormControl>
                     <FormLabel>Start Time:</FormLabel>
                     <DateTimePicker
+                      bg='white'
                       name='startTime'
                       value={startTimeValue}
                       onChange={setStartTimeValue}
@@ -136,16 +146,20 @@ export const EventList: React.FC<EventListProps> = ({
                   </FormControl>
 
                   <InputField
+                    placeholder='The event will take place at...'
                     name='location'
                     label='Location Name'
                     onChange={handleChange}
                   />
                   <InputField
+                    placeholder='Zoom, Google Meet, MS Teams, etc.'
                     name='meetingLink'
                     label='Online Meeting Link'
                     onChange={handleChange}
                   />
-                  <Button type='submit'>Create Event</Button>
+                  <Button my='2' type='submit'>
+                    Create Event
+                  </Button>
                 </Form>
               )}
             </Formik>

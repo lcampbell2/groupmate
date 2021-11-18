@@ -84,7 +84,7 @@ export type Mutation = {
   changeUserRole: BooleanResponse;
   createEvent: EventResponse;
   createGroup: GroupResponse;
-  createPost: PostResponse;
+  createPost: GroupResponse;
   createReply: PostResponse;
   dismissInviteRequest: BooleanResponse;
   forgotPassword: Scalars['Boolean'];
@@ -419,7 +419,7 @@ export type CreatePostMutationVariables = Exact<{
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'PostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, post?: Maybe<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string }, replies?: Maybe<Array<{ __typename?: 'PostReply', id: number, updatedAt: string, message: string, author: { __typename?: 'User', id: number, displayName: string } }>> }> } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'GroupResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>>, group?: Maybe<{ __typename?: 'Group', posts?: Maybe<Array<{ __typename?: 'Post', id: number, title: string, updatedAt: string, description: string, author: { __typename?: 'User', id: number, displayName: string }, replies?: Maybe<Array<{ __typename?: 'PostReply', id: number, updatedAt: string, message: string, author: { __typename?: 'User', id: number, displayName: string } }>> }>> }> } };
 
 export type UpdatePostMutationVariables = Exact<{
   id: Scalars['Float'];
@@ -770,8 +770,10 @@ export const CreatePostDocument = gql`
       field
       message
     }
-    post {
-      ...RegPost
+    group {
+      posts {
+        ...RegPost
+      }
     }
   }
 }
