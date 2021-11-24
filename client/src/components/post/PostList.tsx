@@ -55,16 +55,19 @@ export const PostList: React.FC<PostListProps> = ({ groupId, posts }) => {
             authorName={post.author.displayName}
             replies={post.replies}
           />
-          <Divider borderBottomColor='gray.900' />
         </Box>
       );
     });
   }
 
   return (
-    <Box bg='blue.100' px='2' py='1'>
+    <Box px='2' py='1'>
       <Box my='2'>
         <Button
+          bg='shirtDark'
+          textColor='gray.200'
+          _hover={{ bg: "gray.700" }}
+          s
           onClick={() => setIsCreatingPost(!isCreatingPost)}
           mb='2'
           w='100%'
@@ -72,52 +75,62 @@ export const PostList: React.FC<PostListProps> = ({ groupId, posts }) => {
           New Post
         </Button>
         <Collapse in={isCreatingPost}>
-          <Formik
-            initialValues={{
-              groupId,
-              title: "",
-              description: "",
-            }}
-            onSubmit={async (values, { setErrors }) => {
-              const res = await createPost(values);
-              if (res?.data?.createPost.errors) {
-                setErrors(toErrorMap(res.data.createPost.errors));
-              } else if (res.data?.createPost.group.posts) {
-                toast({
-                  title: "Post successfully created.",
-                  description: `createPost success`,
-                  status: "success",
-                  duration: 9000,
-                  isClosable: true,
-                });
-                values.title = "";
-                values.description = "";
-                setIsCreatingPost(false);
-              }
-            }}
-          >
-            {({ handleChange }) => (
-              <Form>
-                <InputField
-                  name='title'
-                  label='Title'
-                  onChange={handleChange}
-                  placeholder='Post title'
-                />
-                <FormControl>
-                  <FormLabel htmlFor='description'>Description</FormLabel>
-                  <Textarea
-                    name='description'
+          <Box bg='shirtPink' px='2' py='1'>
+            <Formik
+              initialValues={{
+                groupId,
+                title: "",
+                description: "",
+              }}
+              onSubmit={async (values, { setErrors }) => {
+                const res = await createPost(values);
+                if (res?.data?.createPost.errors) {
+                  setErrors(toErrorMap(res.data.createPost.errors));
+                } else if (res.data?.createPost.group.posts) {
+                  toast({
+                    title: "Post successfully created.",
+                    description: `createPost success`,
+                    status: "success",
+                    duration: 9000,
+                    isClosable: true,
+                  });
+                  values.title = "";
+                  values.description = "";
+                  setIsCreatingPost(false);
+                }
+              }}
+            >
+              {({ handleChange }) => (
+                <Form>
+                  <InputField
+                    name='title'
+                    label='Title'
                     onChange={handleChange}
-                    placeholder='I am making this post because...'
-                    mb='2'
-                    bg='white'
+                    placeholder='Post title'
                   />
-                </FormControl>
-                <Button type='submit'>Create Post</Button>
-              </Form>
-            )}
-          </Formik>
+                  <FormControl>
+                    <FormLabel htmlFor='description'>Description</FormLabel>
+                    <Textarea
+                      color='white'
+                      bg='shirtDark'
+                      name='description'
+                      onChange={handleChange}
+                      placeholder='I am making this post because...'
+                      mb='2'
+                    />
+                  </FormControl>
+                  <Button
+                    bg='shirtDark'
+                    textColor='gray.200'
+                    _hover={{ bg: "gray.700" }}
+                    type='submit'
+                  >
+                    Create Post
+                  </Button>
+                </Form>
+              )}
+            </Formik>
+          </Box>
         </Collapse>
       </Box>
       {groupPosts}

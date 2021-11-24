@@ -51,7 +51,7 @@ export const EventCard: React.FC<EventCardProps> = ({
     newDate.getMinutes();
 
   return (
-    <Box bg='blue.200' px='2' py='1'>
+    <Box bg='shirtPink' px='2' py='1' mb='2'>
       {groupName && (
         <Button
           color='black'

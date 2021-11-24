@@ -31,7 +31,7 @@ export const UserCard: React.FC<UserCardProps> = ({
       alignItems={{ base: "flex-start", md: "center" }}
       justifyContent='space-between'
       p='4'
-      bg='blue.200'
+      bg='shirtRed'
     >
       <Text fontSize='lg' fontWeight='semibold' textDecoration='underline'>
         {displayName}

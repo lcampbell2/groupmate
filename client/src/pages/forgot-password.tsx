@@ -32,8 +32,22 @@ export const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
           <Form>
             <InputField name='email' label='Email' onChange={handleChange} />
             <Stack isInline my='4'>
-              <Button type='submit'>Submit</Button>
-              <Button onClick={() => router.push("/login")}>Back</Button>
+              <Button
+                bg='shirtDark'
+                textColor='gray.200'
+                _hover={{ bg: "gray.700" }}
+                type='submit'
+              >
+                Submit
+              </Button>
+              <Button
+                bg='shirtDark'
+                textColor='gray.200'
+                _hover={{ bg: "gray.700" }}
+                onClick={() => router.push("/login")}
+              >
+                Back
+              </Button>
             </Stack>
           </Form>
         )}

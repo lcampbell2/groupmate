@@ -40,11 +40,17 @@ export const Login: React.FC<loginProps> = ({}) => {
       >
         {({ handleChange }) => (
           <Form>
-            <InputField name='email' label='Email' onChange={handleChange} />
+            <InputField
+              name='email'
+              label='Email'
+              placeholder='Email'
+              onChange={handleChange}
+            />
             <InputField
               type='password'
               name='password'
               label='Password'
+              placeholder='password'
               onChange={handleChange}
             />
             <Button
@@ -54,8 +60,22 @@ export const Login: React.FC<loginProps> = ({}) => {
               Forgot your password?
             </Button>
             <Stack isInline my='4'>
-              <Button type='submit'>Login</Button>
-              <Button onClick={() => router.push("/")}>Back</Button>
+              <Button
+                bg='shirtDark'
+                textColor='gray.200'
+                _hover={{ bg: "gray.700" }}
+                type='submit'
+              >
+                Login
+              </Button>
+              <Button
+                bg='shirtDark'
+                textColor='gray.200'
+                _hover={{ bg: "gray.700" }}
+                onClick={() => router.push("/")}
+              >
+                Back
+              </Button>
             </Stack>
           </Form>
         )}

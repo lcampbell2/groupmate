@@ -19,14 +19,12 @@ import { GroupResolver } from "./resolvers/group";
 // import { GroupUser } from "./entities/GroupUser";
 // import { PostReply } from "./entities/PostReply";
 // import { GroupEvent } from "./entities/GroupEvent";
-// import { EventLocation } from "./entities/EventLocation";
 
 const main = async () => {
   const orm = await MikroORM.init(mikroOrmConfig);
 
   //    use to clear db
   // ====================================
-  // await orm.em.nativeDelete(EventLocation, {});
   // await orm.em.nativeDelete(GroupEvent, {});
   // await orm.em.nativeDelete(PostReply, {});
   // await orm.em.nativeDelete(GroupUser, {});

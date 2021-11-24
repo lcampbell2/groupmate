@@ -42,11 +42,17 @@ export const EditableUserEmail: React.FC<EditableUserEmailProps> = ({
         Email:
       </Text>
       <Flex align='center'>
-        <EmailIcon color='gray.400' />
+        <EmailIcon color='shirtDark' />
         <Text ml='2' mb='1'>
           {currentEmail}
         </Text>
-        <Button ml='auto' onClick={onOpen}>
+        <Button
+          bg='shirtDark'
+          textColor='gray.200'
+          _hover={{ bg: "gray.700" }}
+          ml='auto'
+          onClick={onOpen}
+        >
           Edit
         </Button>
       </Flex>
@@ -57,7 +63,7 @@ export const EditableUserEmail: React.FC<EditableUserEmailProps> = ({
         motionPreset='slideInBottom'
       >
         <ModalOverlay />
-        <ModalContent pb='4'>
+        <ModalContent pb='4' bg='shirtDark' color='white'>
           <Formik
             validateOnBlur={false}
             initialValues={{
@@ -105,7 +111,14 @@ export const EditableUserEmail: React.FC<EditableUserEmailProps> = ({
                 </ModalBody>
 
                 <ModalFooter>
-                  <Button isLoading={isSubmitting} type='submit' mr='4'>
+                  <Button
+                    bg='white'
+                    textColor='black'
+                    _hover={{ bg: "gray.400" }}
+                    isLoading={isSubmitting}
+                    type='submit'
+                    mr='4'
+                  >
                     Confirm
                   </Button>
                 </ModalFooter>

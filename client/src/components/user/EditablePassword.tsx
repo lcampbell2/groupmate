@@ -36,11 +36,17 @@ export const EditablePassword: React.FC<EditablePasswordProps> = ({
         Password:
       </Text>
       <Flex align='center'>
-        <LockIcon color='gray.400' />
+        <LockIcon color='shirtDark' />
         <Text ml='2' mt='2'>
           ********
         </Text>
-        <Button ml='auto' onClick={onOpen}>
+        <Button
+          bg='shirtDark'
+          textColor='gray.200'
+          _hover={{ bg: "gray.700" }}
+          ml='auto'
+          onClick={onOpen}
+        >
           Edit
         </Button>
       </Flex>
@@ -52,7 +58,7 @@ export const EditablePassword: React.FC<EditablePasswordProps> = ({
         motionPreset='slideInBottom'
       >
         <ModalOverlay />
-        <ModalContent pb='4'>
+        <ModalContent pb='4' bg='shirtDark' color='white'>
           <Formik
             validateOnBlur={false}
             initialValues={{
@@ -110,7 +116,14 @@ export const EditablePassword: React.FC<EditablePasswordProps> = ({
                 </ModalBody>
 
                 <ModalFooter>
-                  <Button isLoading={isSubmitting} type='submit' mr='4'>
+                  <Button
+                    bg='white'
+                    textColor='black'
+                    _hover={{ bg: "gray.400" }}
+                    isLoading={isSubmitting}
+                    type='submit'
+                    mr='4'
+                  >
                     Confirm
                   </Button>
                 </ModalFooter>

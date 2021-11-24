@@ -52,24 +52,45 @@ export const CreateOrganization: React.FC<createProps> = ({}) => {
             <InputField
               name='name'
               label='Group Name'
+              placeholder='Group name'
               onChange={handleChange}
             />
             <InputField
               name='description'
               label='Description'
+              placeholder='Description of group'
               onChange={handleChange}
             />
             <FormControl>
               <FormLabel htmlFor='visibility'>Group Visibility</FormLabel>
-              <Select name='visibility' onChange={handleChange}>
+              <Select
+                name='visibility'
+                onChange={handleChange}
+                bg='shirtDark'
+                color='gray.400'
+              >
                 <option value='open'>Open</option>
                 <option value='closed'>Closed</option>
                 <option value='private'>Private</option>
               </Select>
             </FormControl>
-            <Stack isInline my='4'>
-              <Button type='submit'>Create Group</Button>
-              <Button onClick={() => router.push("/")}>Back</Button>
+            <Stack isInline my='4' justifyContent='space-between'>
+              <Button
+                bg='shirtDark'
+                textColor='gray.200'
+                _hover={{ bg: "gray.700" }}
+                type='submit'
+              >
+                Create Group
+              </Button>
+              <Button
+                bg='shirtDark'
+                textColor='gray.200'
+                _hover={{ bg: "gray.700" }}
+                onClick={() => router.push("/")}
+              >
+                Back
+              </Button>
             </Stack>
           </Form>
         )}

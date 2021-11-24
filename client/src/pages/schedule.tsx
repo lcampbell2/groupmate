@@ -49,7 +49,9 @@ export const Schedule: React.FC<scheduleProps> = ({}) => {
   }
   return (
     <Box>
-      <Heading textAlign='center'>My Schedule</Heading>
+      <Heading textAlign='center' mb='2'>
+        My Schedule
+      </Heading>
       {eventList}
     </Box>
   );

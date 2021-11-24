@@ -81,9 +81,23 @@ export const SearchCard: React.FC<SearchCardProps> = ({
 
   const joinButtons =
     visibility === "open" ? (
-      <Button onClick={handleJoin}>Join</Button>
+      <Button
+        bg='shirtDark'
+        textColor='gray.200'
+        _hover={{ bg: "gray.700" }}
+        onClick={handleJoin}
+      >
+        Join
+      </Button>
     ) : (
-      <Button onClick={handleRequestInvite}>Request Invite</Button>
+      <Button
+        bg='shirtDark'
+        textColor='gray.200'
+        _hover={{ bg: "gray.700" }}
+        onClick={handleRequestInvite}
+      >
+        Request Invite
+      </Button>
     );
 
   return (
@@ -104,7 +118,13 @@ export const SearchCard: React.FC<SearchCardProps> = ({
       <Box mr={{ md: "1em" }} align='center'>
         <Text fontWeight='semibold'>Total users: {users}</Text>
       </Box>
-      {joined ? <Badge>Joined</Badge> : joinButtons}
+      {joined ? (
+        <Badge bg='shirtDark' textColor='gray.200'>
+          Joined
+        </Badge>
+      ) : (
+        joinButtons
+      )}
     </Flex>
   );
 };

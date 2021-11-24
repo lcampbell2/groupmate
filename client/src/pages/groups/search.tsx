@@ -51,8 +51,11 @@ export const GroupSearch: React.FC<searchProps> = ({}) => {
         Group Search
       </Heading>
       <Input
+        bg='shirtDark'
+        textColor='white'
         placeholder='Search for groups'
         onChange={(e) => setSearchTerm(e.target.value)}
+        mb='2'
       />
       {groupList}
     </Box>

@@ -44,27 +44,49 @@ export const Register: React.FC<registerProps> = ({}) => {
       >
         {({ handleChange }) => (
           <Form>
-            <InputField name='email' label='Email' onChange={handleChange} />
+            <InputField
+              name='email'
+              label='Email'
+              placeholder='Email'
+              onChange={handleChange}
+            />
             <InputField
               name='displayName'
               label='Display Name'
+              placeholder='Display Name'
               onChange={handleChange}
             />
             <InputField
               type='password'
               name='password'
               label='Password'
+              placeholder='Password'
               onChange={handleChange}
             />
             <InputField
               type='password'
               name='confirmPassword'
               label='Confirm Password'
+              placeholder='Confirm password'
               onChange={handleChange}
             />
             <Stack isInline my='4'>
-              <Button type='submit'>Register</Button>
-              <Button onClick={() => router.push("/")}>Back</Button>
+              <Button
+                bg='shirtDark'
+                textColor='gray.200'
+                _hover={{ bg: "gray.700" }}
+                type='submit'
+              >
+                Register
+              </Button>
+              <Button
+                bg='shirtDark'
+                textColor='gray.200'
+                _hover={{ bg: "gray.700" }}
+                onClick={() => router.push("/")}
+              >
+                Back
+              </Button>
             </Stack>
           </Form>
         )}

@@ -128,31 +128,50 @@ export const UserList: React.FC<UserListProps> = ({
   } else {
     inviteRequestsList = inviteRequests?.map((request, idx) => {
       return (
-        <Flex key={idx}>
-          {request.email}
-          {request.displayName}
-          <Button
-            onClick={() => {
-              handleInviteUser(request.email, groupId, "read");
-            }}
-          >
-            Accept
-          </Button>
-          <Button
-            onClick={() => {
-              handleInviteDismiss(groupId, request.id);
-            }}
-          >
-            Dismiss
-          </Button>
+        <Flex
+          key={idx}
+          width='100%'
+          alignItems={{ base: "flex-start", md: "center" }}
+          justifyContent='space-between'
+          p='4'
+          bg='shirtPink'
+        >
+          <Text fontSize='lg' fontWeight='semibold' textDecoration='underline'>
+            {request.email} - {request.displayName}
+          </Text>
+          <Stack isInline>
+            <Button
+              bg='shirtDark'
+              textColor='gray.200'
+              _hover={{ bg: "gray.700" }}
+              onClick={() => {
+                handleInviteUser(request.email, groupId, "read");
+              }}
+            >
+              Accept
+            </Button>
+            <Button
+              bg='shirtDark'
+              textColor='gray.200'
+              _hover={{ bg: "gray.700" }}
+              onClick={() => {
+                handleInviteDismiss(groupId, request.id);
+              }}
+            >
+              Dismiss
+            </Button>
+          </Stack>
         </Flex>
       );
     });
   }
 
   return (
-    <Box bg='blue.100' px='2'>
+    <Box px='2'>
       <Button
+        bg='shirtDark'
+        textColor='gray.200'
+        _hover={{ bg: "gray.700" }}
         w='100%'
         my='2'
         onClick={() => {
@@ -162,40 +181,50 @@ export const UserList: React.FC<UserListProps> = ({
         User List
       </Button>
       <Collapse in={showUserList}>
-        <Formik
-          initialValues={{ email: "", role: "read" }}
-          onSubmit={async (values) => {
-            handleInviteUser(values.email, groupId, values.role);
-          }}
-        >
-          {({ handleChange }) => (
-            <Form>
-              <InputField
-                name='email'
-                placeholder='Invite user by email'
-                onChange={handleChange}
-              />
-              {(isAdmin || isOwner) && (
-                <Stack isInline justifyContent='space-between' my='2'>
-                  <Select
-                    name='role'
-                    onChange={handleChange}
-                    w='25%'
-                    bg='white'
-                  >
-                    <option value='read'>READ</option>
-                    <option value='write'>WRITE</option>
-                    <option value='admin'>ADMIN</option>
-                  </Select>
-                  <Button type='submit'>Invite User</Button>
-                </Stack>
-              )}
-            </Form>
-          )}
-        </Formik>
-        <Divider borderBottomColor='gray.900' />
-        {userList}
-        {(isAdmin || isOwner) && inviteRequestsList}
+        <Box bg='shirtPink' px='2' py='1'>
+          <Formik
+            initialValues={{ email: "", role: "read" }}
+            onSubmit={async (values) => {
+              handleInviteUser(values.email, groupId, values.role);
+            }}
+          >
+            {({ handleChange }) => (
+              <Form>
+                <InputField
+                  name='email'
+                  placeholder='Invite user by email'
+                  onChange={handleChange}
+                />
+                {(isAdmin || isOwner) && (
+                  <Stack isInline justifyContent='space-between' my='2'>
+                    <Select
+                      bg='shirtDark'
+                      color='gray.500'
+                      name='role'
+                      onChange={handleChange}
+                      w='25%'
+                    >
+                      <option value='read'>READ</option>
+                      <option value='write'>WRITE</option>
+                      <option value='admin'>ADMIN</option>
+                    </Select>
+                    <Button
+                      bg='shirtDark'
+                      textColor='gray.200'
+                      _hover={{ bg: "gray.700" }}
+                      type='submit'
+                    >
+                      Invite User
+                    </Button>
+                  </Stack>
+                )}
+              </Form>
+            )}
+          </Formik>
+          <Divider borderBottomColor='gray.900' />
+          {userList}
+          {(isAdmin || isOwner) && inviteRequestsList}
+        </Box>
       </Collapse>
     </Box>
   );

@@ -10,11 +10,7 @@ import { ME } from "../graphql/queries";
 interface userProps {}
 
 export const User: React.FC<userProps> = ({}) => {
-  // const router = useRouter();
   const [{ data }, me] = useQuery({ query: ME });
-  // if (!data?.me) {
-  //   router.push("/login");
-  // }
   return (
     <Stack my='4'>
       <Heading textAlign='center' mb='4'>

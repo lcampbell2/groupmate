@@ -1,5 +1,5 @@
 import { Box, Stack, Text } from "@chakra-ui/layout";
-import { Button, useToast } from "@chakra-ui/react";
+import { Button, Divider, useToast } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/dist/client/router";
 import React from "react";
@@ -56,8 +56,8 @@ export const TextPost: React.FC<TextPostProps> = ({
   }
 
   return (
-    <Box>
-      <Box bg='blue.200' p='2'>
+    <Box bg='shirtPink' mb='2'>
+      <Box p='2'>
         {groupName && (
           <Button
             color='black'
@@ -75,6 +75,7 @@ export const TextPost: React.FC<TextPostProps> = ({
         </Text>
         <Text fontSize='lg'>{description}</Text>
       </Box>
+      <Divider borderBottomColor='gray.900' />
       <Box p='2'>
         {replyList}
         <Formik
@@ -106,7 +107,14 @@ export const TextPost: React.FC<TextPostProps> = ({
                   onChange={handleChange}
                   placeholder='New reply'
                 />
-                <Button type='submit'>Reply</Button>
+                <Button
+                  bg='shirtDark'
+                  textColor='gray.200'
+                  _hover={{ bg: "gray.700" }}
+                  type='submit'
+                >
+                  Reply
+                </Button>
               </Stack>
             </Form>
           )}

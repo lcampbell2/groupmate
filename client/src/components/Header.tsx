@@ -18,6 +18,9 @@ export const Header: React.FC<HeaderProps> = ({}) => {
   } else if (data?.me) {
     authLinks = (
       <Button
+        bg='shirtDark'
+        textColor='gray.200'
+        _hover={{ bg: "gray.700" }}
         isLoading={logoutFetching}
         onClick={() => {
           router.push("/");
@@ -37,14 +40,28 @@ export const Header: React.FC<HeaderProps> = ({}) => {
   } else {
     authLinks = (
       <>
-        <Button onClick={() => router.push("/login")}>Sign in</Button>
-        <Button onClick={() => router.push("/register")}>Create Account</Button>
+        <Button
+          bg='shirtDark'
+          textColor='gray.200'
+          _hover={{ bg: "gray.700" }}
+          onClick={() => router.push("/login")}
+        >
+          Sign in
+        </Button>
+        <Button
+          bg='shirtDark'
+          textColor='gray.200'
+          _hover={{ bg: "gray.700" }}
+          onClick={() => router.push("/register")}
+        >
+          Create Account
+        </Button>
       </>
     );
   }
 
   return (
-    <Box bg='red.300'>
+    <Box bg='shirtRed'>
       <Flex px='8' py='4'>
         <Heading>GroupMate</Heading>
         <Stack isInline ml='auto' align='center' spacing={4}>

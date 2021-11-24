@@ -41,8 +41,11 @@ export const Groups: React.FC<indexProps> = ({}) => {
         My Groups
       </Heading>
       <Input
+        color='white'
+        bg='shirtDark'
         placeholder='Search for groups'
         onChange={(e) => setSearchTerm(e.target.value)}
+        mb='2'
       />
       {groupList}
     </Box>

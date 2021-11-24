@@ -7,7 +7,6 @@ import { Group } from "./entities/Group";
 import { GroupUser } from "./entities/GroupUser";
 import { PostReply } from "./entities/PostReply";
 import { GroupEvent } from "./entities/GroupEvent";
-import { EventLocation } from "./entities/EventLocation";
 
 export default {
   migrations: {
@@ -15,15 +14,7 @@ export default {
     pattern: /^[\w-]+\d+\.[tj]s$/, // regex pattern for the migration files
     disableForeignKeys: false,
   },
-  entities: [
-    Post,
-    User,
-    Group,
-    GroupUser,
-    PostReply,
-    GroupEvent,
-    EventLocation,
-  ],
+  entities: [Post, User, Group, GroupUser, PostReply, GroupEvent],
   dbName: "capstone",
   port: 5433,
   type: "postgresql",

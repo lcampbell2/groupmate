@@ -58,17 +58,19 @@ export const EventList: React.FC<EventListProps> = ({
             location={event.location}
             meetingLink={event.meetingLink}
           />
-          <Divider borderBottomColor='gray.900' />
         </Box>
       );
     });
   }
 
   return (
-    <Box bg='blue.100' px='2'>
+    <Box px='2'>
       {(isAdmin || isOwner) && (
         <Box>
           <Button
+            bg='shirtDark'
+            textColor='gray.200'
+            _hover={{ bg: "gray.700" }}
             my='2'
             onClick={() => setIsCreatingEvent(!isCreatingEvent)}
             w='100%'
@@ -76,97 +78,105 @@ export const EventList: React.FC<EventListProps> = ({
             New Event
           </Button>
           <Collapse in={isCreatingEvent}>
-            <Formik
-              initialValues={{
-                groupId,
-                title: "",
-                description: "",
-                startTime: "",
-                endTime: "",
-                location: "",
-                meetingLink: "",
-              }}
-              onSubmit={async (values, { setErrors }) => {
-                values.startTime = startTimeValue.toISOString();
-                values.endTime = endTimeValue.toISOString();
+            <Box bg='shirtPink' px='2' py='1'>
+              <Formik
+                initialValues={{
+                  groupId,
+                  title: "",
+                  description: "",
+                  startTime: "",
+                  endTime: "",
+                  location: "",
+                  meetingLink: "",
+                }}
+                onSubmit={async (values, { setErrors }) => {
+                  values.startTime = startTimeValue.toISOString();
+                  values.endTime = endTimeValue.toISOString();
 
-                const res = await createEvent(values);
-                console.log("res: ", res);
-                if (res?.data?.createEvent.errors) {
-                  setErrors(toErrorMap(res.data.createEvent.errors));
-                } else if (res.data?.createEvent.event) {
-                  toast({
-                    title: "Event successfully created.",
-                    description: `createEvent success`,
-                    status: "success",
-                    duration: 9000,
-                    isClosable: true,
-                  });
-                  values.title = "";
-                  values.description = "";
-                  setIsCreatingEvent(false);
-                }
-              }}
-            >
-              {({ handleChange }) => (
-                <Form>
-                  <InputField
-                    name='title'
-                    label='Title'
-                    placeholder='Event title'
-                    onChange={handleChange}
-                  />
-                  <FormControl>
-                    <FormLabel htmlFor='description'>Description</FormLabel>
-                    <Textarea
-                      placeholder='This event is awesome because...'
-                      bg='white'
-                      name='description'
+                  const res = await createEvent(values);
+                  console.log("res: ", res);
+                  if (res?.data?.createEvent.errors) {
+                    setErrors(toErrorMap(res.data.createEvent.errors));
+                  } else if (res.data?.createEvent.event) {
+                    toast({
+                      title: "Event successfully created.",
+                      description: `createEvent success`,
+                      status: "success",
+                      duration: 9000,
+                      isClosable: true,
+                    });
+                    values.title = "";
+                    values.description = "";
+                    setIsCreatingEvent(false);
+                  }
+                }}
+              >
+                {({ handleChange }) => (
+                  <Form>
+                    <InputField
+                      name='title'
+                      label='Title'
+                      placeholder='Event title'
                       onChange={handleChange}
                     />
-                  </FormControl>
+                    <FormControl>
+                      <FormLabel htmlFor='description'>Description</FormLabel>
+                      <Textarea
+                        placeholder='This event is awesome because...'
+                        bg='shirtDark'
+                        color='white'
+                        name='description'
+                        onChange={handleChange}
+                      />
+                    </FormControl>
 
-                  <FormControl>
-                    <FormLabel>Start Time:</FormLabel>
-                    <DateTimePicker
-                      bg='white'
-                      name='startTime'
-                      value={startTimeValue}
-                      onChange={setStartTimeValue}
+                    <FormControl>
+                      <FormLabel>Start Time:</FormLabel>
+                      <DateTimePicker
+                        bg='white'
+                        name='startTime'
+                        value={startTimeValue}
+                        onChange={setStartTimeValue}
+                      />
+                    </FormControl>
+
+                    <FormControl>
+                      <FormLabel>End Time:</FormLabel>
+                      <DateTimePicker
+                        name='endTime'
+                        value={endTimeValue}
+                        onChange={setEndTimeValue}
+                      />
+                    </FormControl>
+
+                    <InputField
+                      placeholder='The event will take place at...'
+                      name='location'
+                      label='Location Name'
+                      onChange={handleChange}
                     />
-                  </FormControl>
-
-                  <FormControl>
-                    <FormLabel>End Time:</FormLabel>
-                    <DateTimePicker
-                      name='endTime'
-                      value={endTimeValue}
-                      onChange={setEndTimeValue}
+                    <InputField
+                      placeholder='Zoom, Google Meet, MS Teams, etc.'
+                      name='meetingLink'
+                      label='Online Meeting Link'
+                      onChange={handleChange}
                     />
-                  </FormControl>
-
-                  <InputField
-                    placeholder='The event will take place at...'
-                    name='location'
-                    label='Location Name'
-                    onChange={handleChange}
-                  />
-                  <InputField
-                    placeholder='Zoom, Google Meet, MS Teams, etc.'
-                    name='meetingLink'
-                    label='Online Meeting Link'
-                    onChange={handleChange}
-                  />
-                  <Button my='2' type='submit'>
-                    Create Event
-                  </Button>
-                </Form>
-              )}
-            </Formik>
+                    <Button
+                      bg='shirtDark'
+                      textColor='gray.200'
+                      _hover={{ bg: "gray.700" }}
+                      my='2'
+                      type='submit'
+                    >
+                      Create Event
+                    </Button>
+                  </Form>
+                )}
+              </Formik>
+            </Box>
           </Collapse>
         </Box>
       )}
-      <Text>Events:</Text>
       {groupEvents}
     </Box>
   );

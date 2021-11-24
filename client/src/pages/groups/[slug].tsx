@@ -52,7 +52,7 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
 
   const editGroupInfo = (
     <Collapse in={isEditingGroup}>
-      <Box>
+      <Box bg='shirtPink' px='2'>
         <Formik
           initialValues={{
             id: data?.groupBySlug?.id as number,
@@ -83,18 +83,21 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
               <InputField
                 name='name'
                 label='Group Name'
+                placeholder='Group name'
                 onChange={handleChange}
               />
               <InputField
                 name='description'
                 label='Description'
+                placeholder='Group description'
                 onChange={handleChange}
               />
               <FormControl>
                 <FormLabel htmlFor='visibility'>Group Visibility</FormLabel>
                 <Select
                   w='25%'
-                  bg='white'
+                  bg='shirtDark'
+                  color='gray.500'
                   name='visibility'
                   onChange={handleChange}
                   defaultValue={values.visibility}
@@ -104,7 +107,13 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
                   <option value='private'>Private</option>
                 </Select>
               </FormControl>
-              <Button type='submit' my='2'>
+              <Button
+                bg='shirtDark'
+                textColor='gray.200'
+                _hover={{ bg: "gray.700" }}
+                type='submit'
+                my='2'
+              >
                 Update Group
               </Button>
             </Form>
@@ -122,35 +131,43 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
       <Text textAlign='center' fontSize='xl'>
         {data?.groupBySlug?.description}
       </Text>
-      {isOwner && (
-        <Box bg='blue.100' px='2' py='1'>
-          <Button
-            onClick={() => setIsEditingGroup(!isEditingGroup)}
-            w='100%'
-            my='2'
-          >
-            Edit Group
-          </Button>
-          {editGroupInfo}
-          <Divider borderBottomColor='gray.900' />
-        </Box>
-      )}
-      <UserList
-        groupId={data.groupBySlug.id}
-        users={data.groupBySlug.users}
-        inviteRequests={data.groupBySlug.inviteRequests}
-        isAdmin={isAdmin}
-        isOwner={isOwner}
-      />
-      <Divider borderBottomColor='gray.900' />
-      <PostList groupId={data.groupBySlug.id} posts={data.groupBySlug.posts} />
-      <Divider borderBottomColor='gray.900' />
-      <EventList
-        groupId={data.groupBySlug.id}
-        events={data.groupBySlug.events}
-        isAdmin={isAdmin}
-        isOwner={isOwner}
-      />
+      <Box textColor='black'>
+        {isOwner && (
+          <Box px='2' py='1'>
+            <Button
+              onClick={() => setIsEditingGroup(!isEditingGroup)}
+              w='100%'
+              my='2'
+              bg='shirtDark'
+              textColor='gray.200'
+              _hover={{ bg: "gray.700" }}
+            >
+              Edit Group
+            </Button>
+            {editGroupInfo}
+            <Divider borderBottomColor='gray.900' />
+          </Box>
+        )}
+        <UserList
+          groupId={data.groupBySlug.id}
+          users={data.groupBySlug.users}
+          inviteRequests={data.groupBySlug.inviteRequests}
+          isAdmin={isAdmin}
+          isOwner={isOwner}
+        />
+        <Divider borderBottomColor='gray.900' />
+        <PostList
+          groupId={data.groupBySlug.id}
+          posts={data.groupBySlug.posts}
+        />
+        <Divider borderBottomColor='gray.900' />
+        <EventList
+          groupId={data.groupBySlug.id}
+          events={data.groupBySlug.events}
+          isAdmin={isAdmin}
+          isOwner={isOwner}
+        />
+      </Box>
     </Box>
   );
 };
