@@ -123,7 +123,7 @@ export const SearchCard: React.FC<SearchCardProps> = ({
         <Text fontWeight='semibold'>Total users: {users}</Text>
       </Box>
       {joined ? (
-        <Badge bg='shirtDark' textColor='gray.200'>
+        <Badge bg='shirtBlue' textColor='shirtDark'>
           Joined
         </Badge>
       ) : (

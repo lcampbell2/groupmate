@@ -114,9 +114,9 @@ export const TextPost: React.FC<TextPostProps> = ({
                   placeholder='New reply'
                 />
                 <Button
-                  bg='shirtDark'
-                  textColor='gray.200'
-                  _hover={{ bg: "gray.700" }}
+                  bg='shirtBlue'
+                  textColor='shirtDark'
+                  _hover={{ bg: "blue.400" }}
                   type='submit'
                 >
                   Reply
