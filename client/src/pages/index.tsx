@@ -14,9 +14,9 @@ const Index = () => {
     <Stack align='center' my='4'>
       <Heading textAlign='center'>{welcomeMessage}</Heading>
       <Button
-        bg='shirtDark'
-        textColor='gray.200'
-        _hover={{ bg: "gray.700" }}
+        bg='shirtBlue'
+        textColor='shirtDark'
+        _hover={{ bg: "blue.400" }}
         onClick={() => {
           data?.me ? router.push("/groups/create") : router.push("/register");
         }}

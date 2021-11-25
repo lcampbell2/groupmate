@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/layout";
+import { Box, Divider } from "@chakra-ui/layout";
 import { useToast, Heading, Stack, Button } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import { NextPage } from "next";
@@ -44,15 +44,24 @@ export const ResetPassword: NextPage<{ token: string }> = ({ token }) => {
               name='newPassword'
               label='New Password'
               onChange={handleChange}
+              placeholder='New password'
             />
             <InputField
               type='password'
               name='confirmNewPassword'
               label='Confirm New Password'
               onChange={handleChange}
+              placeholder='Confirm new password'
             />
             <Stack isInline my='4'>
-              <Button type='submit'>Submit</Button>
+              <Button
+                bg='shirtBlue'
+                textColor='shirtDark'
+                _hover={{ bg: "blue.400" }}
+                type='submit'
+              >
+                Submit
+              </Button>
             </Stack>
           </Form>
         )}

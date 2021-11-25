@@ -32,6 +32,9 @@ export const UserCard: React.FC<UserCardProps> = ({
       justifyContent='space-between'
       p='4'
       bg='shirtRed'
+      borderWidth='2px'
+      borderColor='shirtPink'
+      textColor='shirtDark'
     >
       <Text fontSize='lg' fontWeight='semibold' textDecoration='underline'>
         {displayName}
@@ -71,7 +74,8 @@ export const UserCard: React.FC<UserCardProps> = ({
                         name='newRole'
                         onChange={handleChange}
                         defaultValue={values.newRole}
-                        bg='white'
+                        bg='shirtDark'
+                        color='gray.500'
                       >
                         <option value='read'>READ</option>
                         <option value='write'>WRITE</option>
@@ -79,7 +83,14 @@ export const UserCard: React.FC<UserCardProps> = ({
                       </Select>
                     </Flex>
                   </FormControl>
-                  <Button type='submit'>Update</Button>
+                  <Button
+                    bg='shirtBlue'
+                    textColor='shirtDark'
+                    _hover={{ bg: "blue.400" }}
+                    type='submit'
+                  >
+                    Update
+                  </Button>
                 </Stack>
               </Form>
             )}

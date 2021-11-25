@@ -18,9 +18,9 @@ export const Header: React.FC<HeaderProps> = ({}) => {
   } else if (data?.me) {
     authLinks = (
       <Button
-        bg='shirtDark'
-        textColor='gray.200'
-        _hover={{ bg: "gray.700" }}
+        bg='shirtBlue'
+        textColor='shirtDark'
+        _hover={{ bg: "blue.400" }}
         isLoading={logoutFetching}
         onClick={() => {
           router.push("/");
@@ -41,17 +41,17 @@ export const Header: React.FC<HeaderProps> = ({}) => {
     authLinks = (
       <>
         <Button
-          bg='shirtDark'
-          textColor='gray.200'
-          _hover={{ bg: "gray.700" }}
+          bg='shirtBlue'
+          textColor='shirtDark'
+          _hover={{ bg: "blue.400" }}
           onClick={() => router.push("/login")}
         >
           Sign in
         </Button>
         <Button
-          bg='shirtDark'
-          textColor='gray.200'
-          _hover={{ bg: "gray.700" }}
+          bg='shirtBlue'
+          textColor='shirtDark'
+          _hover={{ bg: "blue.400" }}
           onClick={() => router.push("/register")}
         >
           Create Account

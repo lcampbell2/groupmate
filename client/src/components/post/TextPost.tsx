@@ -56,7 +56,13 @@ export const TextPost: React.FC<TextPostProps> = ({
   }
 
   return (
-    <Box bg='shirtPink' mb='2'>
+    <Box
+      bg='shirtRed'
+      borderWidth='4px'
+      borderColor='shirtPink'
+      textColor='shirtDark'
+      mb='2'
+    >
       <Box p='2'>
         {groupName && (
           <Button

@@ -32,18 +32,18 @@ export const EditablePassword: React.FC<EditablePasswordProps> = ({
   const [_, updatePassword] = useUpdatePasswordMutation();
   return (
     <Stack {...props}>
-      <Text fontWeight='bold' fontSize='lg'>
-        Password:
-      </Text>
       <Flex align='center'>
-        <LockIcon color='shirtDark' />
+        <LockIcon color='white' />
+        <Text fontWeight='bold' fontSize='lg' ml='2'>
+          Password:
+        </Text>
         <Text ml='2' mt='2'>
           ********
         </Text>
         <Button
-          bg='shirtDark'
-          textColor='gray.200'
-          _hover={{ bg: "gray.700" }}
+          bg='shirtBlue'
+          textColor='shirtDark'
+          _hover={{ bg: "blue.400" }}
           ml='auto'
           onClick={onOpen}
         >
@@ -97,6 +97,7 @@ export const EditablePassword: React.FC<EditablePasswordProps> = ({
                       name='currentPassword'
                       label='Current Password:'
                       onChange={handleChange}
+                      placeholder='Current password'
                     />
 
                     <InputField
@@ -104,6 +105,7 @@ export const EditablePassword: React.FC<EditablePasswordProps> = ({
                       name='newPassword'
                       label='New Password:'
                       onChange={handleChange}
+                      placeholder='New password'
                     />
 
                     <InputField
@@ -111,15 +113,16 @@ export const EditablePassword: React.FC<EditablePasswordProps> = ({
                       name='confirmNewPassword'
                       label='Confirm New Password:'
                       onChange={handleChange}
+                      placeholder='Confirm new password'
                     />
                   </Stack>
                 </ModalBody>
 
                 <ModalFooter>
                   <Button
-                    bg='white'
-                    textColor='black'
-                    _hover={{ bg: "gray.400" }}
+                    bg='shirtBlue'
+                    textColor='shirtDark'
+                    _hover={{ bg: "blue.400" }}
                     isLoading={isSubmitting}
                     type='submit'
                     mr='4'

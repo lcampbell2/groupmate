@@ -52,7 +52,7 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
 
   const editGroupInfo = (
     <Collapse in={isEditingGroup}>
-      <Box bg='shirtPink' px='2'>
+      <Box px='2' borderWidth='1px' borderColor='shirtBlue'>
         <Formik
           initialValues={{
             id: data?.groupBySlug?.id as number,
@@ -108,9 +108,9 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
                 </Select>
               </FormControl>
               <Button
-                bg='shirtDark'
-                textColor='gray.200'
-                _hover={{ bg: "gray.700" }}
+                bg='shirtBlue'
+                textColor='shirtDark'
+                _hover={{ bg: "blue.400" }}
                 type='submit'
                 my='2'
               >
@@ -131,16 +131,16 @@ export const GroupDetails: NextPage<{ slug: string }> = ({ slug }) => {
       <Text textAlign='center' fontSize='xl'>
         {data?.groupBySlug?.description}
       </Text>
-      <Box textColor='black'>
+      <Box>
         {isOwner && (
           <Box px='2' py='1'>
             <Button
               onClick={() => setIsEditingGroup(!isEditingGroup)}
               w='100%'
               my='2'
-              bg='shirtDark'
-              textColor='gray.200'
-              _hover={{ bg: "gray.700" }}
+              bg='shirtBlue'
+              textColor='shirtDark'
+              _hover={{ bg: "blue.400" }}
             >
               Edit Group
             </Button>

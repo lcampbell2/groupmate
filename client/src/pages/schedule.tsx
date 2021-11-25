@@ -42,7 +42,6 @@ export const Schedule: React.FC<scheduleProps> = ({}) => {
             groupName={event.group.name}
             groupSlug={event.group.slug}
           />
-          <Divider borderBottomColor='gray.900' />
         </Box>
       );
     });

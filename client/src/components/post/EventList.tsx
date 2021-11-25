@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Collapse,
-  Divider,
   FormControl,
   FormLabel,
   Textarea,
@@ -68,9 +67,9 @@ export const EventList: React.FC<EventListProps> = ({
       {(isAdmin || isOwner) && (
         <Box>
           <Button
-            bg='shirtDark'
-            textColor='gray.200'
-            _hover={{ bg: "gray.700" }}
+            bg='shirtBlue'
+            textColor='shirtDark'
+            _hover={{ bg: "blue.400" }}
             my='2'
             onClick={() => setIsCreatingEvent(!isCreatingEvent)}
             w='100%'
@@ -78,7 +77,7 @@ export const EventList: React.FC<EventListProps> = ({
             New Event
           </Button>
           <Collapse in={isCreatingEvent}>
-            <Box bg='shirtPink' px='2' py='1'>
+            <Box px='2' py='1' borderWidth='1px' borderColor='shirtBlue' mb='2'>
               <Formik
                 initialValues={{
                   groupId,
@@ -162,9 +161,9 @@ export const EventList: React.FC<EventListProps> = ({
                       onChange={handleChange}
                     />
                     <Button
-                      bg='shirtDark'
-                      textColor='gray.200'
-                      _hover={{ bg: "gray.700" }}
+                      bg='shirtBlue'
+                      textColor='shirtDark'
+                      _hover={{ bg: "blue.400" }}
                       my='2'
                       type='submit'
                     >

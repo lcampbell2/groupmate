@@ -39,11 +39,13 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
       <Stack isInline align='center' spacing={10}>
         {navBarLinks}
       </Stack>
-      <Box ml='auto'>
-        <NextLink href='/user'>
-          <Link>User Profile</Link>
-        </NextLink>
-      </Box>
+      {data?.me && (
+        <Box ml='auto'>
+          <NextLink href='/user'>
+            <Link>User Profile</Link>
+          </NextLink>
+        </Box>
+      )}
     </Flex>
   );
 };

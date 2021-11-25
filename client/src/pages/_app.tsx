@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }) {
             useSystemColorMode: true,
           }}
         >
-          <Box position='relative' minH='100vh' bg='shirtBlue'>
+          <Box position='relative' minH='100vh' bg='shirtDark'>
             <Box pb={FOOTER_HEIGHT}>
               <Header />
               <Navbar />

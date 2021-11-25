@@ -35,16 +35,16 @@ export const EditableDisplayName: React.FC<EditableDisplayNameProps> = ({
   const [_, updateDisplayName] = useUpdateDisplayNameMutation();
   return (
     <Stack {...props}>
-      <Text fontWeight='bold' fontSize='lg'>
-        Display Name:
-      </Text>
       <Flex align='center'>
-        <AtSignIcon color='shirtDark' />
+        <AtSignIcon color='white' />
+        <Text fontWeight='bold' fontSize='lg' ml='2'>
+          Display Name:
+        </Text>
         <Text ml='2'>{currentDisplayName}</Text>
         <Button
-          bg='shirtDark'
-          textColor='gray.200'
-          _hover={{ bg: "gray.700" }}
+          bg='shirtBlue'
+          textColor='shirtDark'
+          _hover={{ bg: "blue.400" }}
           ml='auto'
           onClick={onOpen}
         >
@@ -102,6 +102,7 @@ export const EditableDisplayName: React.FC<EditableDisplayNameProps> = ({
                       name='displayName'
                       label='New Display Name:'
                       onChange={handleChange}
+                      placeholder='New display name'
                     />
                   </Stack>
                 </ModalBody>
@@ -111,9 +112,9 @@ export const EditableDisplayName: React.FC<EditableDisplayNameProps> = ({
                     isLoading={isSubmitting}
                     type='submit'
                     mr='4'
-                    bg='white'
-                    textColor='black'
-                    _hover={{ bg: "gray.400" }}
+                    bg='shirtBlue'
+                    textColor='shirtDark'
+                    _hover={{ bg: "blue.400" }}
                   >
                     Confirm
                   </Button>

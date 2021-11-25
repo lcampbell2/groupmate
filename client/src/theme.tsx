@@ -13,10 +13,10 @@ const breakpoints = createBreakpoints({
 const theme = extendTheme({
   colors: {
     black: "#16161D",
-    shirtRed: "#E16565",
-    shirtPink: "#EB8D81",
-    shirtBlue: "#70C9F3",
-    shirtDark: "#16151B",
+    shirtRed: "#EE634E",
+    shirtPink: "#FFBDB2",
+    shirtBlue: "#54B9E3",
+    shirtDark: "#161525",
   },
   fonts,
   breakpoints,

@@ -134,16 +134,19 @@ export const UserList: React.FC<UserListProps> = ({
           alignItems={{ base: "flex-start", md: "center" }}
           justifyContent='space-between'
           p='4'
-          bg='shirtPink'
+          bg='shirtRed'
+          borderWidth='2px'
+          borderColor='shirtPink'
+          textColor='shirtDark'
         >
           <Text fontSize='lg' fontWeight='semibold' textDecoration='underline'>
             {request.email} - {request.displayName}
           </Text>
           <Stack isInline>
             <Button
-              bg='shirtDark'
-              textColor='gray.200'
-              _hover={{ bg: "gray.700" }}
+              bg='shirtBlue'
+              textColor='shirtDark'
+              _hover={{ bg: "blue.400" }}
               onClick={() => {
                 handleInviteUser(request.email, groupId, "read");
               }}
@@ -151,9 +154,9 @@ export const UserList: React.FC<UserListProps> = ({
               Accept
             </Button>
             <Button
-              bg='shirtDark'
-              textColor='gray.200'
-              _hover={{ bg: "gray.700" }}
+              bg='shirtBlue'
+              textColor='shirtDark'
+              _hover={{ bg: "blue.400" }}
               onClick={() => {
                 handleInviteDismiss(groupId, request.id);
               }}
@@ -169,9 +172,9 @@ export const UserList: React.FC<UserListProps> = ({
   return (
     <Box px='2'>
       <Button
-        bg='shirtDark'
-        textColor='gray.200'
-        _hover={{ bg: "gray.700" }}
+        bg='shirtBlue'
+        textColor='shirtDark'
+        _hover={{ bg: "blue.400" }}
         w='100%'
         my='2'
         onClick={() => {
@@ -181,7 +184,7 @@ export const UserList: React.FC<UserListProps> = ({
         User List
       </Button>
       <Collapse in={showUserList}>
-        <Box bg='shirtPink' px='2' py='1'>
+        <Box px='2' py='1' borderWidth='1px' borderColor='shirtBlue'>
           <Formik
             initialValues={{ email: "", role: "read" }}
             onSubmit={async (values) => {
@@ -209,9 +212,9 @@ export const UserList: React.FC<UserListProps> = ({
                       <option value='admin'>ADMIN</option>
                     </Select>
                     <Button
-                      bg='shirtDark'
-                      textColor='gray.200'
-                      _hover={{ bg: "gray.700" }}
+                      bg='shirtBlue'
+                      textColor='shirtDark'
+                      _hover={{ bg: "blue.400" }}
                       type='submit'
                     >
                       Invite User

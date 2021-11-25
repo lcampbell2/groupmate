@@ -38,18 +38,18 @@ export const EditableUserEmail: React.FC<EditableUserEmailProps> = ({
 
   return (
     <Stack {...props}>
-      <Text fontWeight='bold' fontSize='lg'>
-        Email:
-      </Text>
       <Flex align='center'>
-        <EmailIcon color='shirtDark' />
+        <EmailIcon color='white' />
+        <Text fontWeight='bold' fontSize='lg' ml='2'>
+          Email:
+        </Text>
         <Text ml='2' mb='1'>
           {currentEmail}
         </Text>
         <Button
-          bg='shirtDark'
-          textColor='gray.200'
-          _hover={{ bg: "gray.700" }}
+          bg='shirtBlue'
+          textColor='shirtDark'
+          _hover={{ bg: "blue.400" }}
           ml='auto'
           onClick={onOpen}
         >
@@ -106,15 +106,16 @@ export const EditableUserEmail: React.FC<EditableUserEmailProps> = ({
                       name='email'
                       label='New email:'
                       onChange={handleChange}
+                      placeholder='New email'
                     />
                   </Stack>
                 </ModalBody>
 
                 <ModalFooter>
                   <Button
-                    bg='white'
-                    textColor='black'
-                    _hover={{ bg: "gray.400" }}
+                    bg='shirtBlue'
+                    textColor='shirtDark'
+                    _hover={{ bg: "blue.400" }}
                     isLoading={isSubmitting}
                     type='submit'
                     mr='4'

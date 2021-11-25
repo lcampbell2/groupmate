@@ -21,7 +21,11 @@ export const GroupCard: React.FC<GroupCardProps> = ({
       width='100%'
       alignItems={{ base: "flex-start", md: "center" }}
       justifyContent='space-around'
-      _hover={{ md: { bg: ["", "blue.300"] } }}
+      _hover={{ bg: "red.300" }}
+      bg='shirtRed'
+      borderWidth='2px'
+      borderColor='shirtPink'
+      textColor='shirtDark'
       p='4'
       as='button'
       onClick={() => {

@@ -76,17 +76,17 @@ export const CreateOrganization: React.FC<createProps> = ({}) => {
             </FormControl>
             <Stack isInline my='4' justifyContent='space-between'>
               <Button
-                bg='shirtDark'
-                textColor='gray.200'
-                _hover={{ bg: "gray.700" }}
+                bg='shirtBlue'
+                textColor='shirtDark'
+                _hover={{ bg: "blue.400" }}
                 type='submit'
               >
                 Create Group
               </Button>
               <Button
-                bg='shirtDark'
-                textColor='gray.200'
-                _hover={{ bg: "gray.700" }}
+                bg='shirtBlue'
+                textColor='shirtDark'
+                _hover={{ bg: "blue.400" }}
                 onClick={() => router.push("/")}
               >
                 Back

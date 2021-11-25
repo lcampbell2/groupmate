@@ -82,18 +82,18 @@ export const SearchCard: React.FC<SearchCardProps> = ({
   const joinButtons =
     visibility === "open" ? (
       <Button
-        bg='shirtDark'
-        textColor='gray.200'
-        _hover={{ bg: "gray.700" }}
+        bg='shirtBlue'
+        textColor='shirtDark'
+        _hover={{ bg: "blue.400" }}
         onClick={handleJoin}
       >
         Join
       </Button>
     ) : (
       <Button
-        bg='shirtDark'
-        textColor='gray.200'
-        _hover={{ bg: "gray.700" }}
+        bg='shirtBlue'
+        textColor='shirtDark'
+        _hover={{ bg: "blue.400" }}
         onClick={handleRequestInvite}
       >
         Request Invite
@@ -106,6 +106,10 @@ export const SearchCard: React.FC<SearchCardProps> = ({
       alignItems={{ base: "flex-start", md: "center" }}
       justifyContent='space-around'
       p='4'
+      bg='shirtRed'
+      borderWidth='2px'
+      borderColor='shirtPink'
+      textColor='shirtDark'
     >
       <Stack isInline align='center'>
         <Text fontSize='lg' fontWeight='semibold' textDecoration='underline'>

@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Collapse,
-  Divider,
   FormControl,
   FormLabel,
   Text,
@@ -64,9 +63,9 @@ export const PostList: React.FC<PostListProps> = ({ groupId, posts }) => {
     <Box px='2' py='1'>
       <Box my='2'>
         <Button
-          bg='shirtDark'
-          textColor='gray.200'
-          _hover={{ bg: "gray.700" }}
+          bg='shirtBlue'
+          textColor='shirtDark'
+          _hover={{ bg: "blue.400" }}
           s
           onClick={() => setIsCreatingPost(!isCreatingPost)}
           mb='2'
@@ -75,7 +74,7 @@ export const PostList: React.FC<PostListProps> = ({ groupId, posts }) => {
           New Post
         </Button>
         <Collapse in={isCreatingPost}>
-          <Box bg='shirtPink' px='2' py='1'>
+          <Box px='2' py='1' borderWidth='1px' borderColor='shirtBlue'>
             <Formik
               initialValues={{
                 groupId,
@@ -120,9 +119,9 @@ export const PostList: React.FC<PostListProps> = ({ groupId, posts }) => {
                     />
                   </FormControl>
                   <Button
-                    bg='shirtDark'
-                    textColor='gray.200'
-                    _hover={{ bg: "gray.700" }}
+                    bg='shirtBlue'
+                    textColor='shirtDark'
+                    _hover={{ bg: "blue.400" }}
                     type='submit'
                   >
                     Create Post
