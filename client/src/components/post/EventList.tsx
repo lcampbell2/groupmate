@@ -129,17 +129,16 @@ export const EventList: React.FC<EventListProps> = ({
                       />
                     </FormControl>
 
-                    <FormControl>
+                    <FormControl textColor='gray.500'>
                       <FormLabel>Start Time:</FormLabel>
                       <DateTimePicker
-                        bg='white'
                         name='startTime'
                         value={startTimeValue}
                         onChange={setStartTimeValue}
                       />
                     </FormControl>
 
-                    <FormControl>
+                    <FormControl textColor='gray.500'>
                       <FormLabel>End Time:</FormLabel>
                       <DateTimePicker
                         name='endTime'

@@ -21,6 +21,8 @@ export const Header: React.FC<HeaderProps> = ({}) => {
         bg='shirtBlue'
         textColor='shirtDark'
         _hover={{ bg: "blue.400" }}
+        borderWidth='1px'
+        borderColor='shirtDark'
         isLoading={logoutFetching}
         onClick={() => {
           router.push("/");
@@ -44,6 +46,8 @@ export const Header: React.FC<HeaderProps> = ({}) => {
           bg='shirtBlue'
           textColor='shirtDark'
           _hover={{ bg: "blue.400" }}
+          borderWidth='1px'
+          borderColor='shirtDark'
           onClick={() => router.push("/login")}
         >
           Sign in
@@ -52,6 +56,8 @@ export const Header: React.FC<HeaderProps> = ({}) => {
           bg='shirtBlue'
           textColor='shirtDark'
           _hover={{ bg: "blue.400" }}
+          borderWidth='1px'
+          borderColor='shirtDark'
           onClick={() => router.push("/register")}
         >
           Create Account

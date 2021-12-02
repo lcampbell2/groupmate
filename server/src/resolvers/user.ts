@@ -84,7 +84,7 @@ export class UserResolver {
   ) {
     const user = await em.findOne(User, { id: req.session.userId });
     if (!user) {
-      console.error("invalid user");
+      console.error("isUserAdmin - invalid user");
       return false;
     }
     const group = await em.findOne(Group, { id: groupId });
@@ -112,7 +112,7 @@ export class UserResolver {
   ) {
     const user = await em.findOne(User, { id: req.session.userId });
     if (!user) {
-      console.error("invalid user");
+      console.error("isUserOwner - invalid user");
       return false;
     }
     const group = await em.findOne(Group, { id: groupId });
@@ -202,7 +202,7 @@ export class UserResolver {
     const hashedPassword = await argon2.hash(options.password);
     const user = em.create(User, {
       displayName: options.displayName,
-      email: options.email,
+      email: options.email.toLowerCase(),
       password: hashedPassword,
     });
 

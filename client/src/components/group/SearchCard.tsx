@@ -111,18 +111,15 @@ export const SearchCard: React.FC<SearchCardProps> = ({
       borderColor='shirtPink'
       textColor='shirtDark'
     >
-      <Stack isInline align='center'>
+      <Box align='center' maxW='25%'>
         <Text fontSize='lg' fontWeight='semibold' textDecoration='underline'>
           {name}
         </Text>
-      </Stack>
-      <Box mr={{ md: "1em" }} align='center'>
+      </Box>
+      <Box align='center' maxW='50%'>
         <Text fontWeight='semibold'>{description}</Text>
       </Box>
-      <Box mr={{ md: "1em" }} align='center'>
-        <Text fontWeight='semibold'>Total users: {users}</Text>
-      </Box>
-      {joined ? (
+      {joined === true ? (
         <Badge bg='shirtBlue' textColor='shirtDark'>
           Joined
         </Badge>

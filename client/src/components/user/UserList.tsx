@@ -38,7 +38,7 @@ export const UserList: React.FC<UserListProps> = ({
   const toast = useToast();
   const [_invite, inviteUser] = useInviteUserToGroupMutation();
   const [_dismiss, dismissRequest] = useDismissInviteRequestMutation();
-  const [showUserList, setShowUserList] = useState(false);
+  const [showUserList, setShowUserList] = useState(true);
 
   const handleInviteUser = async (
     email: string,

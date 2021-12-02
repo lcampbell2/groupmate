@@ -1,4 +1,4 @@
-import { Box, Divider, Heading } from "@chakra-ui/layout";
+import { Box, Divider, Heading, Text } from "@chakra-ui/layout";
 import { Input } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { SearchCard } from "../../components/group/SearchCard";
@@ -12,6 +12,7 @@ export const GroupSearch: React.FC<searchProps> = ({}) => {
   const [searchTerm, setSearchTerm] = useState("");
   let groupList = null;
   let joinedGroup = false;
+
   if (fetching || meFetching) {
     groupList = <Box>Loading...</Box>;
   } else if (!data || error) {
@@ -23,26 +24,38 @@ export const GroupSearch: React.FC<searchProps> = ({}) => {
       return group.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
     });
 
-    groupList = filteredList?.map((group, idx) => {
-      for (let i = 0; i < group.users.length; i++) {
-        if (currentUserId === group.users[i].user.id) {
-          joinedGroup = true;
-        }
-      }
-      return (
-        <Box key={idx}>
-          <SearchCard
-            groupId={group.id}
-            name={group.name}
-            description={group.description}
-            visibility={group.visibility}
-            users={group.users.length}
-            joined={joinedGroup}
-          />
-          <Divider borderBottomColor='gray.900' />
+    if (filteredList.length === 0) {
+      groupList = (
+        <Box>
+          <Text fontWeight='bold' textAlign='center' fontSize='xl'>
+            No groups found!
+          </Text>
         </Box>
       );
-    });
+    } else {
+      groupList = filteredList?.map((group, idx) => {
+        joinedGroup = false;
+        for (let i = 0; i < group.users.length; i++) {
+          if (currentUserId === group.users[i].user.id) {
+            joinedGroup = true;
+            break;
+          }
+        }
+        return (
+          <Box key={idx}>
+            <SearchCard
+              groupId={group.id}
+              name={group.name}
+              description={group.description}
+              visibility={group.visibility}
+              users={group.users.length}
+              joined={joinedGroup}
+            />
+            <Divider borderBottomColor='gray.900' />
+          </Box>
+        );
+      });
+    }
   }
 
   return (

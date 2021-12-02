@@ -23,7 +23,9 @@ export const Schedule: React.FC<scheduleProps> = ({}) => {
   if (data?.myEvents.length === 0) {
     eventList = (
       <Box>
-        <Text fontWeight='bold'>No events found</Text>
+        <Text fontWeight='bold' textAlign='center' fontSize='xl'>
+          No events found. Try joining some groups!
+        </Text>
       </Box>
     );
   } else {
@@ -48,7 +50,7 @@ export const Schedule: React.FC<scheduleProps> = ({}) => {
   }
   return (
     <Box>
-      <Heading textAlign='center' mb='2'>
+      <Heading textAlign='center' mb='4'>
         My Schedule
       </Heading>
       {eventList}
